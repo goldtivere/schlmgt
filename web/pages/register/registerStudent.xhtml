@@ -1,0 +1,320 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+
+
+    <ui:define name="title">
+        Register Student
+    </ui:define>
+
+
+    <ui:define name="content">
+
+        <div class="ibox-content">
+            <p:panel class="panel-default" id="reg" style="border: none;">
+                <div class="row">                
+
+                    <fieldset>
+                        <legend>Personal Details</legend>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="fname" value="First Name: "/>
+                                <p:inputText id="fname" required="true" value="#{reg.fname}" class="form-control"></p:inputText>
+                                <p:message for="fname"/>
+                            </div>    
+                            <div class="form-group">
+                                <p:outputLabel for="dob" value="Date Of Birth: "/>
+                                <p:calendar id="dob" class="form-control" yearRange="2017:1970"  navigator="true" required="true" />
+                                <p:message for="dob"/>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="mname" value="Middle Name: "/>
+                                <p:inputText id="mname" value="#{reg.lname}" class="form-control"></p:inputText>
+                                <p:message for="mname"/>
+                            </div>
+
+                            <div class="form-group">
+                                <p:outputLabel for="uname" value="Phone Number: "/>
+                                <p:inputText id="uname" class="form-control" value="#{reg.username}" maxlength="11" required="true"/>                                
+                                <p:message for="uname"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="lname" value="Last Name: "/>
+                                <p:inputText id="lname" required="true" value="#{reg.lname}" class="form-control"></p:inputText>
+                                <p:message for="lname"/>
+                            </div>
+                            <div class="form-group">
+                                <p:outputLabel for="email" value="Email Address: "/>
+                                <p:inputText id="email" required="true" value="#{reg.emailadd}" class="form-control" label="email" size="40"
+                                             requiredMessage="Please enter your email address."
+                                             validatorMessage="Invalid email format"
+                                             >
+
+                                    <f:validateRegex
+                                        pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                                </p:inputText>
+                                <p:message for="email"/>
+                            </div>                                              
+
+                        </div>
+
+
+                    </fieldset>                   
+                </div>
+                <div class="row">
+                    <fieldset>
+                        <legend>Guardian's Details</legend>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="gfname" value="First Name: "/>
+                                <p:inputText id="gfname" required="true" value="#{reg.lname}" class="form-control"></p:inputText>
+                                <p:message for="gfname"/>
+
+                            </div>
+
+                            <div class="form-group">
+                                <p:outputLabel for="relation" value="Relationship: "/>
+                                <br/>
+                                <p:selectOneMenu id="relation" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>                               
+                                <p:message for="relation"/>
+
+                            </div>
+
+                            <div class="form-group">
+                                <p:outputLabel for="country" value="Country of origin: "/>
+                                <br/>
+                                <p:selectOneMenu id="country" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>                               
+                                <p:message for="country"/>
+
+                            </div>
+                            <div class="form-group">
+                                <p:outputLabel for="add" value="Address of Residence: "/>
+                                <p:inputTextarea id="add" required="true" value="#{reg.lname}" class="form-control"></p:inputTextarea>
+                                <p:message for="add"/>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="gmname" value="Middle Name: "/>
+                                <p:inputText id="gmname" value="#{reg.lname}" class="form-control"></p:inputText>
+                                <p:message for="gmname"/>
+                            </div>
+                            <div class="form-group">
+                                <p:outputLabel for="pnum" value="Phone Number: "/>
+                                <p:inputText id="pnum" required="true" value="#{reg.lname}" class="form-control"></p:inputText>
+                                <p:message for="pnum"/>
+                            </div>
+                            <div class="form-group">
+                                <p:outputLabel for="state" value="State of origin: "/>
+                                <br/>
+                                <p:selectOneMenu id="state" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>                               
+                                <p:message for="state"/>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="glname" value="Last Name: "/>
+                                <p:inputText id="glname" required="true" value="#{reg.lname}" class="form-control"></p:inputText>
+                                <p:message for="glname"/>
+                            </div>
+                            <div class="form-group">
+                                <p:outputLabel for="mail" value="Email Address: "/>
+                                <p:inputText id="mail" required="true" value="#{reg.emailadd}" class="form-control" label="email" size="40"
+                                             requiredMessage="Please enter your email address."
+                                             validatorMessage="Invalid email format"
+                                             >
+
+                                    <f:validateRegex
+                                        pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                                </p:inputText>
+                                <p:message for="mail"/>
+                            </div>
+                            <div class="form-group">
+                                <p:outputLabel for="lga" value="LGA of Origin: "/>
+                                <br/>
+                                <p:selectOneMenu id="lga" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>                               
+                                <p:message for="lga"/>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="row">
+                    <fieldset>
+                        <legend>Previous Education History</legend>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="pschool" value="Name of Previous School: "/>
+                                <p:inputTextarea id="pschool" required="true" value="#{reg.lname}" class="form-control"></p:inputTextarea>
+                                <p:message for="pschool"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="class" value="Class: "/>
+                                <br/>
+                                <p:selectOneMenu id="class" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>   
+                                <p:message for="class"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+
+                            <div class="form-group">
+                                <p:outputLabel for="grade" value="Grade: "/>
+                                <br/>
+                                <p:selectOneMenu id="grade" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>   
+                                <p:message for="grade"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="row">
+                    <fieldset>
+                        <legend>Current Education</legend>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <p:outputLabel for="clas" value="Class: "/>
+                                <br/>
+                                <p:selectOneMenu id="clas" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>   
+                                <p:message for="clas"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <p:outputLabel for="grad" value="Grade: "/>
+                                <br/>
+                                <p:selectOneMenu id="grad" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>   
+                                <p:message for="grad"/>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+                <div class="row">
+                    <fieldset>
+                        <legend>Health History:</legend>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="dis" value="Disability: "/>
+                                <br/>
+                                <p:selectOneMenu id="dis" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>   
+                                <p:message for="dis"/>
+                            </div>                           
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <p:outputLabel for="bgroup" value="Blood Group: "/>
+                                <br/>
+                                <p:selectOneMenu id="bgroup" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+
+                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{bank.bankmodel}"
+                                                   var="singlevalue"  
+                                                   itemLabel="#{singlevalue.bankName}"
+                                                   itemValue="#{singlevalue.bankName}"/>
+                                </p:selectOneMenu>   
+                                <p:message for="bgroup"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="row">
+                    <fieldset>
+                        <legend>Image Upload</legend>
+                        <h:form>
+                            <p:fileUpload fileUploadListener="#{fileUploadView.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                          update="messages" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+
+                            <p:growl id="messages" showDetail="true" />
+                        </h:form>
+                    </fieldset>
+                </div>
+            </p:panel>
+        </div>
+    </ui:define>
+
+</ui:composition>

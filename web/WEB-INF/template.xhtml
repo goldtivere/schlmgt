@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+
+
+    <h:head>
+
+        <f:facet name="first">
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+            <title>School Management System</title>
+        </f:facet>
+        <h:outputStylesheet name="main/css/bootstrap.min.css" /> 
+        <h:outputStylesheet name="main/font-awesome/css/font-awesome.css" /> 
+        <h:outputStylesheet name="main/css/plugins/iCheck/custom.css" /> 
+        <h:outputStylesheet name="main/css/animate.css" /> 
+        <h:outputStylesheet name="main/css/style.css" /> 
+        <h:outputStylesheet name="main/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />                                                
+        <ui:insert name="head" />
+
+    </h:head>
+
+    <h:body onload="history.forward();" >
+
+
+        <div id="wrapper">
+            <h:form enctype="multipart/form-data" id="templateForm">
+                <nav class="navbar-default navbar-static-side" role="navigation">
+                    <div class="sidebar-collapse">
+                        <ul class="nav metismenu" id="side-menu">
+                            <li class="nav-header">
+                                <div class="dropdown profile-element"> <span>
+                                        <h:outputLink target="_blank" >
+                                            <h:graphicImage  width="50" height="50"></h:graphicImage>
+                                        </h:outputLink>                                        
+
+                                    </span>
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                        <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">
+                                                    <h:outputText styleClass="outputLabel" value= "#{login.dto.first_name} #{login.dto.last_name}"/>
+                                                </strong>
+                                            </span></span> </a>
+                                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                        <li class="#{pgeNav.titlePane}"><a href="#{request.contextPath}/pages/cash/cash.xhtml">Profile</a></li>                                           
+                                        <li><p:commandButton actionListener="#{login.noactivity}" value="Logout"/></li>
+                                    </ul>
+                                </div>
+
+                            </li>
+                            <li class="#{view.viewId eq page.viewId ? 'active' : ''}">
+                                <a href="#{request.contextPath}/faces/pages/register/registerStudent.xhtml"><i class="fa fa-user-plus"></i> <span class="nav-label">Register</span></a>                                   
+                            </li>
+                            <li>
+                                <a href="#{request.contextPath}/faces/pages/cash/cash.xhtml"><i class="fa fa-user"></i> <span class="nav-label">Profile</span></a>
+
+                            </li>                                    
+                            <li class="drop">
+                                <a href="#"><i class="fa fa-info"></i> <span class="nav-label">Status</span><span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level collapse">
+                                    <li><a href="#{request.contextPath}/faces/gims.xhtml">Payment</a></li>
+                                    <li><a href="profile.html">Registration</a></li>                                       
+                                </ul>
+
+                            </li>                                                                                                                                                            
+
+                        </ul>
+
+                    </div>
+                </nav>
+
+                <div id="page-wrapper" class="gray-bg">
+                    <div class="row border-bottom">
+                        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                            <div class="navbar-header">
+                                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+
+                            </div>
+                            <ul class="nav navbar-top-links navbar-right">
+                                <li>
+                                    <a href="#{request.contextPath}/faces/pages/register/register.xhtml"><i class="fa fa-user-plus"></i></a>                                   
+                                </li>
+                                <li>
+                                    <a href="#{request.contextPath}/faces/pages/mail/mail.xhtml">
+                                        <div>
+                                            <i class="fa fa-envelope fa-fw"></i>
+                                        </div>
+                                    </a>
+                                </li>
+
+                                <li>
+
+                                <p:commandLink id="nonAjax" actionListener="#{login.noactivity}" immediate="true" ajax="false">
+                                    <i class="fa fa-sign-out"></i><h:outputText value=" Log out" />
+                                </p:commandLink>  
+
+                                </li>
+                            </ul>
+
+                        </nav>
+                    </div>
+                    <div class="row wrapper border-bottom white-bg page-heading">
+                        <div class="col-lg-10">
+
+                            <h2><ui:insert name="title" /></h2>
+                        </div>
+                        <div class="col-lg-2">
+
+                        </div>
+                    </div>
+                    <div class="wrapper wrapper-content animated fadeInRight">
+
+                        <ui:insert name="content" />
+
+                    </div>
+                    <div class="footer">
+                        <ui:insert name="footer"/>
+
+                    </div>
+
+                </div>
+            </h:form>
+        </div>
+
+
+        <!-- Mainly scripts -->
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+        <h:outputScript name="main/js/bootstrap.min.js" />
+        <h:outputScript name="main/js/plugins/metisMenu/jquery.metisMenu.js" />
+        <h:outputScript name="main/js/plugins/slimscroll/jquery.slimscroll.min.js" />                       
+
+
+        <!-- Custom and plugin javascript -->
+        <h:outputScript name="main/js/inspinia.js" />
+        <h:outputScript name="main/js/plugins/pace/pace.min.js" />            
+
+        <!-- iCheck -->
+        <h:outputScript name="main/js/plugins/iCheck/icheck.min.js" />
+
+
+        <script>
+            $(function () {
+                function stripTrailingSlash(str) {
+                    if (str.substr(-1) === '/') {
+                        return str.substr(0, str.length - 1);
+                    }
+                    return str;
+                }
+
+                var url = window.location.pathname;
+                var activePage = stripTrailingSlash(url);
+
+                $('.nav li a').each(function () {
+                    var currentPage = stripTrailingSlash($(this).attr('href'));
+
+                    if (activePage === currentPage) {
+                        $(this).parent().addClass('active');
+                    }
+                });
+            });
+
+
+            $(document).ready(function () {
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            });
+        </script>
+
+    </h:body>
+
+
+</html>
+
