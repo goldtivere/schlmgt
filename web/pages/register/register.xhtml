@@ -8,7 +8,7 @@
 
 
     <ui:define name="title">
-        Register
+        Register User
     </ui:define>
 
 
@@ -66,19 +66,21 @@
                             <p:message for="RWord"/>
                         </div>
                         <div class="form-group">
-                            <p:outputLabel value="Select Image: *" />
-                            <p:fileUpload id="upload_pix_data" value="#{reg.passport_file}" auto="true"
-                                          fileUploadListener="#{reg.handleFileUpload}" 
-                                          mode="advanced" dragDropSupport="false"
-                                          update="pst_img" sizeLimit="2097152" fileLimit="1" 
-                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
+                           
+                                <p:outputLabel value="Select Image: *" />
+                                <p:fileUpload id="upload_pix_data" value="#{reg.passport_file}" auto="true"
+                                              fileUploadListener="#{reg.handleFileUpload}" 
+                                              mode="advanced" dragDropSupport="false"
+                                              update="pst_img" sizeLimit="2097152" fileLimit="1" 
+                                              allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
 
-                            <p:outputLabel value="Passport:"/>
-                            <p:graphicImage id="pst_img" value="#{reg.passport_url}" />
+                                <p:outputLabel value="Passport:"/>
+                                <p:graphicImage id="pst_img" value="#{reg.passport_url}" style="width: 100px; height: 100px;" />
 
-                            <p:commandButton value="clear" ajax="false"
-                                             actionListener="#{reg.clearPix}" 
-                                             update="upload_pix_data,pst_img"/>                                                       
+                                <p:commandButton value="clear" immediate="true" ajax="false"
+                                                 actionListener="#{reg.clearPix}" 
+                                                 update="upload_pix_data,pst_img"/>                                 
+                      
                         </div>
 
 

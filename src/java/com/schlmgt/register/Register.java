@@ -167,6 +167,7 @@ public class Register implements Serializable {
         setUsername("");
         setPassword("");
         setEmailadd("");
+        clearPix();
 
     }
 
@@ -334,23 +335,19 @@ public class Register implements Serializable {
                         rs = pstmt.executeQuery();
                         if (rs.next()) {
 
-                            String user = rs.getString("username");
-                            String pass = AESencrp.decrypt(rs.getString("password"));
-                            String sub = "Account Activation";
-                            String content = "Hello " + getFname() + " " + getLname() + "\n Your username is +\n Username: " + getUsername() + "\n Password: " + getPassword();
+                          
+                            String fullname= getLname()+ " "+ getFname();
 
-                            String insertemail = "insert into tbemail (frommail,tomail,submail,content,date_sent,date_time_sent,sentby,senderid)"
-                                    + "values(?,?,?,?,?,?,?,?)";
+                            String insertemail = "insert into emailstatus (user_id,email,fullname,password,date_logged,status)"
+                                    + "values(?,?,?,?,?,?)";
 
                             pstmt = con.prepareStatement(insertemail);
-                            pstmt.setString(1, user);
+                            pstmt.setString(1, getUsername());
                             pstmt.setString(2, getEmailadd());
-                            pstmt.setString(3, sub);
-                            pstmt.setString(4, content);
-                            pstmt.setString(5, DateManipulation.dateAlone());
-                            pstmt.setString(6, DateManipulation.dateAndTime());
-                            pstmt.setString(7, "Osawota Gold");
-                            pstmt.setString(8, "1");
+                            pstmt.setString(3, fullname);
+                            pstmt.setString(4, AESencrp.encrypt(getPassword()));                            
+                            pstmt.setString(5, DateManipulation.dateAndTime());
+                            pstmt.setBoolean(6, false);                            
 
                             pstmt.executeUpdate();
 

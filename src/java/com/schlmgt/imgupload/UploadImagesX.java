@@ -62,7 +62,7 @@ public class UploadImagesX {
 
             setPst_url(pst_url_location + account + ".jpg");
 
-            System.out.println("Did you get here PIX ?");
+            System.out.println("Did you get here PIX ?" + getPst_url());
 
             return true;
 

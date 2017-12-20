@@ -5,8 +5,14 @@
  */
 package com.schlmgt.register;
 
+import com.schlmgt.dbconn.DbConnectionX;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -19,7 +25,7 @@ import org.primefaces.model.UploadedFile;
  *
  * @author Gold
  */
-@ManagedBean(name = "FileUploadView")
+@ManagedBean(name = "freg")
 @ViewScoped
 public class FreshReg implements Serializable {
 
@@ -46,10 +52,84 @@ public class FreshReg implements Serializable {
     private String bgroup;
     private String disab;
     private UploadedFile uploadImage;
+    private List<RelationshipModel> relation;
+    private RelationshipModel modes = new RelationshipModel();
+    
+    
+    @PostConstruct
+    public void init(){
+        try{
+            relation=relationModel();
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public List<RelationshipModel> relationModel() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM relationship";
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            //
+            List<RelationshipModel> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                RelationshipModel rela = new RelationshipModel();
+                rela.setId(rs.getInt("Id"));
+                rela.setRelation(rs.getString("relation"));
+                //
+                lst.add(rela);
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
 
     public void handleFileUpload(FileUploadEvent event) {
         FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
         FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public List<RelationshipModel> getRelation() {
+        return relation;
+    }
+
+    public void setRelation(List<RelationshipModel> relation) {
+        this.relation = relation;
+    }
+
+    public RelationshipModel getModes() {
+        return modes;
+    }
+
+    public void setModes(RelationshipModel modes) {
+        this.modes = modes;
     }
 
     public String getFname() {
@@ -235,10 +315,5 @@ public class FreshReg implements Serializable {
     public void setUploadImage(UploadedFile uploadImage) {
         this.uploadImage = uploadImage;
     }
-
-    @PostConstruct
-    public void init() {
-
-    }
-
+ 
 }

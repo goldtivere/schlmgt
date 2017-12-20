@@ -22,7 +22,7 @@
         <h:outputStylesheet name="main/css/style.css" /> 
         <h:outputStylesheet name="main/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />                                                
         <ui:insert name="head" />
-
+        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
     </h:head>
 
     <h:body onload="history.forward();" >
@@ -36,7 +36,7 @@
                             <li class="nav-header">
                                 <div class="dropdown profile-element"> <span>
                                         <h:outputLink target="_blank" >
-                                            <h:graphicImage  width="50" height="50"></h:graphicImage>
+                                            <p:graphicImage class="img img-circle img-responsive " width="50" height="50" value="#{login.dto.imageId}"></p:graphicImage>
                                         </h:outputLink>                                        
 
                                     </span>
@@ -128,12 +128,11 @@
 
 
         <!-- Mainly scripts -->
-        <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+              
         <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
         <h:outputScript name="main/js/bootstrap.min.js" />
         <h:outputScript name="main/js/plugins/metisMenu/jquery.metisMenu.js" />
-        <h:outputScript name="main/js/plugins/slimscroll/jquery.slimscroll.min.js" />                       
-
+        <h:outputScript name="main/js/plugins/slimscroll/jquery.slimscroll.min.js" />                              
 
         <!-- Custom and plugin javascript -->
         <h:outputScript name="main/js/inspinia.js" />
@@ -144,33 +143,33 @@
 
 
         <script>
-            $(function () {
-                function stripTrailingSlash(str) {
-                    if (str.substr(-1) === '/') {
-                        return str.substr(0, str.length - 1);
-                    }
-                    return str;
+        $(function () {
+            function stripTrailingSlash(str) {
+                if (str.substr(-1) === '/') {
+                    return str.substr(0, str.length - 1);
                 }
+                return str;
+            }
 
-                var url = window.location.pathname;
-                var activePage = stripTrailingSlash(url);
+            var url = window.location.pathname;
+            var activePage = stripTrailingSlash(url);
 
-                $('.nav li a').each(function () {
-                    var currentPage = stripTrailingSlash($(this).attr('href'));
+            $('.nav li a').each(function () {
+                var currentPage = stripTrailingSlash($(this).attr('href'));
 
-                    if (activePage === currentPage) {
-                        $(this).parent().addClass('active');
-                    }
-                });
+                if (activePage === currentPage) {
+                    $(this).parent().addClass('active');
+                }
             });
+        });
 
 
-            $(document).ready(function () {
-                $('.i-checks').iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green',
-                });
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
             });
+        });
         </script>
 
     </h:body>
