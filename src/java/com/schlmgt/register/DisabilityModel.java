@@ -11,10 +11,9 @@ import java.io.Serializable;
  *
  * @author Gold
  */
-public class CountryModel implements Serializable {
-    
+public class DisabilityModel implements Serializable{
     private int id;
-    private String country;
+    private String disability;
 
     public int getId() {
         return id;
@@ -24,16 +23,12 @@ public class CountryModel implements Serializable {
         this.id = id;
     }
 
-    public String getCountry() {
-        return country;
+    public String getDisability() {
+        return disability;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setDisability(String disability) {
+        this.disability = disability;
     }
-    
-    
-    
-    
     
 }

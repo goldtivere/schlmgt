@@ -11,10 +11,9 @@ import java.io.Serializable;
  *
  * @author Gold
  */
-public class CountryModel implements Serializable {
-    
+public class BloodGroupModel implements Serializable{
     private int id;
-    private String country;
+    private String bloodgroup;
 
     public int getId() {
         return id;
@@ -24,16 +23,13 @@ public class CountryModel implements Serializable {
         this.id = id;
     }
 
-    public String getCountry() {
-        return country;
+    public String getBloodgroup() {
+        return bloodgroup;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setBloodgroup(String bloodgroup) {
+        this.bloodgroup = bloodgroup;
     }
-    
-    
-    
     
     
 }

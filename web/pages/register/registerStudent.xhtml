@@ -15,7 +15,9 @@
     <ui:define name="content">
 
         <div class="ibox-content">
-            <p:panel class="panel-default" id="reg" style="border: none;">
+
+            <p:panel class="panel-default" visible="#{freg.studentPanel}" id="reg" style="border: none;">
+                <p:messages id="messages" closable="true" />
                 <div class="row">                
 
                     <fieldset>
@@ -28,7 +30,7 @@
                             </div>    
                             <div class="form-group">
                                 <p:outputLabel for="dob" value="Date Of Birth: "/>
-                                <p:calendar id="dob" class="form-control" yearRange="2017:1970" value="#{freg.dob}"  navigator="true" required="true" />
+                                <p:calendar id="dob" class="form-control" yearRange="1980:2017" value="#{freg.dob}"  navigator="true" required="true" />
                                 <p:message for="dob"/>
                             </div>
 
@@ -43,7 +45,7 @@
 
                             <div class="form-group">
                                 <p:outputLabel for="uname" value="Phone Number: "/>
-                                <p:inputText id="uname" class="form-control" value="#{freg.pnum}" maxlength="11" required="true"/>                                
+                                <p:inputText id="uname" class="form-control" value="#{freg.pnum}" maxlength="11"/>                                
                                 <p:message for="uname"/>
                             </div>
 
@@ -56,7 +58,7 @@
                             </div>
                             <div class="form-group">
                                 <p:outputLabel for="email" value="Email Address: "/>
-                                <p:inputText id="email" required="true" value="#{freg.email}" class="form-control" label="email" size="40"
+                                <p:inputText id="email" value="#{freg.email}" class="form-control" label="email" size="40"
                                              requiredMessage="Please enter your email address."
                                              validatorMessage="Invalid email format"
                                              >
@@ -83,39 +85,47 @@
                                 <p:message for="gfname"/>
 
                             </div>
-
                             <div class="form-group">
-                                <p:outputLabel for="relation" value="Relationship: "/>
-                                <br/>
-                                <p:selectOneMenu id="relation" class="form-control" value="#{freg.modes.relation}" required="true" requiredMessage="Bank required">
-
-                                    <f:selectItem itemLabel="--Select Relationship--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{freg.relation}"
-                                                   var="singlevalue"  
-                                                   itemLabel="#{singlevalue.relation}"
-                                                   itemValue="#{singlevalue.relation}"/>
-                                </p:selectOneMenu>                               
-                                <p:message for="relation"/>
+                                <div class="row">
+                                    <p:panel id="relate" style="border: none;">
+                                        <div class="col-md-6">
+                                            <p:outputLabel for="relation" value="Relationship: "/>
+                                            <br/>
+                                            <p:selectOneMenu id="relation" class="form-control" value="#{freg.modes.relation}" required="true" requiredMessage="Relationsip required">
+                                                <p:ajax listener="#{freg.onRelationshipChange}" update="relate" />
+                                                <f:selectItem itemLabel="--Select Relationship--" itemValue="" noSelectionOption="true"/>
+                                                <f:selectItems value="#{freg.relation}"
+                                                               var="singlevalue"  
+                                                               itemLabel="#{singlevalue.relation}"
+                                                               itemValue="#{singlevalue.relation}"/>
+                                            </p:selectOneMenu>   
+                                            <br/>
+                                            <br/>                                        
+                                            <p:inputText rendered="#{freg.relatio}" value="#{freg.relationOption}" required="true" id="city" />
+                                            <p:message for="relation"/>
+                                        </div>   
+                                    </p:panel>
+                                </div>
 
                             </div>
 
                             <div class="form-group">
                                 <p:outputLabel for="country" value="Country of origin: "/>
                                 <br/>
-                                <p:selectOneMenu id="country" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
-
+                                <p:selectOneMenu id="country" class="form-control" value="#{freg.counts.country}" required="true" requiredMessage="Country required">
+                                    <p:ajax listener="#{freg.onCountryChange}" update="state" />
                                     <f:selectItem itemLabel="--Select Country--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{bank.bankmodel}"
+                                    <f:selectItems value="#{freg.country}"
                                                    var="singlevalue"  
-                                                   itemLabel="#{singlevalue.bankName}"
-                                                   itemValue="#{singlevalue.bankName}"/>
+                                                   itemLabel="#{singlevalue.country}"
+                                                   itemValue="#{singlevalue.country}"/>
                                 </p:selectOneMenu>                               
                                 <p:message for="country"/>
 
                             </div>
                             <div class="form-group">
                                 <p:outputLabel for="add" value="Address of Residence: "/>
-                                <p:inputTextarea id="add" required="true" value="#{reg.lname}" class="form-control"></p:inputTextarea>
+                                <p:inputTextarea id="add" required="true" value="#{freg.gaddress}" class="form-control"></p:inputTextarea>
                                 <p:message for="add"/>
 
                             </div>
@@ -130,17 +140,18 @@
                                 <p:outputLabel for="pnum" value="Phone Number: "/>
                                 <p:inputText id="pnum" required="true" value="#{freg.gpnum}" class="form-control"></p:inputText>
                                 <p:message for="pnum"/>
+                                <br/>                                
                             </div>
                             <div class="form-group">
                                 <p:outputLabel for="state" value="State of origin: "/>
                                 <br/>
-                                <p:selectOneMenu id="state" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
-
-                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{bank.bankmodel}"
+                                <p:selectOneMenu id="state" class="form-control" value="#{freg.citys.state}" required="true" requiredMessage="State required">
+                                    <p:ajax listener="#{freg.onStateChange}" update="lga" />
+                                    <f:selectItem itemLabel="--Select State--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{freg.state}"
                                                    var="singlevalue"  
-                                                   itemLabel="#{singlevalue.bankName}"
-                                                   itemValue="#{singlevalue.bankName}"/>
+                                                   itemLabel="#{singlevalue.state}"
+                                                   itemValue="#{singlevalue.state}"/>
                                 </p:selectOneMenu>                               
                                 <p:message for="state"/>
 
@@ -164,17 +175,18 @@
 
                                 </p:inputText>
                                 <p:message for="mail"/>
+                                <br/>
                             </div>
                             <div class="form-group">
                                 <p:outputLabel for="lga" value="LGA of Origin: "/>
                                 <br/>
-                                <p:selectOneMenu id="lga" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+                                <p:selectOneMenu id="lga" class="form-control" value="#{freg.lgas.lga}" required="true" requiredMessage="Lga required">
 
-                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{bank.bankmodel}"
+                                    <f:selectItem itemLabel="--Select LGA--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{freg.lgamodel}"
                                                    var="singlevalue"  
-                                                   itemLabel="#{singlevalue.bankName}"
-                                                   itemValue="#{singlevalue.bankName}"/>
+                                                   itemLabel="#{singlevalue.lga}"
+                                                   itemValue="#{singlevalue.lga}"/>
                                 </p:selectOneMenu>                               
                                 <p:message for="lga"/>
 
@@ -196,13 +208,13 @@
                             <div class="form-group">
                                 <p:outputLabel for="class" value="Class: "/>
                                 <br/>
-                                <p:selectOneMenu id="class" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
-
-                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{bank.bankmodel}"
+                                <p:selectOneMenu id="class" class="form-control" value="#{freg.modelclass.tbclass}" required="true" requiredMessage="Class required">
+                                    <p:ajax listener="#{freg.onClassChange}" update="grade" />
+                                    <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{freg.classmodel}"
                                                    var="singlevalue"  
-                                                   itemLabel="#{singlevalue.bankName}"
-                                                   itemValue="#{singlevalue.bankName}"/>
+                                                   itemLabel="#{singlevalue.tbclass}"
+                                                   itemValue="#{singlevalue.tbclass}"/>
                                 </p:selectOneMenu>   
                                 <p:message for="class"/>
                             </div>
@@ -212,13 +224,13 @@
                             <div class="form-group">
                                 <p:outputLabel for="grade" value="Grade: "/>
                                 <br/>
-                                <p:selectOneMenu id="grade" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+                                <p:selectOneMenu id="grade" class="form-control" value="#{freg.modelgrade.grade}" required="true" requiredMessage="Grade required">
 
-                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{bank.bankmodel}"
+                                    <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{freg.grademodel}"
                                                    var="singlevalue"  
-                                                   itemLabel="#{singlevalue.bankName}"
-                                                   itemValue="#{singlevalue.bankName}"/>
+                                                   itemLabel="#{singlevalue.grade}"
+                                                   itemValue="#{singlevalue.grade}"/>
                                 </p:selectOneMenu>   
                                 <p:message for="grade"/>
                             </div>
@@ -230,31 +242,34 @@
                         <legend>Current Education</legend>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <p:outputLabel for="clas" value="Class: "/>
+                                <p:outputLabel for="sclass" value="Class: "/>
                                 <br/>
-                                <p:selectOneMenu id="clas" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+                                <p:selectOneMenu id="sclass" class="form-control" value="#{freg.classmode.tbclass}" required="true" requiredMessage="Class required">
 
-                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{bank.bankmodel}"
+
+                                    <p:ajax listener="#{freg.onClassChanges}" update="grad" />
+                                    <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{freg.classmodel}"
                                                    var="singlevalue"  
-                                                   itemLabel="#{singlevalue.bankName}"
-                                                   itemValue="#{singlevalue.bankName}"/>
+                                                   itemLabel="#{singlevalue.tbclass}"
+                                                   itemValue="#{singlevalue.tbclass}"/>
                                 </p:selectOneMenu>   
-                                <p:message for="clas"/>
+                                <p:message for="sclass"/>                               
+
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <p:outputLabel for="grad" value="Grade: "/>
                                 <br/>
-                                <p:selectOneMenu id="grad" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+                                <p:selectOneMenu id="grad" class="form-control" value="#{freg.gradeMode.grade}" required="true" requiredMessage="Grade required">
 
-                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{bank.bankmodel}"
+                                    <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{freg.grademodels}"
                                                    var="singlevalue"  
-                                                   itemLabel="#{singlevalue.bankName}"
-                                                   itemValue="#{singlevalue.bankName}"/>
-                                </p:selectOneMenu>   
+                                                   itemLabel="#{singlevalue.grade}"
+                                                   itemValue="#{singlevalue.grade}"/>
+                                </p:selectOneMenu>  
                                 <p:message for="grad"/>
                             </div>
                         </div>
@@ -268,28 +283,32 @@
                             <div class="form-group">
                                 <p:outputLabel for="dis" value="Disability: "/>
                                 <br/>
-                                <p:selectOneMenu id="dis" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
-
-                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{bank.bankmodel}"
+                                <p:selectOneMenu id="dis" class="form-control" value="#{freg.modeldis.disability}" required="true" requiredMessage="Disability required">
+                                    <p:ajax listener="#{freg.onDisabilityChange}" update="stat" />
+                                    <f:selectItem itemLabel="--Select Disability--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{freg.dismodel}"
                                                    var="singlevalue"  
-                                                   itemLabel="#{singlevalue.bankName}"
-                                                   itemValue="#{singlevalue.bankName}"/>
+                                                   itemLabel="#{singlevalue.disability}"
+                                                   itemValue="#{singlevalue.disability}"/>
                                 </p:selectOneMenu>   
                                 <p:message for="dis"/>
+                                <br/>
+                                <p:panel style="border:none;" id="stat">
+                                    <p:inputText value="#{freg.disoption}" required="true" id="distat" rendered="#{freg.dStatus}"/>
+                                </p:panel>
                             </div>                           
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <p:outputLabel for="bgroup" value="Blood Group: "/>
                                 <br/>
-                                <p:selectOneMenu id="bgroup" class="form-control" value="#{bank.bankmode.bankName}" required="true" requiredMessage="Bank required">
+                                <p:selectOneMenu id="bgroup" class="form-control" value="#{freg.grpmodel.bloodgroup}" required="true" requiredMessage="Blood group required">
 
-                                    <f:selectItem itemLabel="--Select Bank--" itemValue="" noSelectionOption="true"/>
-                                    <f:selectItems value="#{bank.bankmodel}"
+                                    <f:selectItem itemLabel="--Select Blood Group--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{freg.modelgroup}"
                                                    var="singlevalue"  
-                                                   itemLabel="#{singlevalue.bankName}"
-                                                   itemValue="#{singlevalue.bankName}"/>
+                                                   itemLabel="#{singlevalue.bloodgroup}"
+                                                   itemValue="#{singlevalue.bloodgroup}"/>
                                 </p:selectOneMenu>   
                                 <p:message for="bgroup"/>
                             </div>
@@ -306,21 +325,158 @@
                     <fieldset>
                         <legend>Image Upload</legend>
                         <p:outputLabel value="Select Image: *" />
-                        <p:fileUpload id="upload_pix_data" value="#{reg.passport_file}" auto="true"
-                                      fileUploadListener="#{reg.handleFileUpload}" 
+                        <p:fileUpload required="true" id="upload_pix_data" value="#{freg.passport}" auto="true"
+                                      fileUploadListener="#{freg.handleFileUpload}" 
                                       mode="advanced" dragDropSupport="false"
                                       update="pst_img" sizeLimit="2097152" fileLimit="1" 
                                       allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
 
-                        <p:outputLabel value="Passport:"/>
-                        <p:graphicImage id="pst_img" class="img img-responsive" value="#{reg.passport_url}" style="width: 100px; height: 100px;" />
-
                         <p:commandButton value="clear" immediate="true" ajax="false"
-                                         actionListener="#{reg.clearPix}" 
-                                         update="upload_pix_data,pst_img"/>                           
+                                         actionListener="#{freg.clearPix}" 
+                                         update="upload_pix_data,pst_img"/>    
+                        <p:outputLabel value="Passport:"/>
+                        <p:graphicImage id="pst_img" class="img img-responsive" value="#{freg.passport_url}" style="width: 100px; height: 100px;" />
+
+
                     </fieldset>
                 </div>
+                <div claass="row">
+                    <p:commandButton value="Save" actionListener="#{freg.confirmDetails}" process="@this fname,dob,mname,uname,lname,
+                                     email,gfname,relation,city,distat,
+                                     city,country,add,gmname,pnum,state,glname,
+                                     mail,lga,pschool,class,grade,sclass,grad,
+                                     dis,bgroup,upload_pix_data"
+                                     update="reg,messages,confirm"/>
+                </div>
             </p:panel>
+
+            <p:panel header="Student Registration" id="confirm" visible="#{freg.confirmPanel}">
+                <fieldset>
+                    <legend>Personal Details</legend>
+                    <div class="row">                
+                        <div class="col-md-4">
+                            <p:outputLabel value="First Name: "/><p:outputLabel value="#{freg.fname}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Middle Name: "/><p:outputLabel value="#{freg.mname}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Last Name: "/><p:outputLabel value="#{freg.lname}"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel value="Date Of Birthe: "/><p:outputLabel value="#{freg.dob}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Phone Number: "/><p:outputLabel value="#{freg.pnum}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Email Address: "/><p:outputLabel value="#{freg.email}"/>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Guardian's Details</legend>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel value="First Name: "/><p:outputLabel value="#{freg.gfname}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Middle Name: "/><p:outputLabel value="#{freg.gmname}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Last Name: "/><p:outputLabel value="#{freg.glname}"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel value="Relatioinship: "/><p:outputLabel value="#{freg.modes.relation}"/>
+                            <br/>
+                            <p:outputLabel value="#{freg.relationOption}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Phone Number: "/><p:outputLabel value="#{freg.gpnum}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Email Address: "/><p:outputLabel value="#{freg.gemail}"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel value="Country of Origin: "/><p:outputLabel value="#{freg.gcount}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="State of Origin: "/><p:outputLabel value="#{freg.gstate}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="L.G.A of Origin: "/><p:outputLabel value="#{freg.glga}"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel value="Address of Residence: "/><p:outputLabel value="#{freg.gaddress}"/>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Previous Education</legend>                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel value="Name Of Previous School: "/><p:outputLabel value="#{freg.pschl}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Class: "/><p:outputLabel value="#{freg.modelclass.tbclass}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Grade: "/><p:outputLabel value="#{freg.modelgrade.grade}"/>
+                        </div>
+                    </div>                    
+                </fieldset>
+                <fieldset>
+                    <legend>Current Education</legend>                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel value="Class: "/><p:outputLabel value="#{freg.classmode.tbclass}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Grade: "/><p:outputLabel value="#{freg.gradeMode.grade}"/>
+                        </div>                       
+                    </div>                    
+                </fieldset>
+                <fieldset>
+                    <legend>Health History</legend>                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel value="Disability "/><p:outputLabel value="#{freg.modeldis.disability}"/>
+                            <br/>
+                            <p:outputLabel value="#{freg.disoption}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel value="Blood Group: "/><p:outputLabel value="#{freg.grpmodel.bloodgroup}"/>
+                        </div>
+                    </div>                    
+                </fieldset>
+                <fieldset>
+                    <legend>Image</legend>                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:graphicImage class="img img-responsive" value="#{freg.passport_url}" style="width: 200px; height: 100px;" />
+                        </div>                        
+                    </div>                    
+                </fieldset>  
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <p:commandButton value="Register"/>
+                        <p:commandButton value="Back" actionListener="#{freg.back}"/>
+                    </div>                        
+                </div>
+            </p:panel>
+
         </div>
     </ui:define>
 

@@ -11,10 +11,10 @@ import java.io.Serializable;
  *
  * @author Gold
  */
-public class CountryModel implements Serializable {
+public class ClassModel implements Serializable {
     
     private int id;
-    private String country;
+    private String tbclass;
 
     public int getId() {
         return id;
@@ -24,16 +24,13 @@ public class CountryModel implements Serializable {
         this.id = id;
     }
 
-    public String getCountry() {
-        return country;
+    public String getTbclass() {
+        return tbclass;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setTbclass(String tbclass) {
+        this.tbclass = tbclass;
     }
-    
-    
-    
     
     
 }
