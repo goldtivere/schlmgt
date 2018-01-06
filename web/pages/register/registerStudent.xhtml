@@ -4,11 +4,16 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
-
-
-
+    <ui:define name="head">
+        <style type="text/css">
+            .first{               
+                font-size: 14px;
+            }
+        </style>
+    </ui:define>
     <ui:define name="title">
-        Register Student
+
+        Register Student       
     </ui:define>
 
 
@@ -29,8 +34,8 @@
                                 <p:message for="fname"/>
                             </div>    
                             <div class="form-group">
-                                <p:outputLabel for="dob" value="Date Of Birth: "/>
-                                <p:calendar id="dob" class="form-control" yearRange="1980:2017" value="#{freg.dob}"  navigator="true" required="true" />
+                                <p:outputLabel  for="dob" value="Date Of Birth: "/>
+                                <p:calendar id="dob" class="form-control" yearRange="1980:2017" pattern="dd/MM/yyyy" value="#{freg.dob}"  navigator="true" required="true" />
                                 <p:message for="dob"/>
                             </div>
 
@@ -138,7 +143,7 @@
                             </div>
                             <div class="form-group">
                                 <p:outputLabel for="pnum" value="Phone Number: "/>
-                                <p:inputText id="pnum" required="true" value="#{freg.gpnum}" class="form-control"></p:inputText>
+                                <p:inputText id="pnum" required="true" value="#{freg.gpnum}" class="form-control" maxlength="11" ></p:inputText>
                                 <p:message for="pnum"/>
                                 <br/>                                
                             </div>
@@ -335,7 +340,7 @@
                                          actionListener="#{freg.clearPix}" 
                                          update="upload_pix_data,pst_img"/>    
                         <p:outputLabel value="Passport:"/>
-                        <p:graphicImage id="pst_img" class="img img-responsive" value="#{freg.passport_url}" style="width: 100px; height: 100px;" />
+                        <p:graphicImage id="pst_img" class="img-responsive img-thumbnail" value="#{freg.passport_url}" style="width: 100px; height: 100px;" />
 
 
                     </fieldset>
@@ -355,124 +360,135 @@
                     <legend>Personal Details</legend>
                     <div class="row">                
                         <div class="col-md-4">
-                            <p:outputLabel value="First Name: "/><p:outputLabel value="#{freg.fname}"/>
+                            <p:outputLabel class="first" value="First Name: "/><p:outputLabel class="first" value="#{freg.fname}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Middle Name: "/><p:outputLabel value="#{freg.mname}"/>
+                            <p:outputLabel class="first" value="Middle Name: "/><p:outputLabel class="first" value="#{freg.mname}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Last Name: "/><p:outputLabel value="#{freg.lname}"/>
+                            <p:outputLabel class="first" value="Last Name: "/><p:outputLabel class="first" value="#{freg.lname}"/>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-md-4">
-                            <p:outputLabel value="Date Of Birthe: "/><p:outputLabel value="#{freg.dob}"/>
+                            <p:outputLabel class="first" value="Date Of Birth: "/>
+                            <h:outputText class="first" value="#{freg.dob}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Phone Number: "/><p:outputLabel value="#{freg.pnum}"/>
+                            <p:outputLabel class="first" value="Phone Number: "/><p:outputLabel class="first" value="#{freg.pnum}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Email Address: "/><p:outputLabel value="#{freg.email}"/>
+                            <p:outputLabel class="first" value="Email Address: "/><p:outputLabel class="first" value="#{freg.email}"/>
                         </div>
                     </div>
                 </fieldset>
-
+                <br/>
                 <fieldset>
                     <legend>Guardian's Details</legend>
                     <div class="row">
                         <div class="col-md-4">
-                            <p:outputLabel value="First Name: "/><p:outputLabel value="#{freg.gfname}"/>
+                            <p:outputLabel class="first" value="First Name: "/><p:outputLabel class="first" value="#{freg.gfname}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Middle Name: "/><p:outputLabel value="#{freg.gmname}"/>
+                            <p:outputLabel class="first" value="Middle Name: "/><p:outputLabel class="first" value="#{freg.gmname}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Last Name: "/><p:outputLabel value="#{freg.glname}"/>
+                            <p:outputLabel class="first" value="Last Name: "/><p:outputLabel class="first" value="#{freg.glname}"/>
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-md-4">
-                            <p:outputLabel value="Relatioinship: "/><p:outputLabel value="#{freg.modes.relation}"/>
+                            <p:outputLabel class="first" value="Relatioinship: "/><p:outputLabel class="first" value="#{freg.modes.relation}"/>
                             <br/>
-                            <p:outputLabel value="#{freg.relationOption}"/>
+                            <p:outputLabel class="first" value="#{freg.relationOption}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Phone Number: "/><p:outputLabel value="#{freg.gpnum}"/>
+                            <p:outputLabel class="first" value="Phone Number: "/><p:outputLabel class="first" value="#{freg.gpnum}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Email Address: "/><p:outputLabel value="#{freg.gemail}"/>
+                            <p:outputLabel class="first" value="Email Address: "/><p:outputLabel class="first" value="#{freg.gemail}"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel class="first" value="Country of Origin: "/><p:outputLabel class="first" value="#{freg.gcount}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel class="first" value="State of Origin: "/><p:outputLabel class="first" value="#{freg.gstate}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel class="first" value="L.G.A of Origin: "/><p:outputLabel class="first" value="#{freg.glga}"/>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
-                            <p:outputLabel value="Country of Origin: "/><p:outputLabel value="#{freg.gcount}"/>
-                        </div>
-                        <div class="col-md-4">
-                            <p:outputLabel value="State of Origin: "/><p:outputLabel value="#{freg.gstate}"/>
-                        </div>
-                        <div class="col-md-4">
-                            <p:outputLabel value="L.G.A of Origin: "/><p:outputLabel value="#{freg.glga}"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p:outputLabel value="Address of Residence: "/><p:outputLabel value="#{freg.gaddress}"/>
-                        </div>
+
+                        <p:outputLabel class="first"  value="Address of Residence: "/><p:outputLabel class="first" value="#{freg.gaddress}"/>
+
 
                     </div>
                 </fieldset>
-
+                <br/>
                 <fieldset>
                     <legend>Previous Education</legend>                    
                     <div class="row">
                         <div class="col-md-4">
-                            <p:outputLabel value="Name Of Previous School: "/><p:outputLabel value="#{freg.pschl}"/>
+                            <p:outputLabel class="first" value="Name Of Previous School: "/><p:outputLabel class="first" value="#{freg.pschl}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Class: "/><p:outputLabel value="#{freg.modelclass.tbclass}"/>
+                            <p:outputLabel class="first" value="Class: "/><p:outputLabel class="first" value="#{freg.modelclass.tbclass}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Grade: "/><p:outputLabel value="#{freg.modelgrade.grade}"/>
+                            <p:outputLabel class="first" value="Grade: "/><p:outputLabel class="first" value="#{freg.modelgrade.grade}"/>
                         </div>
                     </div>                    
                 </fieldset>
+                <br/>
                 <fieldset>
                     <legend>Current Education</legend>                    
                     <div class="row">
                         <div class="col-md-4">
-                            <p:outputLabel value="Class: "/><p:outputLabel value="#{freg.classmode.tbclass}"/>
+                            <p:outputLabel class="first" value="Class: "/><p:outputLabel class="first" value="#{freg.classmode.tbclass}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Grade: "/><p:outputLabel value="#{freg.gradeMode.grade}"/>
+                            <p:outputLabel class="first" value="Grade: "/><p:outputLabel class="first" value="#{freg.gradeMode.grade}"/>
                         </div>                       
                     </div>                    
                 </fieldset>
+                <br/>
                 <fieldset>
                     <legend>Health History</legend>                    
                     <div class="row">
                         <div class="col-md-4">
-                            <p:outputLabel value="Disability "/><p:outputLabel value="#{freg.modeldis.disability}"/>
+                            <p:outputLabel class="first" value="Disability "/><p:outputLabel class="first" value="#{freg.modeldis.disability}"/>
                             <br/>
-                            <p:outputLabel value="#{freg.disoption}"/>
+                            <p:outputLabel class="first" value="#{freg.disoption}"/>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel value="Blood Group: "/><p:outputLabel value="#{freg.grpmodel.bloodgroup}"/>
+                            <p:outputLabel class="first" value="Blood Group: "/><p:outputLabel class="first" value="#{freg.grpmodel.bloodgroup}"/>
                         </div>
                     </div>                    
                 </fieldset>
+                <br/>
                 <fieldset>
                     <legend>Image</legend>                    
                     <div class="row">
                         <div class="col-md-4">
-                            <p:graphicImage class="img img-responsive" value="#{freg.passport_url}" style="width: 200px; height: 100px;" />
+                            <img src="#{freg.passport_url}" class="img-responsive img-thumbnail" style="height: 100px; width: 100px" alt="pix"/>
+
                         </div>                        
                     </div>                    
                 </fieldset>  
 
                 <div class="row">
-                    <div class="col-md-4">
-                        <p:commandButton value="Register"/>
-                        <p:commandButton value="Back" actionListener="#{freg.back}"/>
+                    <div class="col-md-offset-4 col-md-3 ">
+                        <p:commandButton value="Register" actionListener="#{freg.registerStudent}" update="reg,confirm"/>
+                        <p:commandButton value="Back" actionListener="#{freg.back}" update="reg,confirm"/>
                     </div>                        
                 </div>
             </p:panel>

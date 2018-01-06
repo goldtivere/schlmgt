@@ -320,10 +320,10 @@ public class Register implements Serializable {
                         pstmt.setString(4, AESencrp.encrypt(getPassword()));
                         pstmt.setString(5, getPassport_url());
                         pstmt.setString(6, getEmailadd());
-                        pstmt.setString(7, "1");
+                        pstmt.setString(7, createdId);
                         pstmt.setString(8, DateManipulation.dateAlone());
                         pstmt.setString(9, DateManipulation.dateAndTime());
-                        pstmt.setString(10, "Osawota Gold");
+                        pstmt.setString(10, createdby);
                         pstmt.setBoolean(11, false);
 
                         pstmt.executeUpdate();
