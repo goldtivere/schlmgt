@@ -8,7 +8,7 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-        <title>Register</title>
+        <title>Success</title>
         <h:outputStylesheet name="main/css/bootstrap.min.css" /> 
         <h:outputStylesheet name="main/font-awesome/css/font-awesome.css" /> 
         <h:outputStylesheet name="main/css/plugins/iCheck/custom.css" /> 
@@ -22,32 +22,9 @@
 
         <div class="middle-box text-center loginscreen animated fadeInDown">
             <div>
-
-                <h:form>  
-                    <p:panel visible="#{createAcct.status}" style=" border: none;">
-                        <p:outputLabel value="#{createAcct.errorLabel}" style="color: red;"/>
-                    </p:panel>
-                    <p:panel visible="#{createAcct.rstatus}" style=" border: none;">                       
-                        <f:metadata>
-                            <f:viewParam name="id" value="#{createAcct.id}" />
-                        </f:metadata>
-                        <h3>Create Account</h3>
-
-
-                        <p:messages id="login_panel" closable="true"/>
-                        <div class="form-group">
-                            <p:inputText class="form-control" id="regnum" value="#{createAcct.matno}" disabled="true" placeholder="Registration Number" required="true"/>
-                        </div>
-                        <div class="form-group">
-                            <p:password class="form-control" id="password" match="Rpassword" validatorMessage="Password do not match" value="#{createAcct.password}" placeholder="Password" required="true"/>
-                        </div>
-                        <div class="form-group">
-                            <p:password class="form-control" id="Rpassword" value="#{login.password}" placeholder="Re-Type Password" required="true"/>
-                        </div>
-                        <p:commandButton value="Register" actionListener="#{createAcct.register}" update="login_panel" process="@this regnum,password,Rpassword " class="btn btn-primary block full-width m-b"/>
-                    </p:panel>
-                </h:form>
-
+                <img src="../../images/success.png" alt="" style="height: 100px; width: 100px;"/>                
+                <br/>
+                <h2>Registration Successful!!</h2>
             </div>
         </div>
 

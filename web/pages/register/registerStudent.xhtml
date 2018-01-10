@@ -39,6 +39,17 @@
                                 <p:message for="dob"/>
                             </div>
 
+                            <div class="form-group">
+                                <p:outputLabel  for="sex" value="Sex: "/>
+                                <br/>
+                                <p:selectOneMenu id="sex" value="#{freg.sex}" class="form-control" requiredMessage="Sex is required" style="width:125px" required="true">
+                                    <f:selectItem itemLabel="Select Sex" itemValue="" noSelectionOption="true" />
+                                    <f:selectItem itemLabel="Male" itemValue="Male" />
+                                    <f:selectItem itemLabel="Female" itemValue="Female" />                                   
+                                </p:selectOneMenu>
+                                <p:message for="sex"/>
+                            </div>
+
 
                         </div>
                         <div class="col-md-4">
@@ -245,7 +256,7 @@
                 <div class="row">
                     <fieldset>
                         <legend>Current Education</legend>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <p:outputLabel for="sclass" value="Class: "/>
                                 <br/>
@@ -263,12 +274,12 @@
 
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <p:outputLabel for="grad" value="Grade: "/>
                                 <br/>
                                 <p:selectOneMenu id="grad" class="form-control" value="#{freg.gradeMode.grade}" required="true" requiredMessage="Grade required">
-
+                                    <p:ajax listener="#{freg.onGradChan()}" update="arm" />
                                     <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems value="#{freg.grademodels}"
                                                    var="singlevalue"  
@@ -277,6 +288,18 @@
                                 </p:selectOneMenu>  
                                 <p:message for="grad"/>
                             </div>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel for="arm" value="Arm: "/>
+                            <br/>
+                            <p:selectOneMenu id="arm" value="#{freg.arm}" disabled="#{freg.armStatus}" class="form-control" requiredMessage="Arm is required" style="width:125px" required="true">
+                                <f:selectItem itemLabel="Select Arm" itemValue="" noSelectionOption="true" />
+                                <f:selectItem itemLabel="A" itemValue="A" />
+                                <f:selectItem itemLabel="B" itemValue="B" />
+                                <f:selectItem itemLabel="C" itemValue="C" />
+                                <f:selectItem itemLabel="D" itemValue="D" />
+                            </p:selectOneMenu>
+                            <p:message for="arm"/>
                         </div>
 
                     </fieldset>
@@ -350,7 +373,7 @@
                                      email,gfname,relation,city,distat,
                                      city,country,add,gmname,pnum,state,glname,
                                      mail,lga,pschool,class,grade,sclass,grad,
-                                     dis,bgroup,upload_pix_data"
+                                     arm,sex,dis,bgroup,upload_pix_data"
                                      update="reg,messages,confirm"/>
                 </div>
             </p:panel>
@@ -383,6 +406,11 @@
                         </div>
                         <div class="col-md-4">
                             <p:outputLabel class="first" value="Email Address: "/><p:outputLabel class="first" value="#{freg.email}"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel class="first" value="Sex: "/><p:outputLabel class="first" value="#{freg.sex}"/>
                         </div>
                     </div>
                 </fieldset>
@@ -457,7 +485,10 @@
                         </div>
                         <div class="col-md-4">
                             <p:outputLabel class="first" value="Grade: "/><p:outputLabel class="first" value="#{freg.gradeMode.grade}"/>
-                        </div>                       
+                        </div>  
+                        <div class="col-md-4">
+                            <p:outputLabel class="first" value="Grade: "/><p:outputLabel class="first" value="#{freg.arm}"/>
+                        </div>  
                     </div>                    
                 </fieldset>
                 <br/>

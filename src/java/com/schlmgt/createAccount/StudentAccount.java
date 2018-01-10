@@ -85,28 +85,33 @@ public class StudentAccount implements Serializable {
 
     }
 
-    public Boolean testReg() throws SQLException {
+    public Boolean testReg() {
+        try {
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            con = dbConnections.mySqlDBconnection();
+            System.out.println(someParam);
+            String testflname = "Select * from studentstatus where studentid=? and guid=?";
+            pstmt = con.prepareStatement(testflname);
+            pstmt.setInt(1, Integer.parseInt(getMatno()));
+            pstmt.setString(2, someParam);
+            rs = pstmt.executeQuery();
 
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        con = dbConnections.mySqlDBconnection();
-        System.out.println(someParam);
-        String testflname = "Select * from studentstatus where studentid=? and guid=?";
-        pstmt = con.prepareStatement(testflname);
-        pstmt.setInt(1, Integer.parseInt(getMatno()));
-        pstmt.setString(2, someParam);
-        rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
 
-        if (rs.next()) {
-            return true;
+        } catch (NumberFormatException e) {
+            setMessangerOfTruth("Link Expired or deleted!!");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
-
     }
 
-    public void register() throws SQLException, Exception {
+    public void register() {
         FacesContext context = FacesContext.getCurrentInstance();
         FacesMessage msg;
 
@@ -114,41 +119,47 @@ public class StudentAccount implements Serializable {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        if (testReg()) {
-            if (getPassword().length() < 6) {
-                setMessangerOfTruth("Password must be greater than 6 characters");
+        try {
+            if (testReg()) {
+                if (getPassword().length() < 6) {
+                    setMessangerOfTruth("Password must be greater than 6 characters");
+                    msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessangerOfTruth(), getMessangerOfTruth());
+                    context.addMessage(null, msg);
+                } else {
+                    con = dbConnections.mySqlDBconnection();
+
+                    String regStudent = "insert into tbstudentlog(fullname,studentid,password,datecreated,datetimecreated)"
+                            + "values"
+                            + "(?,?,?,?,?)";
+
+                    pstmt = con.prepareStatement(regStudent);
+                    pstmt.setString(1, fullname);
+                    pstmt.setString(2, getMatno());
+                    pstmt.setString(3, AESencrp.encrypt(getPassword()));
+                    pstmt.setString(4, DateManipulation.dateAlone());
+                    pstmt.setString(5, DateManipulation.dateAndTime());
+
+                    pstmt.executeUpdate();
+
+                    String deleteParam = "delete from studentstatus where guid=?";
+                    pstmt = con.prepareStatement(deleteParam);
+                    pstmt.setString(1, someParam);
+                    pstmt.executeUpdate();
+
+                    NavigationHandler nav = context.getApplication().getNavigationHandler();
+
+                    String url_ = "/pages/success/success.xhtml?faces-redirect=true";
+                    nav.handleNavigation(context, null, url_);
+                    context.renderResponse();
+
+                }
+            } else {
+                setMessangerOfTruth("Link have expired or User doesnt exist!!");
                 msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);
-            } else {
-                String regStudent = "insert into tbstudentlog(fullname,studentid,password,datecreated,datetimecreated)"
-                        + "values"
-                        + "?,?,?,?,?";
-
-                pstmt = con.prepareStatement(regStudent);
-                pstmt.setString(1, fullname);
-                pstmt.setString(2, getMatno());
-                pstmt.setString(3, AESencrp.encrypt(getPassword()));
-                pstmt.setString(4, DateManipulation.dateAlone());
-                pstmt.setString(5, DateManipulation.dateAndTime());
-
-                pstmt.executeUpdate();
-
-                String deleteParam = "delete from studentstatus where guid=?";
-                pstmt = con.prepareStatement(deleteParam);
-                pstmt.setString(1, someParam);
-                pstmt.executeUpdate();
-                                               
-                NavigationHandler nav = context.getApplication().getNavigationHandler();
-
-                String url_ = "/pages/success.xhtml?faces-redirect=true";
-                nav.handleNavigation(context, null, url_);
-                context.renderResponse();
-
             }
-        } else {
-            setMessangerOfTruth("Link have expired or User doesnt exist!!");
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, getMessangerOfTruth(), getMessangerOfTruth());
-            context.addMessage(null, msg);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

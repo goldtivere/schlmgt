@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.NavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -65,6 +66,9 @@ public class FreshReg implements Serializable {
     private String disability;
     private String bgroup;
     private String disab;
+    private String arm;
+    private String sex;
+    private Boolean armStatus;
     private UploadedFile uploadImage;
     private List<RelationshipModel> relation;
     private RelationshipModel modes = new RelationshipModel();
@@ -102,6 +106,7 @@ public class FreshReg implements Serializable {
         try {
             confirmPanel = false;
             studentPanel = true;
+            armStatus = true;
             dismodel = disabilityDropdown();
             modelgroup = bloodgroupDropdown();
             classmodel = classDropdown();
@@ -149,6 +154,15 @@ public class FreshReg implements Serializable {
     public void onClassChanges() throws Exception {
 
         grademodels = gradeDropdowns();
+
+    }
+
+    public void onGradChan() throws Exception {
+        if (gradeMode.getGrade().isEmpty() || gradeMode.getGrade() == null) {
+            setArmStatus(true);
+        } else {
+            setArmStatus(false);
+        }
 
     }
 
@@ -636,7 +650,7 @@ public class FreshReg implements Serializable {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         con = dbConnections.mySqlDBconnection();
-        String testflname = "Select * from student_details where first_name=? and last_name=? or is_deleted=?";
+        String testflname = "Select * from student_details where first_name=? and last_name=? and is_deleted=?";
         pstmt = con.prepareStatement(testflname);
         pstmt.setString(1, getFname());
         pstmt.setString(2, getLname());
@@ -671,10 +685,11 @@ public class FreshReg implements Serializable {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         con = dbConnections.mySqlDBconnection();
-        String testemail = "Select * from student_details where student_email=? or is_deleted=?";
+        String testemail = "Select * from student_details where student_email=? or guardian_email=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
         pstmt.setString(1, getEmail());
-        pstmt.setBoolean(2, false);
+        pstmt.setString(2, getGemail());
+        pstmt.setBoolean(3, false);
         rs = pstmt.executeQuery();
 
         if (rs.next()) {
@@ -690,10 +705,11 @@ public class FreshReg implements Serializable {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         con = dbConnections.mySqlDBconnection();
-        String testemail = "Select * from student_details where student_phone=? or is_deleted=?";
+        String testemail = "Select * from student_details where student_phone=? or Guardian_phone=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
         pstmt.setString(1, getPnum());
-        pstmt.setBoolean(2, false);
+         pstmt.setString(2, getGpnum());
+        pstmt.setBoolean(3, false);
         rs = pstmt.executeQuery();
 
         if (rs.next()) {
@@ -709,10 +725,11 @@ public class FreshReg implements Serializable {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         con = dbConnections.mySqlDBconnection();
-        String testemail = "Select * from student_details where guardian_email=? or is_deleted=?";
+        String testemail = "Select * from student_details where guardian_email=? or student_email=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
         pstmt.setString(1, getGemail());
-        pstmt.setBoolean(2, false);
+        pstmt.setString(2, getEmail());
+        pstmt.setBoolean(3, false);
         rs = pstmt.executeQuery();
 
         if (rs.next()) {
@@ -728,10 +745,11 @@ public class FreshReg implements Serializable {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         con = dbConnections.mySqlDBconnection();
-        String testemail = "Select * from student_details where Guardian_phone=? or is_deleted=?";
+        String testemail = "Select * from student_details where Guardian_phone=? or Student_phone=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
         pstmt.setString(1, getGpnum());
-        pstmt.setBoolean(2, false);
+        pstmt.setString(2, getPnum());
+        pstmt.setBoolean(3, false);
         rs = pstmt.executeQuery();
 
         if (rs.next()) {
@@ -757,9 +775,9 @@ public class FreshReg implements Serializable {
             String roleId = String.valueOf(userObj.getRole_id());
             int studentId;
             if (studentIdCheck() == 0) {
-                studentId = 0+1;
+                studentId = 0 + 1;
             } else {
-                studentId = studentIdCheck()+1;
+                studentId = studentIdCheck() + 1;
             }
             con = dbConnections.mySqlDBconnection();
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
@@ -771,18 +789,18 @@ public class FreshReg implements Serializable {
             String fullname = getLname() + " " + getMname() + " " + getFname();
             String gfullname = getGlname() + " " + getGmname() + " " + getGfname();
             String insertStudentDetails = "insert into Student_details"
-                    + "(first_name,middle_name,last_name,fullname,DOB,student_phone,student_email,Guardian_firstname,"
+                    + "(first_name,middle_name,last_name,fullname,DOB,student_phone,student_email,sex,Guardian_firstname,"
                     + "Guardian_middlename,Guardian_lastname,Guardian_fullname,relationship,relationship_other,Guardian_phone,"
                     + "Guardian_email,guardian_country,guardian_state,guardian_lga,guardian_address,previous_school,"
-                    + "previous_class,previous_grade,current_class,current_grade,disability,other_disability,bgroup,image,created_by,"
+                    + "previous_class,previous_grade,current_class,current_grade,Arm,disability,other_disability,bgroup,image,created_by,"
                     + "date_created,datetime_created,is_deleted,studentId)"
                     + "values"
                     + "(?,?,?,?,?,"
                     + "?,?,?,?,?,"
+                    + "?,?,?,?,?,?,"
                     + "?,?,?,?,?,"
                     + "?,?,?,?,?,"
-                    + "?,?,?,?,?,"
-                    + "?,?,?,?,?,"
+                    + "?,?,?,?,?,?,"
                     + "?,?,?)";
 
             pstmt = con.prepareStatement(insertStudentDetails);
@@ -793,37 +811,39 @@ public class FreshReg implements Serializable {
             pstmt.setString(5, dob);
             pstmt.setString(6, getPnum());
             pstmt.setString(7, getEmail());
-            pstmt.setString(8, getGfname());
-            pstmt.setString(9, getGmname());
-            pstmt.setString(10, getGlname());
-            pstmt.setString(11, gfullname);
-            pstmt.setString(12, modes.getRelation());
-            pstmt.setString(13, getRelationOption());
-            pstmt.setString(14, getGpnum());
-            pstmt.setString(15, getGemail());
-            pstmt.setString(16, getGcount());
-            pstmt.setString(17, getGstate());
-            pstmt.setString(18, getGlga());
-            pstmt.setString(19, getGaddress());
-            pstmt.setString(20, getPschl());
-            pstmt.setString(21, modelclass.getTbclass());
-            pstmt.setString(22, modelgrade.getGrade());
-            pstmt.setString(23, classmode.getTbclass());
-            pstmt.setString(24, gradeMode.getGrade());
-            pstmt.setString(25, modeldis.getDisability());
-            pstmt.setString(26, getDisoption());
-            pstmt.setString(27, grpmodel.getBloodgroup());
-            pstmt.setString(28, getPassport_url());
-            pstmt.setString(29, createdby);
-            pstmt.setString(30, DateManipulation.dateAlone());
-            pstmt.setString(31, DateManipulation.dateAndTime());
-            pstmt.setBoolean(32, false);
-            pstmt.setInt(33, studentId);
+            pstmt.setString(8, getSex());
+            pstmt.setString(9, getGfname());
+            pstmt.setString(10, getGmname());
+            pstmt.setString(11, getGlname());
+            pstmt.setString(12, gfullname);
+            pstmt.setString(13, modes.getRelation());
+            pstmt.setString(14, getRelationOption());
+            pstmt.setString(15, getGpnum());
+            pstmt.setString(16, getGemail());
+            pstmt.setString(17, getGcount());
+            pstmt.setString(18, getGstate());
+            pstmt.setString(19, getGlga());
+            pstmt.setString(20, getGaddress());
+            pstmt.setString(21, getPschl());
+            pstmt.setString(22, modelclass.getTbclass());
+            pstmt.setString(23, modelgrade.getGrade());
+            pstmt.setString(24, classmode.getTbclass());
+            pstmt.setString(25, gradeMode.getGrade());
+            pstmt.setString(26, getArm());
+            pstmt.setString(27, modeldis.getDisability());
+            pstmt.setString(28, getDisoption());
+            pstmt.setString(29, grpmodel.getBloodgroup());
+            pstmt.setString(30, getPassport_url());
+            pstmt.setString(31, createdby);
+            pstmt.setString(32, DateManipulation.dateAlone());
+            pstmt.setString(33, DateManipulation.dateAndTime());
+            pstmt.setBoolean(34, false);
+            pstmt.setInt(35, studentId);
 
             pstmt.executeUpdate();
-
-            String insertEmail = "insert into studentstatus (guid,full_name,status,datelogged,studentemail,date_time,studentId)"
-                    + "values(?,?,?,?,?,?,?)";
+            String slink = "http://localhost:8080/SchlMgt/faces/pages/create/index.xhtml?id=";
+            String insertEmail = "insert into studentstatus (guid,full_name,status,datelogged,studentemail,date_time,studentId,link)"
+                    + "values(?,?,?,?,?,?,?,?)";
 
             pstmt = con.prepareStatement(insertEmail);
             pstmt.setString(1, idOne.toString());
@@ -833,10 +853,16 @@ public class FreshReg implements Serializable {
             pstmt.setString(5, getGemail());
             pstmt.setString(6, DateManipulation.dateAndTime());
             pstmt.setInt(7, studentId);
+            pstmt.setString(8, slink + idOne.toString());
 
             pstmt.executeUpdate();
 
             refresh();
+            NavigationHandler nav = context.getApplication().getNavigationHandler();
+
+            String url_ = "/pages/register/Success.xhtml?faces-redirect=true";
+            nav.handleNavigation(context, null, url_);
+            context.renderResponse();
             setMessangerOfTruth("User Created!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
@@ -897,13 +923,11 @@ public class FreshReg implements Serializable {
 
     public void refresh() {
 
-        setConfirmPanel(false);
-        setStudentPanel(true);
-
         setFname("");
         setMname("");
         setLname("");
         setDob(null);
+        setSex("");
 
         setPnum("");
         setEmail("");
@@ -927,6 +951,7 @@ public class FreshReg implements Serializable {
 
         classmode.setTbclass("");
         gradeMode.setGrade("");
+        setArm("");
 
         modeldis.setDisability("");
         setDisoption("");
@@ -941,6 +966,7 @@ public class FreshReg implements Serializable {
 
         FacesMessage msg;
         if (studentNameCheck()) {
+            System.out.println(studentNameCheck());
             setMessangerOfTruth("Student Firstname and Lastname exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
@@ -991,6 +1017,8 @@ public class FreshReg implements Serializable {
 
             classmode.setTbclass(classmode.getTbclass());
             gradeMode.setGrade(gradeMode.getGrade());
+            setArm(getArm());
+            setSex(getSex());
 
             modeldis.setDisability(modeldis.getDisability());
             setDisoption(getDisoption());
@@ -1004,6 +1032,30 @@ public class FreshReg implements Serializable {
     public void back() {
         setConfirmPanel(false);
         setStudentPanel(true);
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Boolean getArmStatus() {
+        return armStatus;
+    }
+
+    public void setArmStatus(Boolean armStatus) {
+        this.armStatus = armStatus;
+    }
+
+    public String getArm() {
+        return arm;
+    }
+
+    public void setArm(String arm) {
+        this.arm = arm;
     }
 
     public String getDisplaydate() {
