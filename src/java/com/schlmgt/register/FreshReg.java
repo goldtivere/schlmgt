@@ -708,7 +708,7 @@ public class FreshReg implements Serializable {
         String testemail = "Select * from student_details where student_phone=? or Guardian_phone=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
         pstmt.setString(1, getPnum());
-         pstmt.setString(2, getGpnum());
+        pstmt.setString(2, getGpnum());
         pstmt.setBoolean(3, false);
         rs = pstmt.executeQuery();
 
@@ -757,6 +757,109 @@ public class FreshReg implements Serializable {
 
         }
         return false;
+    }
+
+    public void nurseryUpload(int studentId, String imgLink, String createdby, String fullname) {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = dbConnections.mySqlDBconnection();
+
+            String nurseryInsert = "insert into tbnursery (studentid,first_name,middle_name,last_name,full_name,class,"
+                    + "isdeleted,datecreated,datetime_created,createdby,imagelink,arm) values "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?)";
+
+            pstmt = con.prepareStatement(nurseryInsert);
+
+            pstmt.setInt(1, studentId);
+            pstmt.setString(2, getFname());
+            pstmt.setString(3, getMname());
+            pstmt.setString(4, getLname());
+            pstmt.setString(5, fullname);
+            pstmt.setString(6, gradeMode.getGrade());
+            pstmt.setBoolean(7, false);
+            pstmt.setString(8, DateManipulation.dateAlone());
+            pstmt.setString(9, DateManipulation.dateAndTime());
+            pstmt.setString(10, createdby);
+            pstmt.setString(11, imgLink);
+            pstmt.setString(12, getArm());
+            pstmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void primaryUpload(int studentId, String imgLink, String createdby, String fullname) {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = dbConnections.mySqlDBconnection();
+
+            String nurseryInsert = "insert into tbprimary (studentid,first_name,middle_name,last_name,full_name,class,"
+                    + "isdeleted,datecreated,datetime_created,createdby,imagelink,Arm) values "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?)";
+
+            pstmt = con.prepareStatement(nurseryInsert);
+
+            pstmt.setInt(1, studentId);
+            pstmt.setString(2, getFname());
+            pstmt.setString(3, getMname());
+            pstmt.setString(4, getLname());
+            pstmt.setString(5, fullname);
+            pstmt.setString(6, gradeMode.getGrade());
+            pstmt.setBoolean(7, false);
+            pstmt.setString(8, DateManipulation.dateAlone());
+            pstmt.setString(9, DateManipulation.dateAndTime());
+            pstmt.setString(10, createdby);
+            pstmt.setString(11, imgLink);
+            pstmt.setString(12, getArm());
+            pstmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void secondaryUpload(int studentId, String imgLink, String createdby, String fullname) {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = dbConnections.mySqlDBconnection();
+
+            String nurseryInsert = "insert into tbsecondary (studentid,first_name,middle_name,last_name,full_name,class,"
+                    + "isdeleted,datecreated,datetime_created,createdby,imagelink,arm) values "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?)";
+
+            pstmt = con.prepareStatement(nurseryInsert);
+
+            pstmt.setInt(1, studentId);
+            pstmt.setString(2, getFname());
+            pstmt.setString(3, getMname());
+            pstmt.setString(4, getLname());
+            pstmt.setString(5, fullname);
+            pstmt.setString(6, gradeMode.getGrade());
+            pstmt.setBoolean(7, false);
+            pstmt.setString(8, DateManipulation.dateAlone());
+            pstmt.setString(9, DateManipulation.dateAndTime());
+            pstmt.setString(10, createdby);
+            pstmt.setString(11, imgLink);
+            pstmt.setString(12, getArm());
+
+            pstmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void registerStudent() {
@@ -856,6 +959,14 @@ public class FreshReg implements Serializable {
             pstmt.setString(8, slink + idOne.toString());
 
             pstmt.executeUpdate();
+
+            if (classmode.getTbclass().equalsIgnoreCase("nursery")) {
+                nurseryUpload(studentId, getPassport_url(), createdby, fullname);
+            } else if (classmode.getTbclass().equalsIgnoreCase("primary")) {
+                primaryUpload(studentId, getPassport_url(), createdby, fullname);
+            } else if (classmode.getTbclass().equalsIgnoreCase("secondary")) {
+                secondaryUpload(studentId, getPassport_url(), createdby, fullname);
+            }
 
             refresh();
             NavigationHandler nav = context.getApplication().getNavigationHandler();
@@ -967,23 +1078,23 @@ public class FreshReg implements Serializable {
         FacesMessage msg;
         if (studentNameCheck()) {
             System.out.println(studentNameCheck());
-            setMessangerOfTruth("Student Firstname and Lastname exists!!");
+            setMessangerOfTruth("Firstname and Lastname exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
         } else if (studentEmailCheck()) {
-            setMessangerOfTruth("Student Email Aleady exists!!");
+            setMessangerOfTruth("Email Aleady exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
         } else if (studentPhoneCheck()) {
-            setMessangerOfTruth("Student Phone Aleady exists!!");
+            setMessangerOfTruth("Phone Aleady exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
         } else if (guardianEmailCheck()) {
-            setMessangerOfTruth("Guardian Email exists!!");
+            setMessangerOfTruth("Email exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
         } else if (guardianphoneCheck()) {
-            setMessangerOfTruth("Guardian Phone Aleady exists!!");
+            setMessangerOfTruth("Phone Aleady exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
         } else {

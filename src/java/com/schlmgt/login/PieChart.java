@@ -51,8 +51,8 @@ public class PieChart implements Serializable {
         con = dbConnections.mySqlDBconnection();
         String testflname = "Select * from student_details where first_name=? and last_name=? and is_deleted=?";
         pstmt = con.prepareStatement(testflname);
-        pstmt.setString(1, getFname());
-        pstmt.setString(2, getLname());
+        pstmt.setString(1, "");
+        pstmt.setString(2, "");
         pstmt.setBoolean(3, false);
         rs = pstmt.executeQuery();
 

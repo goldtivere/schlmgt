@@ -1,0 +1,300 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+
+    <ui:define name="title">
+        Student Details
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="row">
+            <div class="ibox-content" style="height: 80px;">
+                <div class="form-group">
+                    <div class="pull-right">
+                        <p:panel id="dude" style="border: none;">
+                            <p:outputLabel value="Search By: "/>
+
+                            <p:selectOneMenu id="class" class="form-control"  value="#{prof.model.tbclass}" required="true" requiredMessage="Class required">                    
+                                <p:ajax listener="#{prof.onClassChange}" update="nursery,primary,secondary,fvendor,nvendor,pvendor,svendor,dude" />
+                                <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{prof.classmodel}"
+                                               var="singlevalue"  
+                                               itemLabel="#{singlevalue.tbclass}"
+                                               itemValue="#{singlevalue.tbclass}"/>
+                            </p:selectOneMenu>   
+
+                            <h:outputText value="&#160;" /><h:outputText value="&#160;" />                        
+                            <p:autoComplete id="fvendor" rendered="#{prof.fbool}" maxResults="10" class="form-control" emptyMessage="Please select Grade" required="true" forceSelection="true" requiredMessage="Please select Grade" dropdown="true" />  
+                            <p:autoComplete id="nvendor" rendered="#{prof.nbool}" maxResults="10" class="form-control" emptyMessage="no record found" required="true" forceSelection="true" value="#{prof.nfname}" completeMethod="#{prof.completNursery}" requiredMessage="value is required" dropdown="true" />  
+                            <p:autoComplete id="pvendor" rendered="#{prof.pbool}" maxResults="10" class="form-control" emptyMessage="no record found" required="true" forceSelection="true" requiredMessage="value ID is required" value="#{prof.pfname}" completeMethod="#{prof.completPrimary}" dropdown="true" />  
+                            <p:autoComplete id="svendor" rendered="#{prof.sbool}" maxResults="10" class="form-control" emptyMessage="no record found" required="true" forceSelection="true" requiredMessage="value ID is required" value="#{prof.sfname}" completeMethod="#{prof.completSecondary}" dropdown="true" /> 
+                            <p:commandButton value="Search" actionListener="#{prof.searchTab}" process="@this class,fvendor,nvendor,pvendor,svendor" update="nursery,primary,secondary" />
+                            <p:message for="class"/>
+                        </p:panel>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-content" style="margin-top: 20px;">
+                <div class="form-group">
+                    <p:panel visible="#{prof.nursery}" id="nursery">
+                        <p:dataTable id="n" class="table table-responsive" var="papprv_rpt" 
+                                     value="#{prof.nursModel}"
+                                     paginatorTemplate="{CurrentPageReport}  
+                                     {FirstPageLink} {PreviousPageLink} 
+                                     {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
+                                     paginator="true" draggableColumns="true" rows="15" style="margin-bottom:20px">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
+                                    <p:dataExporter type="xls" target="n" fileName="report" pageOnly="true"/>
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="pdf" target="n" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="csv" target="n" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true" >
+                                    <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+                            </f:facet>
+
+                            <p:column>
+
+
+                                <f:facet name="header">
+                                    <h:outputText value="Image"/>
+                                </f:facet>
+
+                                <p:graphicImage height="50" width="50" class="img-responsive img-thumbnail" value="#{papprv_rpt.imageLink}"  />                                
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="First Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.first_name}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Middle Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.middle_name}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Last Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.last_name}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Class"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.sclass}"/>
+
+                            </p:column>
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Arm"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.arm}"/>
+
+                            </p:column>                       
+                        </p:dataTable> 
+                    </p:panel>
+                    <p:panel visible="#{prof.primary}" id="primary">
+                        <p:dataTable id="p" class="table table-responsive" var="papprv_rpt" 
+                                     value="#{prof.priModel}"
+                                     paginatorTemplate="{CurrentPageReport}  
+                                     {FirstPageLink} {PreviousPageLink} 
+                                     {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
+                                     paginator="true" style="margin-bottom:20px">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
+                                    <p:dataExporter type="xls" target="p" fileName="report" pageOnly="true"/>
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="pdf" target="p" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="csv" target="p" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true" >
+                                    <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="xml" target="p" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+                            </f:facet>
+
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="First Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.first_name}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Middle Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.middle_name}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Last Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.last_name}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Class"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.sclass}"/>
+
+                            </p:column>
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Arm"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.arm}"/>
+
+                            </p:column>                       
+                        </p:dataTable> 
+                    </p:panel>
+
+                    <p:panel visible="#{prof.secondary}" id="secondary">
+                        <p:dataTable id="s" class="table table-responsive" var="papprv_rpt" 
+                                     value="#{prof.secModel}"
+                                     paginatorTemplate="{CurrentPageReport}  
+                                     {FirstPageLink} {PreviousPageLink} 
+                                     {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
+                                     paginator="true" style="margin-bottom:20px">
+
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
+                                    <p:dataExporter type="xls" target="s" fileName="report" pageOnly="true"/>
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="pdf" target="s" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="csv" target="s" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true" >
+                                    <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="xml" target="s" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+                            </f:facet>                           
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="First Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.first_name}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Middle Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.middle_name}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Last Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.last_name}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Class"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.sclass}"/>
+
+                            </p:column>
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Arm"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.arm}"/>
+
+                            </p:column>                       
+                        </p:dataTable> 
+                    </p:panel>
+                </div>
+            </div>
+
+        </div>
+    </ui:define>
+
+
+</ui:composition>
