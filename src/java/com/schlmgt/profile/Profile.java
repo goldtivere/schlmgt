@@ -18,6 +18,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -58,24 +59,21 @@ public class Profile implements Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
+    }   
 
     public void searchTab() {
-        try
-        {
-        if (model.getTbclass().equalsIgnoreCase("nursery") && !getNfname().isEmpty()) {
-            nursModel = onNurserySearch(getNfname());           
+        try {
+            if (model.getTbclass().equalsIgnoreCase("nursery") && !getNfname().isEmpty()) {
+                nursModel = onNurserySearch(getNfname());
 
-        } else if (model.getTbclass().equalsIgnoreCase("primary") && !getPfname().isEmpty()) {
-            priModel = onPrimarySearch(getPfname());           
+            } else if (model.getTbclass().equalsIgnoreCase("primary") && !getPfname().isEmpty()) {
+                priModel = onPrimarySearch(getPfname());
 
-        } else if (model.getTbclass().equalsIgnoreCase("secondary")&& !getSfname().isEmpty()) {
-            secModel = onSecondarySearch(getSfname());           
-        }
-        System.out.println( getNfname()+" f "+ getPfname() + " a "+ getSfname());
-        }
-        catch(Exception ex)
-        {            
+            } else if (model.getTbclass().equalsIgnoreCase("secondary") && !getSfname().isEmpty()) {
+                secModel = onSecondarySearch(getSfname());
+            }
+            System.out.println(getNfname() + " f " + getPfname() + " a " + getSfname());
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 

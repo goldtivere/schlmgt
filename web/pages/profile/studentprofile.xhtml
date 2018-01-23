@@ -43,10 +43,13 @@
                     <p:panel visible="#{prof.nursery}" id="nursery">
                         <p:dataTable id="n" class="table table-responsive" var="papprv_rpt" 
                                      value="#{prof.nursModel}"
+                                     rowKey="#{papprv_rpt.id}"
                                      paginatorTemplate="{CurrentPageReport}  
                                      {FirstPageLink} {PreviousPageLink} 
                                      {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
-                                     paginator="true" draggableColumns="true" rows="15" style="margin-bottom:20px">
+                                     paginator="true"
+                                     rowsPerPageTemplate="5,10,15"
+                                     draggableColumns="true" rows="15" style="margin-bottom:20px">
                             <f:facet name="{Exporters}">
                                 <h:commandLink immediate="true">
                                     <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
@@ -67,18 +70,7 @@
                                     <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
                                     <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
                                 </h:commandLink>
-                            </f:facet>
-
-                            <p:column>
-
-
-                                <f:facet name="header">
-                                    <h:outputText value="Image"/>
-                                </f:facet>
-
-                                <p:graphicImage height="50" width="50" class="img-responsive img-thumbnail" value="#{papprv_rpt.imageLink}"  />                                
-
-                            </p:column>
+                            </f:facet>                            
 
                             <p:column>
 
@@ -127,16 +119,27 @@
 
                                 <h:outputText value="#{papprv_rpt.arm}"/>
 
-                            </p:column>                       
+                            </p:column>    
+                            <p:column style="width:52px" exportable="false">
+                                <f:facet name="header">Action</f:facet>
+                                <p:link outcome="editprofile">
+                                    <h:graphicImage value="/images/ed.png" style="width: 20px; height: 20px;" ></h:graphicImage>
+                                    <f:param name="studentid" value="#{papprv_rpt.studentid}" />
+                                    <f:param name="cla" value="#{prof.model.tbclass}" />
+                                </p:link>
+                            </p:column>
                         </p:dataTable> 
                     </p:panel>
                     <p:panel visible="#{prof.primary}" id="primary">
                         <p:dataTable id="p" class="table table-responsive" var="papprv_rpt" 
                                      value="#{prof.priModel}"
+                                     rowKey="#{papprv_rpt.id}"
                                      paginatorTemplate="{CurrentPageReport}  
                                      {FirstPageLink} {PreviousPageLink} 
                                      {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
-                                     paginator="true" style="margin-bottom:20px">
+                                     paginator="true"
+                                     rowsPerPageTemplate="5,10,15"
+                                     draggableColumns="true" rows="15" style="margin-bottom:20px">
                             <f:facet name="{Exporters}">
                                 <h:commandLink immediate="true">
                                     <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
@@ -207,17 +210,28 @@
 
                                 <h:outputText value="#{papprv_rpt.arm}"/>
 
-                            </p:column>                       
+                            </p:column>    
+                            <p:column style="width:52px" exportable="false">
+                                <f:facet name="header">Action</f:facet>
+                                <p:link outcome="editprofile">
+                                    <h:graphicImage value="/images/ed.png" style="width: 20px; height: 20px;" ></h:graphicImage>
+                                    <f:param name="studentid" value="#{papprv_rpt.studentid}" />
+                                    <f:param name="cla" value="#{prof.model.tbclass}" />
+                                </p:link>
+                            </p:column>
                         </p:dataTable> 
                     </p:panel>
 
                     <p:panel visible="#{prof.secondary}" id="secondary">
                         <p:dataTable id="s" class="table table-responsive" var="papprv_rpt" 
                                      value="#{prof.secModel}"
+                                     rowKey="#{papprv_rpt.id}"
                                      paginatorTemplate="{CurrentPageReport}  
                                      {FirstPageLink} {PreviousPageLink} 
                                      {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
-                                     paginator="true" style="margin-bottom:20px">
+                                     paginator="true"
+                                     rowsPerPageTemplate="5,10,15"
+                                     draggableColumns="true" rows="15" style="margin-bottom:20px">
 
                             <f:facet name="{Exporters}">
                                 <h:commandLink immediate="true">
@@ -287,7 +301,15 @@
 
                                 <h:outputText value="#{papprv_rpt.arm}"/>
 
-                            </p:column>                       
+                            </p:column>      
+                            <p:column style="width:52px" exportable="false">
+                                <f:facet name="header">Action</f:facet>
+                                <p:link outcome="editprofile">
+                                    <h:graphicImage value="/images/ed.png" style="width: 20px; height: 20px;" ></h:graphicImage>
+                                    <f:param name="studentid" value="#{papprv_rpt.studentid}" />
+                                    <f:param name="cla" value="#{prof.model.tbclass}" />
+                                </p:link>
+                            </p:column>
                         </p:dataTable> 
                     </p:panel>
                 </div>
