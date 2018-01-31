@@ -3,7 +3,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template.xhtml">
+                template="/WEB-INF/template1.xhtml">
 
 
 
@@ -11,50 +11,130 @@
         Student Profile
     </ui:define>
 
-
-    <ui:define name="content">
-
-
-        <p:messages id="message" closable="true"/>
-        <div class="ibox-content">
-            <h:form>                                   
-                <f:metadata>
-                    <f:viewParam name="studentid" value="#{edit.studentid}" />
-                    <f:viewParam name="cla" value="#{edit.cla}" />
-                </f:metadata>
-                <div class="row profile">
-                    <div class="col-md-3">
-                        <div class="profile-sidebar">
-                            <div class="profile-userpic" align="center">
-                                <img src="#{edit.imagelink}" class="img-responsive img-thumbnail" style="height: 100px; width: 100px" alt="#{edit.fullname}"/>
-                            </div>
-                            <div class="profile-user-title">
-                                <div class="profile-user-name">
-                                    <p:outputLabel class="first" value="#{edit.fullname}"/>
-                                </div>                                
-                            </div>
-                            <div class="profile-user-menu">
-                                <ul class="nav">
-                                    <li><a href="Home.aspx"><i class="glyphicon glyphicon-home"></i>News Feed</a></li>
-                                    <li><a href="Account.aspx"><i class="glyphicon glyphicon-home"></i>Account History</a></li>
-                                    <li><a href="Profile.aspx"><i class="glyphicon glyphicon-user"></i>Profile </a></li>
-                                    <li><a href="Messages.aspx"><i class="glyphicon glyphicon-user"></i>Personal Messages</a></li>                                  
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+    <ui:define name="Subtitle">
+        Edit Profile
+    </ui:define>
 
 
-                    <div class="col-md-9 cont">
+    <ui:define name="content2">
+        <div class="row">            
 
+            <p:panel visible="#{edit.fpanel}" id="pan">
+                <div class="ibox-content">
+                    <p:accordionPanel multiple="true" id="ss">
+                        <p:tab title="Personal Details" id="sss">                               
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <h:outputText value="First Name: "/> <h:outputText value="#{edit.fname}"/> 
+                                <h:outputText value="Middle Name: "/> <h:outputText value="#{edit.mname}"/> 
+                                <h:outputText value="Last Name: "/> <h:outputText value="#{edit.lname}"/>                     
+                                <h:outputText value="Phone Number: "/> <h:outputText value="#{edit.sphone}"/> 
+                                <h:outputText value="Email: "/> <h:outputText value="#{edit.semail}"/> 
+                                <h:outputText value="Date Of Birth: "/> <h:outputText value="#{edit.dob}"/>
+                                <h:outputText value="Sex: "/> <h:outputText value="#{edit.sex}"/>
 
+                                <p:commandButton value="Edit" class="pull-left" type="button" onclick="PF('dlg2').show();" />
 
-                    </div>
-                </div>
-            </h:form>
+                                <p:dialog header="Edit Profile" id="ssss" widgetVar="dlg2">                                        
+
+                                    <h:form id="formProces">
+                                        <p:panel id="damn">                                          
+                                            <h:panelGrid columns="3" cellpadding="10">
+                                                <p:outputLabel for="fnames" value="First Name: "></p:outputLabel> 
+                                                <p:inputText id="fnames" required="true" value="#{edit.fname}" requiredMessage="First name is required" />
+                                                <p:message for="fnames"/>
+                                                <p:outputLabel for="mnames" value="Middle Name: "></p:outputLabel> 
+                                                <p:inputText id="mnames" required="true" value="#{edit.mname}" requiredMessage="Middle name is required" />
+                                                <p:message for="mnames"/>
+                                                <p:outputLabel for="lnames" value="Last Name: "></p:outputLabel> 
+                                                <p:inputText id="lnames" required="true" value="#{edit.lname}" requiredMessage="Last name is required" />
+                                                <p:message for="lnames"/>
+                                                <p:outputLabel for="pnums" value="Phone Number: "></p:outputLabel>
+                                                <p:inputText id="pnums" required="true" value="#{edit.sphone}" requiredMessage="Phone is required" maxlength="11" />
+                                                <p:message for="pnums"/>
+                                                <p:outputLabel for="emails" value="Email: "></p:outputLabel> 
+                                                <p:inputText id="emails" value="#{edit.semail}" label="email"
+                                                             requiredMessage="Please enter your email address."
+                                                             validatorMessage="Invalid email format"
+                                                             >
+
+                                                    <f:validateRegex
+                                                        pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                                                </p:inputText>
+                                                <p:message for="emails"/>
+                                                <p:outputLabel for="dobs" value="DOB: "/> 
+                                                <p:calendar id="dobs" yearRange="1980:2017" value="#{edit.dateOfBirth}" pattern="dd/MM/yyyy"  navigator="true" requiredMessage="Date of Birth is required" required="true">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                </p:calendar>
+                                                <p:message for="dobs"/>  
+                                                <p:outputLabel for="sex" value="Sex: "></p:outputLabel>
+                                                <p:selectOneMenu id="sex" requiredMessage="Sex is required" value="#{edit.sex}" style="width:125px" required="true">
+                                                    <f:selectItem itemLabel="Select Sex" itemValue=""  noSelectionOption="true" />
+                                                    <f:selectItem itemLabel="Male" itemValue="Male" />
+                                                    <f:selectItem itemLabel="Female" itemValue="Female" />                                   
+                                                </p:selectOneMenu> 
+                                                <p:message for="sex"/>  
+                                                <f:facet name="footer">
+                                                    <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs,sex" update=":templateForm:growl,:templateForm:pan,formProces:damn" actionListener="#{edit.updateStudentDetails}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                                </f:facet>
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </h:form>
+                                </p:dialog>                                  
+                            </h:panelGrid>                                                                                                       
+                        </p:tab>
+                        <p:tab title="Parent/Guardian Details">
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <h:outputText value="First Name: "/> <h:outputText value="#{edit.gfname}"/> 
+                                    <h:outputText value="Middle Name: "/> <h:outputText value="#{edit.gmname}"/> 
+                                    <h:outputText value="Last Name: "/> <h:outputText value="#{edit.glname}"/>                        
+                                    <h:outputText value="Relationship: "/> <h:outputText value="#{edit.relationship}"/> 
+                                    <h:outputText value="Other Realtionship: "/> <h:outputText value="#{edit.relationship_other}"/> 
+                                    <h:outputText value="Phone Numner: "/> <h:outputText value="#{edit.gphone}"/>                                            
+                                    <h:outputText value="Email:  "/> <h:outputText value="#{edit.gmemail}"/> 
+                                    <h:outputText value="Country: "/> <h:outputText value="#{edit.gcountry}"/> 
+                                    <h:outputText value="State: "/> <h:outputText value="#{edit.state}"/> 
+                                    <h:outputText value="L.G.A.: "/> <h:outputText value="#{edit.lga}"/> 
+                                    <h:outputText value="Address: "/> <h:outputText value="#{edit.address}"/> 
+
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Previous Education History">
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <h:outputText value="Previous School: "/> <h:outputText value="#{edit.previousSchl}"/> 
+                                <h:outputText value="Previous Class: "/> <h:outputText value="#{edit.previousClass}"/>                    
+                            </h:panelGrid>
+                        </p:tab>           
+                        <p:tab title="Health History">
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <h:outputText value="Disability: "/> <h:outputText value="#{edit.disability}"/> 
+                                <h:outputText value="Other Disability: "/> <h:outputText value="#{edit.otherDis}"/>  
+                                <h:outputText value="Blood Group: "/> <h:outputText value="#{edit.bgroup}"/>  
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Image">
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <div class="profile-userpic" style="height: 100px; width: 100px;" >
+                                    <img src="#{edit.imagelink}" class="img-responsive img-thumbnail" alt="#{edit.fullname}"/>
+                                </div>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:accordionPanel>            
+                </div>                    
+            </p:panel>               
+            <script type="text/javascript">
+                function handleLoginRequests(xhr, status, args) {
+                    if (args.validationFailed || !args.loggedIn) {
+                        PF('dlg2').jq.effect("shake", {times: 5}, 100);
+                    } else {
+                        PF('dlg2').hide();
+                        $('#loginLink').fadeOut();
+                    }
+                }
+            </script>          
         </div>
-
-
 
     </ui:define>
 
