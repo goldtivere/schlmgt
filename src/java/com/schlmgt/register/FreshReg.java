@@ -107,6 +107,7 @@ public class FreshReg implements Serializable {
             confirmPanel = false;
             studentPanel = true;
             armStatus = true;
+            grademodels = gradeDropdowns();
             dismodel = disabilityDropdown();
             modelgroup = bloodgroupDropdown();
             classmodel = classDropdown();

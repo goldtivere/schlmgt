@@ -6,6 +6,7 @@
 package com.schlmgt.profile;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.register.GradeModel;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
