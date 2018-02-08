@@ -6,10 +6,13 @@
 package com.schlmgt.profile;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.imgupload.UploadImagesX;
 import com.schlmgt.logic.DateManipulation;
 import com.schlmgt.login.UserDetails;
+import com.schlmgt.register.BloodGroupModel;
 import com.schlmgt.register.ClassModel;
 import com.schlmgt.register.CountryModel;
+import com.schlmgt.register.DisabilityModel;
 import com.schlmgt.register.FreshReg;
 import com.schlmgt.register.GradeModel;
 import com.schlmgt.register.LgaModel;
@@ -22,9 +25,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -37,6 +42,8 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.faces.event.ActionEvent;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -96,6 +103,13 @@ public class EditStudent implements Serializable {
     private List<StateModel> states;
     private List<CountryModel> coun;
     private List<LgaModel> lgamodel;
+    private String previousCla;
+    private String privaClass;
+    private List<DisabilityModel> dismodel;
+    private Boolean status;
+    private List<BloodGroupModel> modelgroup;
+    private UploadedFile passport;
+    private String ref_number;
 
     @PostConstruct
     public void init() {
@@ -105,6 +119,8 @@ public class EditStudent implements Serializable {
             relation = relationModel();
             StudentNumber();
             studentClass();
+            modelgroup = bloodgroupDropdown();
+            dismodel = disabilityDropdown();
             grademodels = gradeDropdowns();
             coun = countryModel();
             classmodel = classDropdown();
@@ -112,6 +128,165 @@ public class EditStudent implements Serializable {
             lgamodel = lgaModels();
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public EditStudent() {
+        ref_number = generateRefNo();
+    }
+
+    public String generateRefNo() {
+
+        try {
+
+            String timeStamp = new SimpleDateFormat("yyMMddHHmmss").format(Calendar.getInstance().getTime());
+
+            int rnd = new Random().nextInt(99999753);
+            String temp_val = String.valueOf(rnd).concat(timeStamp);
+            return temp_val;
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+            return null;
+
+        }
+
+    }//end generateRefNo(...)s
+
+    public void handleFileUpload(FileUploadEvent event) {
+
+        setPassport(event.getFile());
+        setImagelink("");
+
+        //byte fileNameByte[] = getFile().getContents();
+        //System.out.println("fileNameByte:" + fileNameByte);
+        FacesMessage message;
+        UploadImagesX uploadImagesX = new UploadImagesX();
+
+        try {
+
+            if (!(uploadImagesX.uploadImg(getPassport(), "pix".concat(String.valueOf(getRef_number()))))) {
+
+                message = new FacesMessage(FacesMessage.SEVERITY_FATAL, uploadImagesX.getMessangerOfTruth(), uploadImagesX.getMessangerOfTruth());
+                FacesContext.getCurrentInstance().addMessage(null, message);
+
+                //value.setPst_url(null);
+                return;
+
+            }
+
+            message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+            setImagelink(uploadImagesX.getPst_url());
+            FacesContext.getCurrentInstance().addMessage(null, message);
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+            message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+
+        }
+
+    }
+
+    public void onDisabilityChange() {
+        if (getDisability().equalsIgnoreCase("YES")) {
+            setStatus(true);
+
+        } else {
+            setStatus(false);
+            setOtherDis("");
+        }
+    }
+
+    public List<BloodGroupModel> bloodgroupDropdown() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbbloodgroup";
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            //
+            List<BloodGroupModel> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                BloodGroupModel coun = new BloodGroupModel();
+                coun.setId(rs.getInt("id"));
+                coun.setBloodgroup(rs.getString("bloodgroup"));
+
+                //
+                lst.add(coun);
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public List<DisabilityModel> disabilityDropdown() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbdisability";
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            //
+            List<DisabilityModel> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                DisabilityModel coun = new DisabilityModel();
+                coun.setId(rs.getInt("id"));
+                coun.setDisability(rs.getString("disability"));
+
+                //
+                lst.add(coun);
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
         }
     }
 
@@ -130,7 +305,8 @@ public class EditStudent implements Serializable {
             pstmt = con.prepareStatement(query);
             System.out.println(getPreviousClass() + "a");
             System.out.println(getFullClass());
-            pstmt.setString(1, getFullClass());
+            System.out.println(getPreviousCla());
+            pstmt.setString(1, getPreviousCla());
             rs = pstmt.executeQuery();
             //
             List<GradeModel> lst = new ArrayList<>();
@@ -395,6 +571,7 @@ public class EditStudent implements Serializable {
             setRelatio(true);
         } else {
             setRelatio(false);
+            setRelationship_other("");
         }
     }
 
@@ -508,6 +685,7 @@ public class EditStudent implements Serializable {
                 setLga(rs.getString("guardian_lga"));
                 setAddress(rs.getString("guardian_address"));
                 setPreviousSchl(rs.getString("previous_school"));
+                setPreviousCla(rs.getString("previous_class"));
                 setPreviousClass(rs.getString("previous_grade"));
                 setArm(rs.getString("arm"));
                 setDisability(rs.getString("disability"));
@@ -722,6 +900,152 @@ public class EditStudent implements Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void updatePrevious() {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        String fullname = getLname() + " " + getMname() + " " + getFname();
+        boolean loggedIn = true;
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            con = dbConnections.mySqlDBconnection();
+
+            String previous = "update student_details set previous_school=? ,previous_class=?, previous_grade=?,"
+                    + "updated_by=?,updated_id=?,date_updated=? where studentid=?";
+
+            pstmt = con.prepareStatement(previous);
+
+            pstmt.setString(1, getPreviousSchl());
+            pstmt.setString(2, getPreviousCla());
+            pstmt.setString(3, getPreviousClass());
+            pstmt.setString(4, createdby);
+            pstmt.setInt(5, createdId);
+            pstmt.setString(6, DateManipulation.dateAndTime());
+            pstmt.setString(7, studentid);
+            System.out.println(studentid);
+            pstmt.executeUpdate();
+            updateClass();
+            setMessangerOfTruth("Previous School Details Updated!!");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, msg);
+            StudentNumber();
+            cont.addCallbackParam("loggedIn", loggedIn);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void updateHealth() {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        String fullname = getLname() + " " + getMname() + " " + getFname();
+        boolean loggedIn = true;
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            con = dbConnections.mySqlDBconnection();
+
+            String previous = "update student_details set disability=? ,other_disability=?, bgroup=?,"
+                    + "updated_by=?,updated_id=?,date_updated=? where studentid=?";
+
+            pstmt = con.prepareStatement(previous);
+
+            pstmt.setString(1, getDisability());
+            pstmt.setString(2, getOtherDis());
+            pstmt.setString(3, getBgroup());
+            pstmt.setString(4, createdby);
+            pstmt.setInt(5, createdId);
+            pstmt.setString(6, DateManipulation.dateAndTime());
+            pstmt.setString(7, studentid);
+            System.out.println(studentid);
+            pstmt.executeUpdate();
+            updateClass();
+            setMessangerOfTruth("Health Details Updated!!");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, msg);
+            StudentNumber();
+            cont.addCallbackParam("loggedIn", loggedIn);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public List<BloodGroupModel> getModelgroup() {
+        return modelgroup;
+    }
+
+    public String getRef_number() {
+        return ref_number;
+    }
+
+    public void setRef_number(String ref_number) {
+        this.ref_number = ref_number;
+    }
+
+    public UploadedFile getPassport() {
+        return passport;
+    }
+
+    public void setPassport(UploadedFile passport) {
+        this.passport = passport;
+    }
+
+    public void setModelgroup(List<BloodGroupModel> modelgroup) {
+        this.modelgroup = modelgroup;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public String getPreviousCla() {
+        return previousCla;
+    }
+
+    public void setPreviousCla(String previousCla) {
+        this.previousCla = previousCla;
+    }
+
+    public List<DisabilityModel> getDismodel() {
+        return dismodel;
+    }
+
+    public void setDismodel(List<DisabilityModel> dismodel) {
+        this.dismodel = dismodel;
+    }
+
+    public String getPrivaClass() {
+        return privaClass;
+    }
+
+    public void setPrivaClass(String privaClass) {
+        this.privaClass = privaClass;
     }
 
     public GradeModel getMod() {

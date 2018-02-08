@@ -70,8 +70,13 @@
                         </p:tab>
                         <p:tab title="Image">
                             <h:panelGrid columns="2" cellpadding="10">
+                                <p:fileUpload required="true" id="upload_pix_data" value="#{edit.passport}" auto="true"
+                                              fileUploadListener="#{edit.handleFileUpload}" 
+                                              mode="advanced" dragDropSupport="false"
+                                              update="pst_img" sizeLimit="2097152" fileLimit="1" 
+                                              allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
                                 <div class="profile-userpic" style="height: 100px; width: 100px;" >
-                                    <img src="#{edit.imagelink}" class="img-responsive img-thumbnail" alt="#{edit.fullname}"/>
+                                    <p:graphicImage id="pst_img" class="img-responsive img-thumbnail" value="#{edit.imagelink}" style="height: 100px; width: 100px;" alt="#{edit.fullname}" />
                                 </div>
                                 <p:commandButton value="Update" class="pull-left" type="button" onclick="PF('dlg2').show();" />
                             </h:panelGrid>
@@ -234,7 +239,7 @@
                                     <p:message for="pschl"/>
 
                                     <p:outputLabel for="class" value="Class: "></p:outputLabel>
-                                    <p:selectOneMenu id="class" class="form-control" value="#{edit.fullClass}" required="true" requiredMessage="Class required">
+                                    <p:selectOneMenu id="class" class="form-control" value="#{edit.previousCla}" required="true" requiredMessage="Class required">
                                         <p:ajax listener="#{edit.onClassChange}" update="grade" />
                                         <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
                                         <f:selectItems value="#{edit.classmodel}"
@@ -253,6 +258,10 @@
                                                        itemValue="#{singlevalue.grade}"/>
                                     </p:selectOneMenu>
                                     <p:message for="grade"/>
+
+                                    <f:facet name="footer">
+                                        <p:commandButton class="btn btn-primary pull-right" actionListener="#{edit.updatePrevious}" process="@this pschl,class,grade" update=":templateForm:growl,:templateForm:pan" oncomplete="handleLoginReques(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                    </f:facet>
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
@@ -262,7 +271,38 @@
 
                         <h:form>
                             <p:panel>                                          
+                                <h:panelGrid columns="3" cellpadding="10">
+                                    <p:outputLabel for="disability" value="Disability: "></p:outputLabel>
+                                    <p:selectOneMenu id="disability" class="form-control" value="#{edit.disability}" required="true" requiredMessage="Disability required">
+                                        <p:ajax listener="#{edit.onDisabilityChange}" update="stats" />
+                                        <f:selectItem itemLabel="--Select Disability--" itemValue="" noSelectionOption="true"/>
+                                        <f:selectItems value="#{edit.dismodel}"
+                                                       var="singlevalue"  
+                                                       itemLabel="#{singlevalue.disability}"
+                                                       itemValue="#{singlevalue.disability}"/>
+                                    </p:selectOneMenu>                                       
+                                    <p:message for="disability"/>
 
+                                    <p:outputLabel ></p:outputLabel>
+                                    <p:panel visible="#{edit.status}" style="border:none;" id="stats">
+                                        <p:inputText id="disab" rendered="#{edit.status}" required="true" value="#{edit.otherDis}"></p:inputText>
+                                    </p:panel>
+                                    <p:outputLabel ></p:outputLabel>
+
+                                    <p:outputLabel for="bgrp" value="Blood Group: "></p:outputLabel> 
+                                    <p:selectOneMenu id="bgrp" class="form-control" value="#{edit.bgroup}" required="true" requiredMessage="Blood group required">
+
+                                        <f:selectItem itemLabel="--Select Blood Group--" itemValue="" noSelectionOption="true"/>
+                                        <f:selectItems value="#{freg.modelgroup}"
+                                                       var="singlevalue"  
+                                                       itemLabel="#{singlevalue.bloodgroup}"
+                                                       itemValue="#{singlevalue.bloodgroup}"/>
+                                    </p:selectOneMenu>   
+                                    <p:message for="bgrp"/>  
+                                    <f:facet name="footer">
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this disability,bgrp,disab" update=":templateForm:growl,:templateForm:pan" actionListener="#{edit.updateHealth}" oncomplete="handleLoginReque(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                    </f:facet>
+                                </h:panelGrid>
                             </p:panel>
                         </h:form>
                     </p:dialog> 
