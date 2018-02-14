@@ -120,13 +120,10 @@
                                 <h:outputText value="#{papprv_rpt.arm}"/>
 
                             </p:column>    
-                            <p:column style="width:52px" exportable="false">
+                            <p:column style="width:60px" exportable="false">
                                 <f:facet name="header">Action</f:facet>
-                                <p:link outcome="editprofile">
-                                    <h:graphicImage value="/images/ed.png" style="width: 20px; height: 20px;" ></h:graphicImage>
-                                    <f:param name="studentid" value="#{papprv_rpt.studentid}" /> 
-                                    <f:param name="class" value="#{papprv_rpt.sclass}" />
-                                </p:link>
+                                <p:commandButton value="" icon="ui-icon-search" process="@this" 
+                                                 actionListener="#{prof.selectRe(papprv_rpt)}"/>                               
                             </p:column>
                         </p:dataTable> 
                     </p:panel>
@@ -210,14 +207,11 @@
 
                                 <h:outputText value="#{papprv_rpt.arm}"/>
 
-                            </p:column>    
-                            <p:column style="width:52px" exportable="false">
+                            </p:column>                              
+                            <p:column style="width:60px" exportable="false">
                                 <f:facet name="header">Action</f:facet>
-                                <p:link outcome="editprofile">
-                                    <h:graphicImage value="/images/ed.png" style="width: 20px; height: 20px;" ></h:graphicImage>
-                                    <f:param name="studentid" value="#{papprv_rpt.studentid}" />                                    
-                                    <f:param name="class" value="#{papprv_rpt.sclass}" />
-                                </p:link>
+                                <p:commandButton value="" icon="ui-icon-search" process="@this"
+                                                 actionListener="#{prof.selectRec(papprv_rpt)}"/>                               
                             </p:column>
                         </p:dataTable> 
                     </p:panel>
@@ -302,13 +296,10 @@
                                 <h:outputText value="#{papprv_rpt.arm}"/>
 
                             </p:column>      
-                            <p:column style="width:52px" exportable="false">
+                            <p:column style="width:60px" exportable="false">
                                 <f:facet name="header">Action</f:facet>
-                                <p:link outcome="editprofile">
-                                    <h:graphicImage value="/images/ed.png" style="width: 20px; height: 20px;" ></h:graphicImage>
-                                    <f:param name="studentid" value="#{papprv_rpt.studentid}" />    
-                                    <f:param name="class" value="#{papprv_rpt.sclass}" />
-                                </p:link>
+                                <p:commandButton value="" icon="ui-icon-search" process="@this"
+                                                 actionListener="#{prof.selectReco(papprv_rpt)}"/>                               
                             </p:column>
                         </p:dataTable> 
                     </p:panel>

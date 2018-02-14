@@ -8,6 +8,7 @@ package com.schlmgt.profile;
 import com.schlmgt.dbconn.DbConnectionX;
 import com.schlmgt.imgupload.UploadImagesX;
 import com.schlmgt.logic.DateManipulation;
+import com.schlmgt.logic.LoadPPTfile;
 import com.schlmgt.login.UserDetails;
 import com.schlmgt.register.BloodGroupModel;
 import com.schlmgt.register.ClassModel;
@@ -18,6 +19,7 @@ import com.schlmgt.register.GradeModel;
 import com.schlmgt.register.LgaModel;
 import com.schlmgt.register.RelationshipModel;
 import com.schlmgt.register.StateModel;
+import java.io.File;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -109,7 +112,12 @@ public class EditStudent implements Serializable {
     private Boolean status;
     private List<BloodGroupModel> modelgroup;
     private UploadedFile passport;
+    private String passport_url;
     private String ref_number;
+    private String from;
+    private SecondaryModel secModel = new SecondaryModel();
+    private PrimaryModel priModel = new PrimaryModel();
+    private NurseryModel nurModel = new NurseryModel();
 
     @PostConstruct
     public void init() {
@@ -126,13 +134,16 @@ public class EditStudent implements Serializable {
             classmodel = classDropdown();
             states = cityModel();
             lgamodel = lgaModels();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     public EditStudent() {
+        //
         ref_number = generateRefNo();
+
     }
 
     public String generateRefNo() {
@@ -154,10 +165,57 @@ public class EditStudent implements Serializable {
 
     }//end generateRefNo(...)s
 
+    public void valVal() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        FacesMessage msg;
+        LoadPPTfile loadPPTfile = new LoadPPTfile();
+        Map<String, String> params = externalContext.getRequestParameterMap();
+        String sscl = params.get("from");
+
+        System.out.println(sscl);
+
+    }
+
+    public void clearPix() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        FacesMessage msg;
+        LoadPPTfile loadPPTfile = new LoadPPTfile();
+        Map<String, String> params = externalContext.getRequestParameterMap();
+        String sscl = params.get("from");
+        try {
+
+            String file_ = "pix".concat(String.valueOf(getRef_number())).concat(".jpg");
+
+            if (!(loadPPTfile.isLoadPPtFile())) {
+                setMessangerOfTruth("Cannot load configuration file...");
+                setMessangerOfTruth("Operation failed");
+                return;
+            }
+            //
+            Properties ppt = loadPPTfile.getPptFile();
+            String url = ppt.getProperty("pst_location");
+
+            File file = new File(url + "".concat(file_));
+            file.delete();
+            //
+            setPassport(null);
+            passport = null;
+            setPassport_url("");
+            System.out.println(sscl);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(sscl);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
     public void handleFileUpload(FileUploadEvent event) {
 
         setPassport(event.getFile());
-        setImagelink("");
+        setPassport_url("");
 
         //byte fileNameByte[] = getFile().getContents();
         //System.out.println("fileNameByte:" + fileNameByte);
@@ -177,7 +235,7 @@ public class EditStudent implements Serializable {
             }
 
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
-            setImagelink(uploadImagesX.getPst_url());
+            setPassport_url(uploadImagesX.getPst_url());
             FacesContext.getCurrentInstance().addMessage(null, message);
 
         } catch (Exception ex) {
@@ -642,12 +700,7 @@ public class EditStudent implements Serializable {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        Map<String, String> params = externalContext.getRequestParameterMap();
-        String c = params.get("class");
-        setCras(c);
 
-        String words[] = c.split(" ");
-        setFullClass(words[0]);
     }
 
     public void studDetails() {
@@ -657,9 +710,23 @@ public class EditStudent implements Serializable {
             PreparedStatement pstmt = null;
             ResultSet rs = null;
             con = dbConnections.mySqlDBconnection();
+            String studId;
+
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            SecondaryModel secResult = (SecondaryModel) ctx.getExternalContext().getApplicationMap().get("SecData");
+            PrimaryModel priResult = (PrimaryModel) ctx.getExternalContext().getApplicationMap().get("priData");
+            NurseryModel nurResult = (NurseryModel) ctx.getExternalContext().getApplicationMap().get("nurData");
+            //test for null...
+            secModel = secResult;
+            priModel = priResult;
+            nurModel = nurResult;
+
+            System.out.println(priResult.getFirst_name() + "hhh" + priModel.getFirst_name()
+                    + "  okay"+ priModel.getClasstype());
+
             String testguid = "Select * from student_details where studentid=?";
             pstmt = con.prepareStatement(testguid);
-            pstmt.setString(1, StudentId());
+            pstmt.setString(1, "1");
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -992,8 +1059,90 @@ public class EditStudent implements Serializable {
         }
     }
 
+    public void uploadPix() {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        String fullname = getLname() + " " + getMname() + " " + getFname();
+        boolean loggedIn = true;
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            con = dbConnections.mySqlDBconnection();
+
+            String previous = "update student_details set image=?,"
+                    + "updated_by=?,updated_id=?,date_updated=? where studentid=?";
+
+            pstmt = con.prepareStatement(previous);
+
+            pstmt.setString(1, getPassport_url());
+            pstmt.setString(2, createdby);
+            pstmt.setInt(3, createdId);
+            pstmt.setString(4, DateManipulation.dateAndTime());
+            pstmt.setString(5, studentid);
+            System.out.println(studentid);
+            pstmt.executeUpdate();
+            updateClass();
+            setMessangerOfTruth("Image Updated!!");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, msg);
+            StudentNumber();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public List<BloodGroupModel> getModelgroup() {
         return modelgroup;
+    }
+
+    public SecondaryModel getSecModel() {
+        return secModel;
+    }
+
+    public void setSecModel(SecondaryModel secModel) {
+        this.secModel = secModel;
+    }
+
+    public PrimaryModel getPriModel() {
+        return priModel;
+    }
+
+    public void setPriModel(PrimaryModel priModel) {
+        this.priModel = priModel;
+    }
+
+    public NurseryModel getNurModel() {
+        return nurModel;
+    }
+
+    public void setNurModel(NurseryModel nurModel) {
+        this.nurModel = nurModel;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getPassport_url() {
+        return passport_url;
+    }
+
+    public void setPassport_url(String passport_url) {
+        this.passport_url = passport_url;
     }
 
     public String getRef_number() {

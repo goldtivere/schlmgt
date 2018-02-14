@@ -14,16 +14,19 @@ import java.io.Serializable;
 public class NurseryModel implements Serializable {
 
     private int id;
-    private int studentid;
+    private String studentid;
     private String first_name;
     private String middle_name;
     private String last_name;
     private String full_name;
     private String sclass;
+    private String classtype;
     private Boolean promoted;
     private String imageLink;
     private String arm;
 
+    
+    
     public String getArm() {
         return arm;
     }
@@ -48,11 +51,11 @@ public class NurseryModel implements Serializable {
         this.id = id;
     }
 
-    public int getStudentid() {
+    public String getStudentid() {
         return studentid;
     }
 
-    public void setStudentid(int studentid) {
+    public void setStudentid(String studentid) {
         this.studentid = studentid;
     }
 
@@ -102,6 +105,14 @@ public class NurseryModel implements Serializable {
 
     public void setPromoted(Boolean promoted) {
         this.promoted = promoted;
+    }
+
+    public String getClasstype() {
+        return classtype;
+    }
+
+    public void setClasstype(String classtype) {
+        this.classtype = classtype;
     }
 
 }

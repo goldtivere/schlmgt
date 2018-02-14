@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.NavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -60,7 +61,55 @@ public class Profile implements Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }   
+    }
+
+    public void selectRe(NurseryModel nurRecord) {
+
+        try {
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            NavigationHandler nav = ctx.getApplication().getNavigationHandler();
+            ctx.getExternalContext().getApplicationMap().put("nurData", nurRecord);
+            String url = "editprofile.xhtml?faces-redirect=true";
+            nav.handleNavigation(ctx, null, url);
+            ctx.renderResponse();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void selectRec(PrimaryModel priRecord) {
+
+        try {
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            NavigationHandler nav = ctx.getApplication().getNavigationHandler();
+            ctx.getExternalContext().getApplicationMap().put("priData", priRecord);
+            String url = "editprofile.xhtml?faces-redirect=true";
+            nav.handleNavigation(ctx, null, url);
+            ctx.renderResponse();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void selectReco(SecondaryModel secRecord) {
+
+        try {
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            NavigationHandler nav = ctx.getApplication().getNavigationHandler();
+            ctx.getExternalContext().getApplicationMap().put("SecData", secRecord);
+            String url = "editprofile.xhtml?faces-redirect=true";
+            nav.handleNavigation(ctx, null, url);
+            ctx.renderResponse();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
 
     public void searchTab() {
         try {
@@ -98,12 +147,13 @@ public class Profile implements Serializable {
 
                 NurseryModel coun = new NurseryModel();
                 coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getInt("studentid"));
+                coun.setStudentid(rs.getString("studentid"));
                 coun.setFirst_name(rs.getString("first_name"));
                 coun.setMiddle_name(rs.getString("middle_name"));
                 coun.setLast_name(rs.getString("last_name"));
                 coun.setFull_name(rs.getString("full_name"));
                 coun.setSclass(rs.getString("class"));
+                coun.setClasstype(rs.getString("classtype"));
                 coun.setPromoted(rs.getBoolean("promoted"));
                 coun.setImageLink(rs.getString("imagelink"));
                 coun.setArm(rs.getString("arm"));
@@ -149,12 +199,13 @@ public class Profile implements Serializable {
 
                 PrimaryModel coun = new PrimaryModel();
                 coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getInt("studentid"));
+                coun.setStudentid(rs.getString("studentid"));
                 coun.setFirst_name(rs.getString("first_name"));
                 coun.setMiddle_name(rs.getString("middle_name"));
                 coun.setLast_name(rs.getString("last_name"));
                 coun.setFull_name(rs.getString("full_name"));
                 coun.setSclass(rs.getString("class"));
+                coun.setClasstype(rs.getString("classtype"));
                 coun.setPromoted(rs.getBoolean("promoted"));
                 coun.setImageLink(rs.getString("imagelink"));
                 coun.setArm(rs.getString("arm"));
@@ -200,12 +251,13 @@ public class Profile implements Serializable {
 
                 SecondaryModel coun = new SecondaryModel();
                 coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getInt("studentid"));
+                coun.setStudentid(rs.getString("studentid"));
                 coun.setFirst_name(rs.getString("first_name"));
                 coun.setMiddle_name(rs.getString("middle_name"));
                 coun.setLast_name(rs.getString("last_name"));
                 coun.setFull_name(rs.getString("full_name"));
                 coun.setSclass(rs.getString("class"));
+                coun.setClasstype(rs.getString("classtype"));
                 coun.setPromoted(rs.getBoolean("promoted"));
                 coun.setImageLink(rs.getString("imagelink"));
                 coun.setArm(rs.getString("arm"));
@@ -250,12 +302,13 @@ public class Profile implements Serializable {
 
                 NurseryModel coun = new NurseryModel();
                 coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getInt("studentid"));
+                coun.setStudentid(rs.getString("studentid"));
                 coun.setFirst_name(rs.getString("first_name"));
                 coun.setMiddle_name(rs.getString("middle_name"));
                 coun.setLast_name(rs.getString("last_name"));
                 coun.setFull_name(rs.getString("full_name"));
                 coun.setSclass(rs.getString("class"));
+                coun.setClasstype(rs.getString("classtype"));
                 coun.setPromoted(rs.getBoolean("promoted"));
                 coun.setImageLink(rs.getString("imagelink"));
                 coun.setArm(rs.getString("arm"));
@@ -300,12 +353,13 @@ public class Profile implements Serializable {
 
                 PrimaryModel coun = new PrimaryModel();
                 coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getInt("studentid"));
+                coun.setStudentid(rs.getString("studentid"));
                 coun.setFirst_name(rs.getString("first_name"));
                 coun.setMiddle_name(rs.getString("middle_name"));
                 coun.setLast_name(rs.getString("last_name"));
                 coun.setFull_name(rs.getString("full_name"));
                 coun.setSclass(rs.getString("class"));
+                coun.setClasstype(rs.getString("classtype"));
                 coun.setPromoted(rs.getBoolean("promoted"));
                 coun.setImageLink(rs.getString("imagelink"));
                 coun.setArm(rs.getString("arm"));
@@ -350,12 +404,13 @@ public class Profile implements Serializable {
 
                 SecondaryModel coun = new SecondaryModel();
                 coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getInt("studentid"));
+                coun.setStudentid(rs.getString("studentid"));
                 coun.setFirst_name(rs.getString("first_name"));
                 coun.setMiddle_name(rs.getString("middle_name"));
                 coun.setLast_name(rs.getString("last_name"));
                 coun.setFull_name(rs.getString("full_name"));
                 coun.setSclass(rs.getString("class"));
+                coun.setClasstype(rs.getString("classtype"));
                 coun.setPromoted(rs.getBoolean("promoted"));
                 coun.setImageLink(rs.getString("imagelink"));
                 coun.setArm(rs.getString("arm"));

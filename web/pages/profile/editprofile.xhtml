@@ -21,7 +21,7 @@
 
             <p:panel visible="#{edit.fpanel}" id="pan">
                 <div class="ibox-content">
-                    <p:accordionPanel id="ss">
+                    <p:accordionPanel multiple="true" id="ss">
                         <p:tab title="Personal Details" id="sss">                               
                             <h:panelGrid columns="2" cellpadding="10">
                                 <h:outputText value="First Name: "/> <h:outputText value="#{edit.fname}"/> 
@@ -69,16 +69,24 @@
                             </h:panelGrid>
                         </p:tab>
                         <p:tab title="Image">
-                            <h:panelGrid columns="2" cellpadding="10">
+                            <h:panelGrid columns="1" cellpadding="10">
+                                <div class="profile-userpic" style="height: 100px; width: 100px;" >
+                                    <img src="#{edit.imagelink}" class="img-responsive img-thumbnail" alt="#{edit.fullname}"/>
+                                </div>  
+                                <p:outputLabel value=""></p:outputLabel>
+                                <p:outputLabel value=""></p:outputLabel>   
                                 <p:fileUpload required="true" id="upload_pix_data" value="#{edit.passport}" auto="true"
                                               fileUploadListener="#{edit.handleFileUpload}" 
                                               mode="advanced" dragDropSupport="false"
-                                              update="pst_img" sizeLimit="2097152" fileLimit="1" 
-                                              allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
-                                <div class="profile-userpic" style="height: 100px; width: 100px;" >
-                                    <p:graphicImage id="pst_img" class="img-responsive img-thumbnail" value="#{edit.imagelink}" style="height: 100px; width: 100px;" alt="#{edit.fullname}" />
-                                </div>
-                                <p:commandButton value="Update" class="pull-left" type="button" onclick="PF('dlg2').show();" />
+                                              update="pst_img" sizeLimit="2097152" fileLimit="1" />                               
+                                <p:commandButton value="clear" immediate="true" ajax="false"
+                                                 actionListener="#{edit.clearPix}" 
+                                                 update="upload_pix_data,pst_img"/>    
+                                <p:outputLabel value="Passport:"/>
+                                <p:graphicImage id="pst_img" class="img-responsive img-thumbnail" value="#{edit.passport_url}" style="width: 100px; height: 100px;" />
+                                <p:outputLabel value=""></p:outputLabel>
+                                <p:outputLabel value=""></p:outputLabel>                                
+                                <p:commandButton value="Update" process="@this upload_pix_data" actionListener="#{edit.uploadPix}" update=":templateForm:growl,:templateForm:pan,:templateForm:okay" class="pull-left" />    
                             </h:panelGrid>
                         </p:tab>
                     </p:accordionPanel>   
@@ -127,7 +135,7 @@
                                     </p:selectOneMenu> 
                                     <p:message for="sex"/>  
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs" update=":templateForm:growl,:templateForm:pan" actionListener="#{edit.updateStudentDetails}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs" update=":templateForm:growl,:templateForm:pan,:templateForm:okayy" actionListener="#{edit.updateStudentDetails}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
@@ -222,7 +230,7 @@
                                     <p:message for="add"/>
 
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" actionListener="#{edit.updateParent}" process="@this gfname,gmname,glname,relation,relateOther,gpnum,gemail,gcount,gstate,lga,add" update=":templateForm:growl,:templateForm:pan" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" actionListener="#{edit.updateParent}" process="@this gfname,gmname,glname,relation,relateOther,gpnum,gemail,gcount,gstate,lga,add" update=":templateForm:growl,:templateForm:okay,:templateForm:pan" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="update"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
@@ -260,7 +268,7 @@
                                     <p:message for="grade"/>
 
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" actionListener="#{edit.updatePrevious}" process="@this pschl,class,grade" update=":templateForm:growl,:templateForm:pan" oncomplete="handleLoginReques(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" actionListener="#{edit.updatePrevious}" process="@this pschl,class,grade" update=":templateForm:growl,:templateForm:pan,:templateForm:okay" oncomplete="handleLoginReques(xhr, status, args)" style="margin-top: 20px;" value="update"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
@@ -274,7 +282,7 @@
                                 <h:panelGrid columns="3" cellpadding="10">
                                     <p:outputLabel for="disability" value="Disability: "></p:outputLabel>
                                     <p:selectOneMenu id="disability" class="form-control" value="#{edit.disability}" required="true" requiredMessage="Disability required">
-                                        <p:ajax listener="#{edit.onDisabilityChange}" update="stats" />
+                                        <p:ajax listener="#{edit.onDisabilityChange}" update="stats,:templateForm:okay" />
                                         <f:selectItem itemLabel="--Select Disability--" itemValue="" noSelectionOption="true"/>
                                         <f:selectItems value="#{edit.dismodel}"
                                                        var="singlevalue"  
@@ -300,12 +308,14 @@
                                     </p:selectOneMenu>   
                                     <p:message for="bgrp"/>  
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" process="@this disability,bgrp,disab" update=":templateForm:growl,:templateForm:pan" actionListener="#{edit.updateHealth}" oncomplete="handleLoginReque(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this disability,bgrp,disab" update=":templateForm:growl,:templateForm:pan,:templateForm:okay" actionListener="#{edit.updateHealth}" oncomplete="handleLoginReque(xhr, status, args)" style="margin-top: 20px;" value="update"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
                     </p:dialog> 
+
+
                 </div>                    
             </p:panel>               
             <script type="text/javascript">
@@ -344,6 +354,7 @@
                         $('#loginLink').fadeOut();
                     }
                 }
+
             </script>          
         </div>
 
