@@ -204,7 +204,6 @@ public class EditStudent implements Serializable {
             passport = null;
             setPassport_url("");
             System.out.println(sscl);
-            FacesContext.getCurrentInstance().getExternalContext().redirect(sscl);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -821,10 +820,11 @@ public class EditStudent implements Serializable {
                 pstmt.setString(5, createdby);
                 pstmt.setInt(6, createdId);
                 pstmt.setString(7, DateManipulation.dateAndTime());
-                pstmt.setString(8, studentid);
-                pstmt.setString(9, getCras());
+                pstmt.setString(8, getStudentid());
+                pstmt.setString(9, nurModel.getSclass());
 
                 pstmt.executeUpdate();
+                System.out.println("o" + nurModel.getSclass());
             } else if (priModel != null && priModel.getClasstype().equalsIgnoreCase("primary")) {
                 String personalDetails = "update tbprimary set first_name=? ,middle_name=?, last_name=?, full_name=?,"
                         + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
@@ -838,11 +838,11 @@ public class EditStudent implements Serializable {
                 pstmt.setString(5, createdby);
                 pstmt.setInt(6, createdId);
                 pstmt.setString(7, DateManipulation.dateAndTime());
-                pstmt.setString(8, studentid);
-                pstmt.setString(9, getCras());
+                pstmt.setString(8, getStudentid());
+                pstmt.setString(9, priModel.getSclass());
 
                 pstmt.executeUpdate();
-                System.out.println("o" + getCras());
+                System.out.println("o" + priModel.getSclass());
             } else if (secModel != null && secModel.getClasstype().equalsIgnoreCase("secondary")) {
                 String personalDetails = "update tbsecondary set first_name=? ,middle_name=?, last_name=?, full_name=?,"
                         + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
@@ -856,11 +856,11 @@ public class EditStudent implements Serializable {
                 pstmt.setString(5, createdby);
                 pstmt.setInt(6, createdId);
                 pstmt.setString(7, DateManipulation.dateAndTime());
-                pstmt.setString(8, studentid);
-                pstmt.setString(9, getCras());
+                pstmt.setString(8, getStudentid());
+                pstmt.setString(9, secModel.getSclass());
 
                 pstmt.executeUpdate();
-                System.out.println("o" + getCras());
+                System.out.println("o" + secModel.getSclass());
             }
 
         } catch (Exception ex) {
@@ -937,10 +937,11 @@ public class EditStudent implements Serializable {
             String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
             int createdId = userObj.getId();
             con = dbConnections.mySqlDBconnection();
-
+            String nameFull = getGlname() + " " + getGmname() + " " + getGfname();
             String personalDetails = "update student_details set guardian_firstname=? ,guardian_middlename=?, guardian_lastname=?, relationship=?,"
                     + "relationship_other=?,"
-                    + "guardian_phone=? , guardian_email=?, guardian_country=? ,guardian_state=?,guardian_lga=?,guardian_address=?,updated_by=?,updated_id=?,date_updated=? where studentid=?";
+                    + "guardian_phone=? , guardian_email=?, guardian_country=? ,guardian_state=?,"
+                    + "guardian_lga=?,guardian_address=?,updated_by=?,updated_id=?,date_updated=?,guardian_fullname=? where studentid=?";
 
             pstmt = con.prepareStatement(personalDetails);
 
@@ -958,8 +959,9 @@ public class EditStudent implements Serializable {
             pstmt.setString(12, createdby);
             pstmt.setInt(13, createdId);
             pstmt.setString(14, DateManipulation.dateAndTime());
-            pstmt.setString(15, studentid);
-            System.out.println(studentid);
+            pstmt.setString(15, nameFull);
+            pstmt.setString(16, getStudentid());
+            System.out.println(getStudentid());
             pstmt.executeUpdate();
             updateClass();
             setMessangerOfTruth("Parent/Guardian Details Updated!!");
@@ -1003,8 +1005,8 @@ public class EditStudent implements Serializable {
             pstmt.setString(4, createdby);
             pstmt.setInt(5, createdId);
             pstmt.setString(6, DateManipulation.dateAndTime());
-            pstmt.setString(7, studentid);
-            System.out.println(studentid);
+            pstmt.setString(7, getStudentid());
+            System.out.println(getStudentid());
             pstmt.executeUpdate();
             updateClass();
             setMessangerOfTruth("Previous School Details Updated!!");
@@ -1048,8 +1050,8 @@ public class EditStudent implements Serializable {
             pstmt.setString(4, createdby);
             pstmt.setInt(5, createdId);
             pstmt.setString(6, DateManipulation.dateAndTime());
-            pstmt.setString(7, studentid);
-            System.out.println(studentid);
+            pstmt.setString(7, getStudentid());
+            System.out.println(getStudentid());
             pstmt.executeUpdate();
             updateClass();
             setMessangerOfTruth("Health Details Updated!!");
@@ -1076,6 +1078,8 @@ public class EditStudent implements Serializable {
         boolean loggedIn = true;
 
         try {
+            if(!getPassport_url().isEmpty())
+            {
             UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
             String on = String.valueOf(userObj);
             String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
@@ -1091,14 +1095,86 @@ public class EditStudent implements Serializable {
             pstmt.setString(2, createdby);
             pstmt.setInt(3, createdId);
             pstmt.setString(4, DateManipulation.dateAndTime());
-            pstmt.setString(5, studentid);
-            System.out.println(studentid);
+            pstmt.setString(5, getStudentid());
+            System.out.println(getStudentid());
             pstmt.executeUpdate();
-            updateClass();
+            setPassport_url("");
+            updateImg();
             setMessangerOfTruth("Image Updated!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
             StudentNumber();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void updateImg() {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        String fullname = getLname() + " " + getMname() + " " + getFname();
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+            String dobs = format.format(getDateOfBirth());
+            con = dbConnections.mySqlDBconnection();
+            if (nurModel != null && nurModel.getClasstype().equalsIgnoreCase("nursery")) {
+                String personalDetails = "update tbnursery set imagelink=?,"
+                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
+
+                pstmt = con.prepareStatement(personalDetails);
+
+                pstmt.setString(1, getPassport_url());
+                pstmt.setString(2, createdby);
+                pstmt.setInt(3, createdId);
+                pstmt.setString(4, DateManipulation.dateAndTime());
+                pstmt.setString(5, getStudentid());
+                pstmt.setString(6, nurModel.getSclass());
+
+                pstmt.executeUpdate();
+                System.out.println("o" + nurModel.getSclass());
+            } else if (priModel != null && priModel.getClasstype().equalsIgnoreCase("primary")) {
+                String personalDetails = "update tbprimary set imagelink=?,"
+                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
+
+                pstmt = con.prepareStatement(personalDetails);
+
+                pstmt.setString(1, getPassport_url());
+                pstmt.setString(2, createdby);
+                pstmt.setInt(3, createdId);
+                pstmt.setString(4, DateManipulation.dateAndTime());
+                pstmt.setString(5, getStudentid());
+                pstmt.setString(6, priModel.getSclass());
+
+                pstmt.executeUpdate();
+                System.out.println("o" + priModel.getSclass());
+            } else if (secModel != null && secModel.getClasstype().equalsIgnoreCase("secondary")) {
+                String personalDetails = "update tbsecondary set imagelink=?,"
+                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
+
+                pstmt = con.prepareStatement(personalDetails);
+
+                pstmt.setString(1, getPassport_url());
+                pstmt.setString(2, createdby);
+                pstmt.setInt(3, createdId);
+                pstmt.setString(4, DateManipulation.dateAndTime());
+                pstmt.setString(5, getStudentid());
+                pstmt.setString(6, secModel.getSclass());
+
+                pstmt.executeUpdate();
+                System.out.println("o" + secModel.getSclass());
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
