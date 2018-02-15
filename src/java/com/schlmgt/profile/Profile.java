@@ -68,6 +68,8 @@ public class Profile implements Serializable {
         try {
             FacesContext ctx = FacesContext.getCurrentInstance();
             NavigationHandler nav = ctx.getApplication().getNavigationHandler();
+            ctx.getExternalContext().getApplicationMap().remove("SecData");
+            ctx.getExternalContext().getApplicationMap().remove("priData");
             ctx.getExternalContext().getApplicationMap().put("nurData", nurRecord);
             String url = "editprofile.xhtml?faces-redirect=true";
             nav.handleNavigation(ctx, null, url);
@@ -84,6 +86,8 @@ public class Profile implements Serializable {
         try {
             FacesContext ctx = FacesContext.getCurrentInstance();
             NavigationHandler nav = ctx.getApplication().getNavigationHandler();
+            ctx.getExternalContext().getApplicationMap().remove("SecData");
+            ctx.getExternalContext().getApplicationMap().remove("nurData");
             ctx.getExternalContext().getApplicationMap().put("priData", priRecord);
             String url = "editprofile.xhtml?faces-redirect=true";
             nav.handleNavigation(ctx, null, url);
@@ -100,6 +104,8 @@ public class Profile implements Serializable {
         try {
             FacesContext ctx = FacesContext.getCurrentInstance();
             NavigationHandler nav = ctx.getApplication().getNavigationHandler();
+            ctx.getExternalContext().getApplicationMap().remove("nurData");
+            ctx.getExternalContext().getApplicationMap().remove("priData");
             ctx.getExternalContext().getApplicationMap().put("SecData", secRecord);
             String url = "editprofile.xhtml?faces-redirect=true";
             nav.handleNavigation(ctx, null, url);

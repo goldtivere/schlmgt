@@ -139,13 +139,12 @@
                                             </div>
                                             <div class="profile-user-menu">
                                                 <ul class="nav">
-                                                    <li>                                                       
-                                                    <h:link outcome="editprofile">  
-                                                        <i class="glyphicon glyphicon-home"></i><h:outputLabel value="Edit Profile"/>
-                                                        <f:param name="studentid" value="#{edit.studentid}" />                                                        
-                                                    </h:link>
+                                                    <li>
+                                                        <a href="#{request.contextPath}/faces/pages/profile/editprofile.xhtml"><i class="fa fa-home"></i> <span class="nav-label">Edit Profile</span></a>                                   
                                                     </li>
-                                                    <li><a href="Account.aspx"><i class="glyphicon glyphicon-home"></i>Subject</a></li>
+                                                    <li>
+                                                        <a href="Account.aspx"><i class="fa fa-home"></i> <span class="nav-label">Home</span></a>                                   
+                                                    </li>
                                                     <li><a href="Account.aspx"><i class="glyphicon glyphicon-home"></i>Subject Registration</a></li>
                                                     <li><a href="Profile.aspx"><i class="glyphicon glyphicon-user"></i>Exam Registration</a></li>
                                                     <li><a href="Messages.aspx"><i class="glyphicon glyphicon-user"></i>Result Upload</a></li>                                  

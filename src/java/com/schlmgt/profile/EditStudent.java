@@ -720,13 +720,17 @@ public class EditStudent implements Serializable {
             secModel = secResult;
             priModel = priResult;
             nurModel = nurResult;
-
-            System.out.println(priResult.getFirst_name() + "hhh" + priModel.getFirst_name()
-                    + "  okay"+ priModel.getClasstype());
+            if (nurModel != null && "Nursery".equalsIgnoreCase(nurModel.getClasstype())) {
+                setStudentid(nurModel.getStudentid());
+            } else if (priModel != null && "Primary".equalsIgnoreCase(priModel.getClasstype())) {
+                setStudentid(priModel.getStudentid());
+            } else if (secModel != null && "Secondary".equalsIgnoreCase(secModel.getClasstype())) {
+                setStudentid(secModel.getStudentid());
+            }
 
             String testguid = "Select * from student_details where studentid=?";
             pstmt = con.prepareStatement(testguid);
-            pstmt.setString(1, "1");
+            pstmt.setString(1, getStudentid());
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -804,7 +808,7 @@ public class EditStudent implements Serializable {
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
             String dobs = format.format(getDateOfBirth());
             con = dbConnections.mySqlDBconnection();
-            if (getFullClass().equalsIgnoreCase("nursery")) {
+            if (nurModel != null && nurModel.getClasstype().equalsIgnoreCase("nursery")) {
                 String personalDetails = "update tbnursery set first_name=? ,middle_name=?, last_name=?, full_name=?,"
                         + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
 
@@ -821,7 +825,7 @@ public class EditStudent implements Serializable {
                 pstmt.setString(9, getCras());
 
                 pstmt.executeUpdate();
-            } else if (getFullClass().equalsIgnoreCase("primary")) {
+            } else if (priModel != null && priModel.getClasstype().equalsIgnoreCase("primary")) {
                 String personalDetails = "update tbprimary set first_name=? ,middle_name=?, last_name=?, full_name=?,"
                         + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
 
@@ -839,7 +843,7 @@ public class EditStudent implements Serializable {
 
                 pstmt.executeUpdate();
                 System.out.println("o" + getCras());
-            } else if (getFullClass().equalsIgnoreCase("secondary")) {
+            } else if (secModel != null && secModel.getClasstype().equalsIgnoreCase("secondary")) {
                 String personalDetails = "update tbsecondary set first_name=? ,middle_name=?, last_name=?, full_name=?,"
                         + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
 
@@ -901,8 +905,8 @@ public class EditStudent implements Serializable {
             pstmt.setString(9, createdby);
             pstmt.setInt(10, createdId);
             pstmt.setString(11, DateManipulation.dateAndTime());
-            pstmt.setString(12, studentid);
-            System.out.println(studentid);
+            pstmt.setString(12, getStudentid());
+            System.out.println(getStudentid());
             pstmt.executeUpdate();
             updateClass();
             setMessangerOfTruth("Personal Details Updated!!");
