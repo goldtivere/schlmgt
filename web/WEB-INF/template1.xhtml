@@ -62,7 +62,11 @@
                             <li>
                                 <a href="#{request.contextPath}/faces/pages/profile/studentprofile.xhtml"><i class="fa fa-user"></i> <span class="nav-label">Profile</span></a>
 
-                            </li>                                    
+                            </li>     
+                            <li>
+                                <a href="#{request.contextPath}/faces/pages/student/updateSubject.xhtml"><i class="fa fa-user"></i> <span class="nav-label">Update Subject</span></a>
+
+                            </li>  
                             <li class="drop">
                                 <a href="#"><i class="fa fa-info"></i> <span class="nav-label">Status</span><span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level collapse">
@@ -127,9 +131,9 @@
                                     <div class="row profile">
 
                                         <div class="profile-sidebar">
-                                            <div class="profile-userpic" style="height: 100px; width: 100px; margin-left: 50px;" >
+                                            <div class="profile-userpic" style="height: 100px; width: 156px; margin-left: 50px;" >
                                                 <p:panel id="okay1" style="border: none;">
-                                                    <img src="#{edit.imagelink}" class="img-responsive img-thumbnail" alt="#{edit.fullname}"/>
+                                                    <img src="#{edit.imagelink}" class="img-responsive img-thumbnail" style="height: 100px; width: 100px;" alt="#{edit.fullname}"/>
                                                 </p:panel>
                                             </div>
                                             <div class="profile-user-title" style="margin-top: 30px;">
@@ -142,13 +146,11 @@
                                             <div class="profile-user-menu">
                                                 <ul class="nav">
                                                     <li>
-                                                        <a href="#{request.contextPath}/faces/pages/profile/editprofile.xhtml"><i class="fa fa-home"></i> <span class="nav-label">Edit Profile</span></a>                                   
+                                                        <a href="#{request.contextPath}/faces/pages/profile/editprofile.xhtml"><i class="glyphicon glyphicon-edit"></i> <span class="nav-label">Edit Profile</span></a>                                   
+                                                    </li>                                                   
+                                                    <li><a href="#{request.contextPath}/faces/pages/profile/viewSubject.xhtml"><i class="glyphicon glyphicon-blackboard"></i> <span class="nav-label">View Subject</span></a> 
                                                     </li>
-                                                    <li>
-                                                        <a href="Account.aspx"><i class="fa fa-home"></i> <span class="nav-label">Home</span></a>                                   
-                                                    </li>
-                                                    <li><a href="Account.aspx"><i class="glyphicon glyphicon-home"></i>Subject Registration</a></li>
-                                                    <li><a href="Profile.aspx"><i class="glyphicon glyphicon-user"></i>Exam Registration</a></li>
+                                                    <li><a href="Profile.aspx"><i class="glyphicon glyphicon-user"></i>Result</a></li>
                                                     <li><a href="Messages.aspx"><i class="glyphicon glyphicon-user"></i>Result Upload</a></li>                                  
                                                 </ul>
                                             </div>
@@ -175,8 +177,8 @@
             <p:ajaxStatus onstart="PF('statusDialog').show();"
                           onsuccess="PF('statusDialog').hide();" />
             <p:dialog modal="true" widgetVar="statusDialog"
-                      draggable="false" closable="false">
-                <p:graphicImage value="/images/schlmgt.gif" style="width: 50px; height: 50px;" />
+                      draggable="false"  closable="false">
+                <p:graphicImage value="/images/stdmgt.gif" style="width: 50px; height: 50px;" />
             </p:dialog>
         </div>
 

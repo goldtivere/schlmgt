@@ -100,6 +100,7 @@ public class FreshReg implements Serializable {
     private String disoption;
     private String relationOption;
     private String displaydate;
+    private String imageLocation;
 
     @PostConstruct
     public void init() {
@@ -629,6 +630,7 @@ public class FreshReg implements Serializable {
 
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             setPassport_url(uploadImagesX.getPst_url());
+            setImageLocation(uploadImagesX.getPst_loc());
             FacesContext.getCurrentInstance().addMessage(null, message);
 
         } catch (Exception ex) {
@@ -769,9 +771,9 @@ public class FreshReg implements Serializable {
         try {
             con = dbConnections.mySqlDBconnection();
 
-            String nurseryInsert = "insert into tbnursery (studentid,first_name,middle_name,last_name,full_name,class,"
-                    + "isdeleted,datecreated,datetime_created,createdby,imagelink,arm) values "
-                    + "(?,?,?,?,?,?,?,?,?,?,?,?)";
+           String nurseryInsert = "insert into tbnursery (studentid,first_name,middle_name,last_name,full_name,class,"
+                    + "classtype,isdeleted,datecreated,datetime_created,createdby,imagelink,Arm) values "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             pstmt = con.prepareStatement(nurseryInsert);
 
@@ -781,12 +783,13 @@ public class FreshReg implements Serializable {
             pstmt.setString(4, getLname());
             pstmt.setString(5, fullname);
             pstmt.setString(6, gradeMode.getGrade());
-            pstmt.setBoolean(7, false);
-            pstmt.setString(8, DateManipulation.dateAlone());
-            pstmt.setString(9, DateManipulation.dateAndTime());
-            pstmt.setString(10, createdby);
-            pstmt.setString(11, imgLink);
-            pstmt.setString(12, getArm());
+            pstmt.setString(7, "Nursery");
+            pstmt.setBoolean(8, false);
+            pstmt.setString(9, DateManipulation.dateAlone());
+            pstmt.setString(10, DateManipulation.dateAndTime());
+            pstmt.setString(11, createdby);
+            pstmt.setString(12, imgLink);
+            pstmt.setString(13, getArm());
             pstmt.executeUpdate();
 
         } catch (Exception ex) {
@@ -804,8 +807,8 @@ public class FreshReg implements Serializable {
             con = dbConnections.mySqlDBconnection();
 
             String nurseryInsert = "insert into tbprimary (studentid,first_name,middle_name,last_name,full_name,class,"
-                    + "isdeleted,datecreated,datetime_created,createdby,imagelink,Arm) values "
-                    + "(?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + "classtype,isdeleted,datecreated,datetime_created,createdby,imagelink,Arm) values "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             pstmt = con.prepareStatement(nurseryInsert);
 
@@ -815,12 +818,13 @@ public class FreshReg implements Serializable {
             pstmt.setString(4, getLname());
             pstmt.setString(5, fullname);
             pstmt.setString(6, gradeMode.getGrade());
-            pstmt.setBoolean(7, false);
-            pstmt.setString(8, DateManipulation.dateAlone());
-            pstmt.setString(9, DateManipulation.dateAndTime());
-            pstmt.setString(10, createdby);
-            pstmt.setString(11, imgLink);
-            pstmt.setString(12, getArm());
+            pstmt.setString(7, "Primary");
+            pstmt.setBoolean(8, false);
+            pstmt.setString(9, DateManipulation.dateAlone());
+            pstmt.setString(10, DateManipulation.dateAndTime());
+            pstmt.setString(11, createdby);
+            pstmt.setString(12, imgLink);
+            pstmt.setString(13, getArm());
             pstmt.executeUpdate();
 
         } catch (Exception ex) {
@@ -838,8 +842,8 @@ public class FreshReg implements Serializable {
             con = dbConnections.mySqlDBconnection();
 
             String nurseryInsert = "insert into tbsecondary (studentid,first_name,middle_name,last_name,full_name,class,"
-                    + "isdeleted,datecreated,datetime_created,createdby,imagelink,arm) values "
-                    + "(?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + "classtype,isdeleted,datecreated,datetime_created,createdby,imagelink,Arm) values "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             pstmt = con.prepareStatement(nurseryInsert);
 
@@ -849,13 +853,13 @@ public class FreshReg implements Serializable {
             pstmt.setString(4, getLname());
             pstmt.setString(5, fullname);
             pstmt.setString(6, gradeMode.getGrade());
-            pstmt.setBoolean(7, false);
-            pstmt.setString(8, DateManipulation.dateAlone());
-            pstmt.setString(9, DateManipulation.dateAndTime());
-            pstmt.setString(10, createdby);
-            pstmt.setString(11, imgLink);
-            pstmt.setString(12, getArm());
-
+            pstmt.setString(7, "Secondary");
+            pstmt.setBoolean(8, false);
+            pstmt.setString(9, DateManipulation.dateAlone());
+            pstmt.setString(10, DateManipulation.dateAndTime());
+            pstmt.setString(11, createdby);
+            pstmt.setString(12, imgLink);
+            pstmt.setString(13, getArm());
             pstmt.executeUpdate();
 
         } catch (Exception ex) {
@@ -897,7 +901,7 @@ public class FreshReg implements Serializable {
                     + "Guardian_middlename,Guardian_lastname,Guardian_fullname,relationship,relationship_other,Guardian_phone,"
                     + "Guardian_email,guardian_country,guardian_state,guardian_lga,guardian_address,previous_school,"
                     + "previous_class,previous_grade,current_class,current_grade,Arm,disability,other_disability,bgroup,image,created_by,"
-                    + "date_created,datetime_created,is_deleted,studentId)"
+                    + "date_created,datetime_created,is_deleted,studentId,imglocation)"
                     + "values"
                     + "(?,?,?,?,?,"
                     + "?,?,?,?,?,"
@@ -905,7 +909,7 @@ public class FreshReg implements Serializable {
                     + "?,?,?,?,?,"
                     + "?,?,?,?,?,"
                     + "?,?,?,?,?,?,"
-                    + "?,?,?)";
+                    + "?,?,?,?)";
 
             pstmt = con.prepareStatement(insertStudentDetails);
             pstmt.setString(1, getFname());
@@ -943,6 +947,7 @@ public class FreshReg implements Serializable {
             pstmt.setString(33, DateManipulation.dateAndTime());
             pstmt.setBoolean(34, false);
             pstmt.setInt(35, studentId);
+            pstmt.setString(36, getImageLocation());
 
             pstmt.executeUpdate();
             String slink = "http://localhost:8080/SchlMgt/faces/pages/create/index.xhtml?id=";
@@ -1146,6 +1151,15 @@ public class FreshReg implements Serializable {
         setStudentPanel(true);
     }
 
+    public String getImageLocation() {
+        return imageLocation;
+    }
+
+    public void setImageLocation(String imageLocation) {
+        this.imageLocation = imageLocation;
+    }
+
+    
     public String getSex() {
         return sex;
     }

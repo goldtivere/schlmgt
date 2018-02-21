@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+
+
+    <ui:define name="title">
+        Update Subjects     
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="row">
+            <div class="ibox-content" style="height: 80px;">
+                <div class="form-group">
+                    <div class="pull-right">
+                        <p:panel id="dude" style="border: none;">
+
+                            <p:selectOneMenu id="sclass" class="form-control" value="#{subjectUpdate.studentClass}" required="true" requiredMessage="Class required">
+
+
+                                <p:ajax listener="#{classmode.onClassChanges(subjectUpdate.studentClass)}" update="grad" />
+                                <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{classmode.classmodel}"
+                                               var="singlevalue"  
+                                               itemLabel="#{singlevalue.tbclass}"
+                                               itemValue="#{singlevalue.tbclass}"/>
+                            </p:selectOneMenu>   
+
+
+                            <p:selectOneMenu id="grad" class="form-control" value="#{subjectUpdate.studentGrade}" required="true" requiredMessage="Grade required">                                
+                                <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{classmode.grademodels}"
+                                               var="singlevalue"  
+                                               itemLabel="#{singlevalue.grade}"
+                                               itemValue="#{singlevalue.grade}"/>
+                            </p:selectOneMenu>                              
+
+                            <p:commandButton value="Dude!!!" actionListener="#{testCSV.testCSV}" immediate="true"/>
+                        </p:panel>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

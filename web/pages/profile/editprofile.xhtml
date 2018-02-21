@@ -21,7 +21,7 @@
 
             <p:panel visible="#{edit.fpanel}" id="pan">
                 <div class="ibox-content">
-                    <p:accordionPanel multiple="true" id="ss">
+                    <p:accordionPanel id="ss">
                         <p:tab title="Personal Details" id="sss">                               
                             <h:panelGrid columns="2" cellpadding="10">
                                 <h:outputText value="First Name: "/> <h:outputText value="#{edit.fname}"/> 
@@ -95,8 +95,7 @@
                     <p:dialog header="Edit Profile" widgetVar="dlg2"                              
                               position="center"
                               minimizable="true"
-                              maximizable="true"
-                              height="470" width="600">                                        
+                              maximizable="true">                                        
 
                         <h:form id="formProces">
                             <p:panel id="damn">                                          

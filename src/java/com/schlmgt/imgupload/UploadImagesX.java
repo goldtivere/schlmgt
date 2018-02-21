@@ -20,6 +20,7 @@ public class UploadImagesX {
     private String messangerOfTruth;
 
     private String pst_url;
+    private String pst_loc;
     LoadPPTfile loadPPTfile = new LoadPPTfile();  
 
     public boolean uploadImg(UploadedFile file, String account) throws Exception {
@@ -61,6 +62,7 @@ public class UploadImagesX {
             fos.close();
 
             setPst_url(pst_url_location + account + ".jpg");
+            setPst_loc(pst_location+account+".jpg");
 
             System.out.println("Did you get here PIX ?" + getPst_url());
 
@@ -82,6 +84,15 @@ public class UploadImagesX {
 
     }
 
+    public String getPst_loc() {
+        return pst_loc;
+    }
+
+    public void setPst_loc(String pst_loc) {
+        this.pst_loc = pst_loc;
+    }
+
+    
     /**
      * @return the messangerOfTruth
      */

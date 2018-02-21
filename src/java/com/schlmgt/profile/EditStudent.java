@@ -113,8 +113,10 @@ public class EditStudent implements Serializable {
     private List<BloodGroupModel> modelgroup;
     private UploadedFile passport;
     private String passport_url;
+    private String passportLocation;
     private String ref_number;
     private String from;
+    private String imageLocation;
     private SecondaryModel secModel = new SecondaryModel();
     private PrimaryModel priModel = new PrimaryModel();
     private NurseryModel nurModel = new NurseryModel();
@@ -235,6 +237,7 @@ public class EditStudent implements Serializable {
 
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             setPassport_url(uploadImagesX.getPst_url());
+            setPassportLocation(uploadImagesX.getPst_loc());
             FacesContext.getCurrentInstance().addMessage(null, message);
 
         } catch (Exception ex) {
@@ -762,8 +765,10 @@ public class EditStudent implements Serializable {
                 setOtherDis(rs.getString("other_disability"));
                 setBgroup(rs.getString("bgroup"));
                 setImagelink(rs.getString("image"));
+                setImageLocation(rs.getString("imgLocation"));
 
             }
+            System.out.println(getImageLocation() + " l");
             System.out.println(getImagelink());
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -1078,32 +1083,34 @@ public class EditStudent implements Serializable {
         boolean loggedIn = true;
 
         try {
-            if(!getPassport_url().isEmpty())
-            {
-            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
-            String on = String.valueOf(userObj);
-            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
-            int createdId = userObj.getId();
-            con = dbConnections.mySqlDBconnection();
+            if (!getPassport_url().isEmpty()) {
+                UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+                String on = String.valueOf(userObj);
+                String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+                int createdId = userObj.getId();
+                con = dbConnections.mySqlDBconnection();
 
-            String previous = "update student_details set image=?,"
-                    + "updated_by=?,updated_id=?,date_updated=? where studentid=?";
+                String previous = "update student_details set image=?,imgLocation=?,"
+                        + "updated_by=?,updated_id=?,date_updated=? where studentid=?";
 
-            pstmt = con.prepareStatement(previous);
+                pstmt = con.prepareStatement(previous);
 
-            pstmt.setString(1, getPassport_url());
-            pstmt.setString(2, createdby);
-            pstmt.setInt(3, createdId);
-            pstmt.setString(4, DateManipulation.dateAndTime());
-            pstmt.setString(5, getStudentid());
-            System.out.println(getStudentid());
-            pstmt.executeUpdate();
-            setPassport_url("");
-            updateImg();
-            setMessangerOfTruth("Image Updated!!");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-            context.addMessage(null, msg);
-            StudentNumber();
+                pstmt.setString(1, getPassport_url());
+                pstmt.setString(2, getPassport_url());
+                pstmt.setString(3, createdby);
+                pstmt.setInt(4, createdId);
+                pstmt.setString(5, DateManipulation.dateAndTime());
+                pstmt.setString(6, getStudentid());
+                System.out.println(getStudentid());
+                pstmt.executeUpdate();
+                setPassport_url("");
+                updateImg();
+                setMessangerOfTruth("Image Updated!!");
+                File file = new File(getImageLocation());
+                file.delete();
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+                StudentNumber();
             }
 
         } catch (Exception ex) {
@@ -1179,6 +1186,22 @@ public class EditStudent implements Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public String getPassportLocation() {
+        return passportLocation;
+    }
+
+    public void setPassportLocation(String passportLocation) {
+        this.passportLocation = passportLocation;
+    }
+
+    public String getImageLocation() {
+        return imageLocation;
+    }
+
+    public void setImageLocation(String imageLocation) {
+        this.imageLocation = imageLocation;
     }
 
     public List<BloodGroupModel> getModelgroup() {
