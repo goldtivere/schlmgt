@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 /**
@@ -23,10 +24,13 @@ import javax.faces.context.FacesContext;
  * @author Gold
  */
 @ManagedBean(name = "classmode")
+@ViewScoped
 public class ClassGrade implements Serializable {
 
     private List<ClassModel> classmodel;
     private List<GradeModel> grademodels;
+    private List<String> termList;
+    private List<String> term;
 
     @PostConstruct
     public void init() {
@@ -82,6 +86,56 @@ public class ClassGrade implements Serializable {
         }
     }
 
+    public List<String> yearDropdown(String term) throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT distinct year FROM yearterm where term=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, term);
+            rs = pstmt.executeQuery();
+            //
+            List<String> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                lst.add(rs.getString("year"));
+
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+    
+    public void ontermChanges(String tbclass) throws Exception {
+
+        term = yearDropdown(tbclass);
+        System.out.println(tbclass);
+
+    }
+
+
     public List<GradeModel> gradeDropdowns(String tbclass) throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -130,10 +184,50 @@ public class ClassGrade implements Serializable {
         }
     }
 
+    public List<String> termDropdown() throws Exception {
+
+        //
+        try {
+            List<String> lst = new ArrayList<>();
+            lst.add("First Term");
+            lst.add("Second Term");
+            lst.add("Third Term");
+            return lst;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        }
+    }
+
+    public void ongradeChanges() throws Exception {
+
+        termList = termDropdown();
+
+    }
+
     public void onClassChanges(String tbclass) throws Exception {
 
         grademodels = gradeDropdowns(tbclass);
 
+    }
+
+    public List<String> getTerm() {
+        return term;
+    }
+
+    public void setTerm(List<String> term) {
+        this.term = term;
+    }
+
+    
+    public List<String> getTermList() {
+        return termList;
+    }
+
+    public void setTermList(List<String> termList) {
+        this.termList = termList;
     }
 
     public List<GradeModel> getGrademodels() {

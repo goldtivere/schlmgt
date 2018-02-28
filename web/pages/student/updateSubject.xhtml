@@ -15,7 +15,8 @@
         <div class="row">
             <div class="ibox-content" style="height: 80px;">
                 <div class="form-group">
-                    <div class="pull-right">
+                    <div class="text-center">
+                        <p:growl id="wat"></p:growl>
                         <p:panel id="dude" style="border: none;">
 
                             <p:selectOneMenu id="sclass" class="form-control" value="#{subjectUpdate.studentClass}" required="true" requiredMessage="Class required">
@@ -31,20 +32,112 @@
 
 
                             <p:selectOneMenu id="grad" class="form-control" value="#{subjectUpdate.studentGrade}" required="true" requiredMessage="Grade required">                                
+                                <p:ajax listener="#{classmode.ongradeChanges}" update="gra" />
                                 <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{classmode.grademodels}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.grade}"
                                                itemValue="#{singlevalue.grade}"/>
-                            </p:selectOneMenu>                              
+                            </p:selectOneMenu> 
 
-                            <p:commandButton value="Dude!!!" actionListener="#{testCSV.testCSV}" immediate="true"/>
+                            <p:selectOneMenu id="gra" class="form-control" value="#{subjectUpdate.term}" required="true" requiredMessage="Grade required">                                
+                                <p:ajax listener="#{classmode.ontermChanges(subjectUpdate.term)}" update="gr" />
+                                <f:selectItem itemLabel="--Select Term--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{classmode.termList}"/>
+                            </p:selectOneMenu> 
+                            <p:selectOneMenu id="gr" class="form-control" value="#{subjectUpdate.year}" required="true" requiredMessage="Grade required">                                
+                                <p:ajax listener="#{subjectUpdate.onYearChange()}" update="nursery,nur" />
+                                <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{classmode.term}"/>
+                            </p:selectOneMenu> 
+
                         </p:panel>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row">
 
-    </ui:define>
+            <div class="col-md-6" style="margin-top: 20px;"> 
+                <p:panel visible="#{subjectUpdate.status}" id="nursery">
+                    <div class="ibox-content">
+                        <p:outputLabel value="#{subjectUpdate.studentGrade}"></p:outputLabel>
+                        <br/>
+                        <p:outputLabel value="#{subjectUpdate.term}#{subjectUpdate.year}"></p:outputLabel>
+
+                        <p:dataTable id="n" class="table table-responsive" var="papprv_rpt" 
+                                     value="#{subjectUpdate.sesTab}"
+                                     rowKey="#{papprv_rpt.id}"
+                                     paginatorTemplate="{CurrentPageReport}  
+                                     {FirstPageLink} {PreviousPageLink} 
+                                     {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
+                                     paginator="true"
+                                     rowsPerPageTemplate="5,10,15"
+                                     draggableColumns="true" rows="15" style="margin-bottom:20px">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
+                                    <p:dataExporter type="xls" target="n" fileName="report" pageOnly="true"/>
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="pdf" target="n" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="csv" target="n" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true" >
+                                    <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+                            </f:facet>                            
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Subject"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.subject}"/>
+
+                            </p:column>
+                            <p:column style="width:60px" exportable="false">
+                                <f:facet name="header">Action</f:facet>
+                                <p:commandButton value="" icon="ui-icon-search" process="@this" 
+                                                 actionListener="#{prof.selectRe(papprv_rpt)}"/>                               
+                            </p:column>
+                        </p:dataTable> 
+
+                    </div>
+                </p:panel> 
+            </div>   
+
+            <div class="col-md-6" style="margin-top: 20px;">
+                <p:panel visible="#{subjectUpdate.status}" id="nur">
+                    <div class="ibox-content">
+                        <div class="row profile">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Select File:" />
+                                <p:outputLabel value="" />
+                                <p:fileUpload required="true" id="upload_pix_data" value="#{subjectUpdate.csv}" auto="true"
+                                              fileUploadListener="#{subjectUpdate.handleFileUpload}" 
+                                              allowTypes="/(\.|\/)(xls|xlsx)$/"
+                                              invalidFileMessage="Excel is only Required"
+                                              mode="advanced"  dragDropSupport="false"
+                                              update="wat" sizeLimit="2097152" fileLimit="1" />                                                               
+                        </h:panelGrid>
+                    </div>
+                </div>
+            </p:panel>
+        </div>
+
+
+    </div>
+
+</ui:define>
 
 </ui:composition>
