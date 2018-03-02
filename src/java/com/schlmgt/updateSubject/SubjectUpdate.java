@@ -8,6 +8,8 @@ package com.schlmgt.updateSubject;
 import com.schlmgt.dbconn.DbConnectionX;
 import static com.schlmgt.imgupload.ExcelUpload.cellToString;
 import com.schlmgt.imgupload.UploadImagesX;
+import com.schlmgt.logic.AESencrp;
+import com.schlmgt.logic.DateManipulation;
 import com.schlmgt.login.UserDetails;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +31,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Part;
+import javax.swing.table.TableModel;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -52,6 +55,8 @@ public class SubjectUpdate implements Serializable {
     private String term;
     private String year;
     private List<SessionTable> sesTab;
+    private SessionTable tab;
+    private SessionTable tabValues = new SessionTable();
     private boolean status;
     private UploadedFile csv;
     private String csvUrl;
@@ -64,31 +69,6 @@ public class SubjectUpdate implements Serializable {
         setStatus(false);
     }
 
-    public SubjectUpdate() {
-        //
-        ref_number = generateRefNo();
-
-    }
-
-    public String generateRefNo() {
-
-        try {
-
-            String timeStamp = new SimpleDateFormat("yyMMddHHmmss").format(Calendar.getInstance().getTime());
-
-            int rnd = new Random().nextInt(99999753);
-            String temp_val = String.valueOf(rnd).concat(timeStamp);
-            return temp_val;
-
-        } catch (Exception ex) {
-
-            ex.printStackTrace();
-            return null;
-
-        }
-
-    }//end generateRefNo(...)s
-
     public List<SessionTable> displaySubject() throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -100,11 +80,12 @@ public class SubjectUpdate implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM sessiontable where class=? and term=? and year=?";
+            String query = "SELECT * FROM sessiontable where class=? and term=? and year=? and isdeleted=?";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, getStudentClass());
             pstmt.setString(2, getTerm());
             pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
             rs = pstmt.executeQuery();
             //
             List<SessionTable> lst = new ArrayList<>();
@@ -140,6 +121,24 @@ public class SubjectUpdate implements Serializable {
         }
     }
 
+    public void select(SessionTable e) {
+
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        FacesMessage msg;        
+
+        tabValues.setGrade(e.getGrade());
+        tabValues.setId(e.getId());
+        tabValues.setSclass(e.getSclass());
+        tabValues.setSubject(e.getSubject());
+        tabValues.setTerm(e.getTerm());
+        tabValues.setYear(e.getYear());    
+        System.out.println(e.getSubject());
+        System.out.println(tabValues.getSubject());
+
+    }
+
     public void handleFileUpload(FileUploadEvent event) {
 
         FacesMessage message;
@@ -149,6 +148,9 @@ public class SubjectUpdate implements Serializable {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        boolean stat = false;
+
+        con = dbConnections.mySqlDBconnection();
 
         try {
 
@@ -162,34 +164,51 @@ public class SubjectUpdate implements Serializable {
             XSSFSheet ws = wb.getSheetAt(0);
             Row row;
             row = (Row) ws.getRow(0);
-            
-            
+
             if ("subject".equalsIgnoreCase(row.getCell(0).toString())) {
-                
-                String personalDetails = "insert into sessiontable (term,class,grade,year,subject,createdby,datecreated,isdeleted) values("
+                con.setAutoCommit(false);
+                String subjectDetail = "insert into sessiontable (term,class,grade,year,subject,createdby,datecreated,isdeleted) values("
                         + "?,?,?,?,?,?,?,?)";
+                pstmt = con.prepareStatement(subjectDetail);
                 for (int i = 1; i <= ws.getLastRowNum(); i++) {
                     row = (Row) ws.getRow(i);
 
                     if (row.getCell(0) == null) {
-                        int s=i+1;
-                        setMessangerOfTruth("Cell in row "+String.valueOf(s)+" is empty");
+                        int s = i + 1;
+                        setMessangerOfTruth("Cell in row " + String.valueOf(s) + " is empty");
                         message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                         context.addMessage(null, message);
                         break;
                     }
+
+                    pstmt.setString(1, getTerm());
+                    pstmt.setString(2, getStudentClass());
+                    pstmt.setString(3, getStudentGrade());
+                    pstmt.setString(4, getYear());
+                    pstmt.setString(5, row.getCell(0).toString());
+                    pstmt.setString(6, createdby);
+                    pstmt.setString(7, DateManipulation.dateAndTime());
+                    pstmt.setBoolean(8, false);
+                    pstmt.executeUpdate();
                     System.out.println(row.getCell(0).toString());
-                    System.out.println(row.getCell(1).toString());
+                    stat = true;
 
                 }
-                setMessangerOfTruth("File Upload Successful");
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                context.addMessage(null, message);
+                if (stat == true) {
+                    con.commit();
+                    sesTab = displaySubject();
+                    setMessangerOfTruth("File Upload Successful");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                    context.addMessage(null, message);
+                } else {
+
+                }
             } else {
                 setMessangerOfTruth("Excel not in correct format");
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, message);
             }
+            setCsv(null);
 
         } catch (Exception ex) {
 
@@ -204,6 +223,22 @@ public class SubjectUpdate implements Serializable {
     public void onYearChange() throws Exception {
         setStatus(true);
         sesTab = displaySubject();
+    }
+
+    public SessionTable getTabValues() {
+        return tabValues;
+    }
+
+    public void setTabValues(SessionTable tabValues) {
+        this.tabValues = tabValues;
+    }
+
+    public SessionTable getTab() {
+        return tab;
+    }
+
+    public void setTab(SessionTable tab) {
+        this.tab = tab;
     }
 
     public String getMessangerOfTruth() {
