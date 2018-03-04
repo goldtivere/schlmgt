@@ -17,11 +17,11 @@
 
                 <p:panel id="okay">                                          
                     <p:outputPanel id="upda">
+                        <h:panelGrid columns="2">
+                            <p:inputTextarea id="txt" required="true" value="#{subjectUpdate.tab.subject}"/>
 
-                        <p:inputTextarea value="#{subjectUpdate.tab.subject}"/>
-
-                        <p:commandButton class="btn btn-primary pull-right" actionListener="#{edit.updateHealth}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="update"/>
-
+                            <p:commandButton class="btn btn-primary pull-right" update=":templateForm:n,wat" process="@this txt" actionListener="#{subjectUpdate.updateSubject}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                        </h:panelGrid>
                     </p:outputPanel>
                 </p:panel>
 
@@ -80,53 +80,28 @@
 
                         <p:dataTable id="n" class="table table-responsive" scrollable="true" scrollHeight="150" var="papprv_rpt" 
                                      value="#{subjectUpdate.sesTab}"
+                                     selection="#{subjectUpdate.sesTab1}"
                                      rowKey="#{papprv_rpt.id}"
                                      paginatorTemplate="{CurrentPageReport}  
                                      {FirstPageLink} {PreviousPageLink} 
-                                     {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
+                                     {PageLinks} {NextPageLink} {LastPageLink}"
                                      paginator="true"
                                      rowsPerPageTemplate="5,10,15"
-                                     draggableColumns="true" rows="15" style="margin-bottom:20px">
-                            <f:facet name="{Exporters}">
-                                <h:commandLink immediate="true">
-                                    <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
-                                    <p:dataExporter type="xls" target="n" fileName="report" pageOnly="true"/>
-                                </h:commandLink>
-
-                                <h:commandLink immediate="true">
-                                    <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
-                                    <p:dataExporter type="pdf" target="n" fileName="report" pageOnly="true" />
-                                </h:commandLink>
-
-                                <h:commandLink immediate="true">
-                                    <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
-                                    <p:dataExporter type="csv" target="n" fileName="report" pageOnly="true" />
-                                </h:commandLink>
-
-                                <h:commandLink immediate="true" >
-                                    <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
-                                    <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
-                                </h:commandLink>
-                            </f:facet>                            
-
-                            <p:column>
-
-                                <f:facet name="header">
-                                    <h:outputText value="Subject"/>
-                                </f:facet>
-
+                                     draggableColumns="true" rows="15" style="margin-bottom:20px">                          
+                            <p:column selectionMode="multiple" style="width:30px;text-align:center"/>
+                            <p:column headerText="Subject">
                                 <h:outputText value="#{papprv_rpt.subject}"/>
 
                             </p:column>
-                            <p:column style="width:150px" exportable="false">
-                                <f:facet name="header">Action</f:facet>
-                                <p:commandButton value="" alt="search" id="please" icon="ui-icon-search" update=":templateForm:okay,:templateForm:upda" process="@this" 
+                            <p:column headerText="Action" style="width:60px" exportable="false">                                
+                                <p:commandButton value="" alt="search" id="please" icon="ui-icon-pencil" update=":templateForm:okay,:templateForm:upda" process="@this" 
                                                  oncomplete="PF('dlg2').show()"> 
                                     <f:setPropertyActionListener value="#{papprv_rpt}" target="#{subjectUpdate.tab}" />
-                                </p:commandButton>
-                                <p:commandButton value="" alt="delete" icon="ui-icon-trash" process="@this" 
-                                                 actionListener="#{subjectUpdate.select(papprv_rpt)}"/>  
+                                </p:commandButton>                               
                             </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton style="margin-right: 380px;"  icon="ui-icon-trash" value="delete" />
+                            </f:facet>
                         </p:dataTable> 
 
                     </div>

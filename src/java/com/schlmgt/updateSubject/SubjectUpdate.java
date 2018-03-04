@@ -29,6 +29,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Part;
 import javax.swing.table.TableModel;
@@ -39,6 +40,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -55,6 +57,7 @@ public class SubjectUpdate implements Serializable {
     private String term;
     private String year;
     private List<SessionTable> sesTab;
+    private List<SessionTable> sesTab1;
     private SessionTable tab;
     private SessionTable tabValues = new SessionTable();
     private boolean status;
@@ -80,7 +83,7 @@ public class SubjectUpdate implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM sessiontable where class=? and term=? and year=? and isdeleted=?";
+            String query = "SELECT * FROM sessiontable where class=? and term=? and year=? and isdeleted=? order by id desc";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, getStudentClass());
             pstmt.setString(2, getTerm());
@@ -126,14 +129,14 @@ public class SubjectUpdate implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
 
         DbConnectionX dbConnections = new DbConnectionX();
-        FacesMessage msg;        
+        FacesMessage msg;
 
         tabValues.setGrade(e.getGrade());
         tabValues.setId(e.getId());
         tabValues.setSclass(e.getSclass());
         tabValues.setSubject(e.getSubject());
         tabValues.setTerm(e.getTerm());
-        tabValues.setYear(e.getYear());    
+        tabValues.setYear(e.getYear());
         System.out.println(e.getSubject());
         System.out.println(tabValues.getSubject());
 
@@ -209,7 +212,7 @@ public class SubjectUpdate implements Serializable {
                 context.addMessage(null, message);
             }
             setCsv(null);
-
+            mn.close();
         } catch (Exception ex) {
 
             ex.printStackTrace();
@@ -220,9 +223,55 @@ public class SubjectUpdate implements Serializable {
 
     }
 
+    public void updateSubject() {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        boolean loggedIn = true;
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            con = dbConnections.mySqlDBconnection();
+
+            String updateSubject = "update sessiontable set subject=? ,updatedby=?,updatetime=? where id=?";
+
+            pstmt = con.prepareStatement(updateSubject);
+
+            pstmt.setString(1, tab.getSubject());
+            pstmt.setString(2, createdby);
+            pstmt.setString(3, DateManipulation.dateAndTime());
+            pstmt.setInt(4, tab.getId());
+            pstmt.executeUpdate();
+            sesTab = displaySubject();
+            setMessangerOfTruth("Subject Updated!!");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, msg);
+            cont.addCallbackParam("loggedIn", loggedIn);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void onYearChange() throws Exception {
         setStatus(true);
         sesTab = displaySubject();
+    }
+
+    public List<SessionTable> getSesTab1() {
+        return sesTab1;
+    }
+
+    public void setSesTab1(List<SessionTable> sesTab1) {
+        this.sesTab1 = sesTab1;
     }
 
     public SessionTable getTabValues() {
