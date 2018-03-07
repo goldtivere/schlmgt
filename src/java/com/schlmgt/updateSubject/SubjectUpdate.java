@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.PostConstruct;
+import javax.el.PropertyNotFoundException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -58,7 +59,7 @@ public class SubjectUpdate implements Serializable {
     private String year;
     private List<SessionTable> sesTab;
     private List<SessionTable> sesTab1;
-    private SessionTable tab;
+    private SessionTable tab = new SessionTable();
     private SessionTable tabValues = new SessionTable();
     private boolean status;
     private UploadedFile csv;
@@ -256,6 +257,54 @@ public class SubjectUpdate implements Serializable {
             context.addMessage(null, msg);
             cont.addCallbackParam("loggedIn", loggedIn);
 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void deleteRecord() {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            con = dbConnections.mySqlDBconnection();
+            if (sesTab1 == null) {                
+                setMessangerOfTruth("Item(s) not selected!!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+            } else {
+
+                String updateSubject = "update sessiontable set isdeleted=?,deletedby=?,dateDeleted=? where id=?";
+
+                pstmt = con.prepareStatement(updateSubject);
+                for (SessionTable ta : sesTab1) {
+                    pstmt.setBoolean(1, true);
+                    pstmt.setString(2, createdby);
+                    pstmt.setString(3, DateManipulation.dateAndTime());
+                    pstmt.setInt(4, ta.getId());
+                    pstmt.executeUpdate();
+
+                }
+                sesTab = displaySubject();
+                setMessangerOfTruth("Subject Deleted!!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+            }
+        } catch (PropertyNotFoundException e) {
+
+            setMessangerOfTruth("Item(s) not selected!!");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, msg);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

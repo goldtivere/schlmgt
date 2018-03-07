@@ -14,17 +14,18 @@
     <ui:define name="content">
         <div class="row">
             <p:dialog header="Edit" style="margin-top: -200px; margin-left: -250px;" position="center" widgetVar="dlg2">                                        
+                <h:form id="ooo">
+                    <p:panel id="okay">                                          
+                        <p:outputPanel id="upda">
+                            <h:panelGrid columns="2">
+                                <p:inputTextarea id="txt" required="true" value="#{subjectUpdate.tab.subject}"/>
 
-                <p:panel id="okay">                                          
-                    <p:outputPanel id="upda">
-                        <h:panelGrid columns="2">
-                            <p:inputTextarea id="txt" required="true" value="#{subjectUpdate.tab.subject}"/>
+                                <p:commandButton class="btn btn-primary pull-right" update=":templateForm:n,:templateForm:wat" process="@this txt" actionListener="#{subjectUpdate.updateSubject}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                            </h:panelGrid>
+                        </p:outputPanel>
 
-                            <p:commandButton class="btn btn-primary pull-right" update=":templateForm:n,wat" process="@this txt" actionListener="#{subjectUpdate.updateSubject}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="update"/>
-                        </h:panelGrid>
-                    </p:outputPanel>
-                </p:panel>
-
+                    </p:panel>
+                </h:form>
             </p:dialog> 
             <div class="ibox-content" style="height: 80px;">
                 <div class="form-group">
@@ -76,7 +77,7 @@
                     <div class="ibox-content">
                         <p:outputLabel value="#{subjectUpdate.studentGrade}"></p:outputLabel>
                         <br/>
-                        <p:outputLabel value="#{subjectUpdate.term}#{subjectUpdate.year}"></p:outputLabel>
+                        <p:outputLabel value="#{subjectUpdate.term}, #{subjectUpdate.year}"></p:outputLabel>
 
                         <p:dataTable id="n" class="table table-responsive" scrollable="true" scrollHeight="150" var="papprv_rpt" 
                                      value="#{subjectUpdate.sesTab}"
@@ -94,13 +95,19 @@
 
                             </p:column>
                             <p:column headerText="Action" style="width:60px" exportable="false">                                
-                                <p:commandButton value="" alt="search" id="please" icon="ui-icon-pencil" update=":templateForm:okay,:templateForm:upda" process="@this" 
+                                <p:commandButton value="" alt="search" id="please" icon="ui-icon-pencil" update=":templateForm:ooo:okay,:templateForm:ooo:upda" process="@this" 
                                                  oncomplete="PF('dlg2').show()"> 
                                     <f:setPropertyActionListener value="#{papprv_rpt}" target="#{subjectUpdate.tab}" />
                                 </p:commandButton>                               
                             </p:column>
                             <f:facet name="footer">
-                                <p:commandButton style="margin-right: 380px;"  icon="ui-icon-trash" value="delete" />
+                                <p:commandButton style="margin-right: 380px;" process="@this n" actionListener="#{subjectUpdate.deleteRecord}" update=":templateForm:n,:templateForm:wat" icon="ui-icon-trash" value="delete">
+                                    <p:confirm header="Delete" message="Are you sure you want to delete record?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                                <p:confirmDialog id="pop" global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton value="Yes" immediate="true" process="@this" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton value="No" type="button" process="@this" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
                             </f:facet>
                         </p:dataTable> 
 
