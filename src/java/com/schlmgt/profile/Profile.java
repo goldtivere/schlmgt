@@ -299,8 +299,9 @@ public class Profile implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbnursery";
+            String query = "SELECT * FROM tbstudentclass where classtype=?";
             pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "Nursery");
             rs = pstmt.executeQuery();
             //
             List<NurseryModel> lst = new ArrayList<>();
@@ -350,8 +351,9 @@ public class Profile implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbprimary";
+            String query = "SELECT * FROM tbstudentclass where classtype=?";
             pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "Primary");
             rs = pstmt.executeQuery();
             //
             List<PrimaryModel> lst = new ArrayList<>();
@@ -401,8 +403,9 @@ public class Profile implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbsecondary";
+            String query = "SELECT * FROM tbstudentclass where classtype=?";
             pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "Secondary");
             rs = pstmt.executeQuery();
             //
             List<SecondaryModel> lst = new ArrayList<>();
@@ -455,8 +458,9 @@ public class Profile implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbnursery";
+            String query = "SELECT * FROM tbstudentclass where classtype=?";
             pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "Nursery");
             rs = pstmt.executeQuery();
             //
             List<String> lst = new ArrayList<>();
@@ -516,8 +520,9 @@ public class Profile implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbprimary";
+            String query = "SELECT * FROM tbstudentclass where classtype=?";
             pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "Primary");
             rs = pstmt.executeQuery();
             //
             List<String> lst = new ArrayList<>();
@@ -577,8 +582,9 @@ public class Profile implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbsecondary";
+            String query = "SELECT * FROM tbstudentclass where classtype=?";
             pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "Secondary");
             rs = pstmt.executeQuery();
             //
             List<String> lst = new ArrayList<>();

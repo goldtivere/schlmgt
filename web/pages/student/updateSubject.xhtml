@@ -85,10 +85,31 @@
                                      rowKey="#{papprv_rpt.id}"
                                      paginatorTemplate="{CurrentPageReport}  
                                      {FirstPageLink} {PreviousPageLink} 
-                                     {PageLinks} {NextPageLink} {LastPageLink}"
+                                     {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                      paginator="true"
                                      rowsPerPageTemplate="5,10,15"
-                                     draggableColumns="true" rows="15" style="margin-bottom:20px">                          
+                                     draggableColumns="true" rows="15" style="margin-bottom:20px">  
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
+                                    <p:dataExporter type="xls" target="n" fileName="report" pageOnly="true"/>
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="pdf" target="n" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="csv" target="n" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true" >
+                                    <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+                            </f:facet>                            
                             <p:column selectionMode="multiple" style="width:30px;text-align:center"/>
                             <p:column headerText="Subject">
                                 <h:outputText value="#{papprv_rpt.subject}"/>

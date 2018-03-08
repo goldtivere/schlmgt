@@ -762,7 +762,7 @@ public class FreshReg implements Serializable {
         return false;
     }
 
-    public void nurseryUpload(int studentId, String imgLink, String createdby, String fullname) {
+    public void classUpload(int studentId, String imgLink, String createdby, String fullname, String currentclass) {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -771,9 +771,9 @@ public class FreshReg implements Serializable {
         try {
             con = dbConnections.mySqlDBconnection();
 
-           String nurseryInsert = "insert into tbnursery (studentid,first_name,middle_name,last_name,full_name,class,"
-                    + "classtype,isdeleted,datecreated,datetime_created,createdby,imagelink,Arm) values "
-                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String nurseryInsert = "insert into tbstudentclass (studentid,first_name,middle_name,last_name,full_name,class,"
+                    + "classtype,isdeleted,datecreated,datetime_created,createdby,imagelink,Arm,currentclass) values "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             pstmt = con.prepareStatement(nurseryInsert);
 
@@ -783,83 +783,14 @@ public class FreshReg implements Serializable {
             pstmt.setString(4, getLname());
             pstmt.setString(5, fullname);
             pstmt.setString(6, gradeMode.getGrade());
-            pstmt.setString(7, "Nursery");
+            pstmt.setString(7, currentclass);
             pstmt.setBoolean(8, false);
             pstmt.setString(9, DateManipulation.dateAlone());
             pstmt.setString(10, DateManipulation.dateAndTime());
             pstmt.setString(11, createdby);
             pstmt.setString(12, imgLink);
             pstmt.setString(13, getArm());
-            pstmt.executeUpdate();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void primaryUpload(int studentId, String imgLink, String createdby, String fullname) {
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try {
-            con = dbConnections.mySqlDBconnection();
-
-            String nurseryInsert = "insert into tbprimary (studentid,first_name,middle_name,last_name,full_name,class,"
-                    + "classtype,isdeleted,datecreated,datetime_created,createdby,imagelink,Arm) values "
-                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-            pstmt = con.prepareStatement(nurseryInsert);
-
-            pstmt.setInt(1, studentId);
-            pstmt.setString(2, getFname());
-            pstmt.setString(3, getMname());
-            pstmt.setString(4, getLname());
-            pstmt.setString(5, fullname);
-            pstmt.setString(6, gradeMode.getGrade());
-            pstmt.setString(7, "Primary");
-            pstmt.setBoolean(8, false);
-            pstmt.setString(9, DateManipulation.dateAlone());
-            pstmt.setString(10, DateManipulation.dateAndTime());
-            pstmt.setString(11, createdby);
-            pstmt.setString(12, imgLink);
-            pstmt.setString(13, getArm());
-            pstmt.executeUpdate();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void secondaryUpload(int studentId, String imgLink, String createdby, String fullname) {
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try {
-            con = dbConnections.mySqlDBconnection();
-
-            String nurseryInsert = "insert into tbsecondary (studentid,first_name,middle_name,last_name,full_name,class,"
-                    + "classtype,isdeleted,datecreated,datetime_created,createdby,imagelink,Arm) values "
-                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-            pstmt = con.prepareStatement(nurseryInsert);
-
-            pstmt.setInt(1, studentId);
-            pstmt.setString(2, getFname());
-            pstmt.setString(3, getMname());
-            pstmt.setString(4, getLname());
-            pstmt.setString(5, fullname);
-            pstmt.setString(6, gradeMode.getGrade());
-            pstmt.setString(7, "Secondary");
-            pstmt.setBoolean(8, false);
-            pstmt.setString(9, DateManipulation.dateAlone());
-            pstmt.setString(10, DateManipulation.dateAndTime());
-            pstmt.setString(11, createdby);
-            pstmt.setString(12, imgLink);
-            pstmt.setString(13, getArm());
+            pstmt.setBoolean(14, true);
             pstmt.executeUpdate();
 
         } catch (Exception ex) {
@@ -966,13 +897,7 @@ public class FreshReg implements Serializable {
 
             pstmt.executeUpdate();
 
-            if (classmode.getTbclass().equalsIgnoreCase("nursery")) {
-                nurseryUpload(studentId, getPassport_url(), createdby, fullname);
-            } else if (classmode.getTbclass().equalsIgnoreCase("primary")) {
-                primaryUpload(studentId, getPassport_url(), createdby, fullname);
-            } else if (classmode.getTbclass().equalsIgnoreCase("secondary")) {
-                secondaryUpload(studentId, getPassport_url(), createdby, fullname);
-            }
+            classUpload(studentId, getPassport_url(), createdby, fullname, classmode.getTbclass());
 
             refresh();
             NavigationHandler nav = context.getApplication().getNavigationHandler();
@@ -1159,7 +1084,6 @@ public class FreshReg implements Serializable {
         this.imageLocation = imageLocation;
     }
 
-    
     public String getSex() {
         return sex;
     }

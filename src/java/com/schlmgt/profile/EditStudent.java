@@ -813,7 +813,7 @@ public class EditStudent implements Serializable {
             String dobs = format.format(getDateOfBirth());
             con = dbConnections.mySqlDBconnection();
             if (nurModel != null && nurModel.getClasstype().equalsIgnoreCase("nursery")) {
-                String personalDetails = "update tbnursery set first_name=? ,middle_name=?, last_name=?, full_name=?,"
+                String personalDetails = "update tbstudentclass set first_name=? ,middle_name=?, last_name=?, full_name=?,"
                         + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
 
                 pstmt = con.prepareStatement(personalDetails);
@@ -831,7 +831,7 @@ public class EditStudent implements Serializable {
                 pstmt.executeUpdate();
                 System.out.println("o" + nurModel.getSclass());
             } else if (priModel != null && priModel.getClasstype().equalsIgnoreCase("primary")) {
-                String personalDetails = "update tbprimary set first_name=? ,middle_name=?, last_name=?, full_name=?,"
+                String personalDetails = "update tbstudentclass set first_name=? ,middle_name=?, last_name=?, full_name=?,"
                         + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
 
                 pstmt = con.prepareStatement(personalDetails);
@@ -849,7 +849,7 @@ public class EditStudent implements Serializable {
                 pstmt.executeUpdate();
                 System.out.println("o" + priModel.getSclass());
             } else if (secModel != null && secModel.getClasstype().equalsIgnoreCase("secondary")) {
-                String personalDetails = "update tbsecondary set first_name=? ,middle_name=?, last_name=?, full_name=?,"
+                String personalDetails = "update tbstudentclass set first_name=? ,middle_name=?, last_name=?, full_name=?,"
                         + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
 
                 pstmt = con.prepareStatement(personalDetails);
@@ -1137,8 +1137,8 @@ public class EditStudent implements Serializable {
             String dobs = format.format(getDateOfBirth());
             con = dbConnections.mySqlDBconnection();
             if (nurModel != null && nurModel.getClasstype().equalsIgnoreCase("nursery")) {
-                String personalDetails = "update tbnursery set imagelink=?,"
-                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
+                String personalDetails = "update tbstudentclass set imagelink=?,"
+                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=? and currentclass=?";
 
                 pstmt = con.prepareStatement(personalDetails);
 
@@ -1148,12 +1148,13 @@ public class EditStudent implements Serializable {
                 pstmt.setString(4, DateManipulation.dateAndTime());
                 pstmt.setString(5, getStudentid());
                 pstmt.setString(6, nurModel.getSclass());
+                pstmt.setBoolean(7, true);
 
                 pstmt.executeUpdate();
                 System.out.println("o" + nurModel.getSclass());
             } else if (priModel != null && priModel.getClasstype().equalsIgnoreCase("primary")) {
-                String personalDetails = "update tbprimary set imagelink=?,"
-                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
+                String personalDetails = "update tbstudentclass set imagelink=?,"
+                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=? and currentclass=?";
 
                 pstmt = con.prepareStatement(personalDetails);
 
@@ -1163,12 +1164,13 @@ public class EditStudent implements Serializable {
                 pstmt.setString(4, DateManipulation.dateAndTime());
                 pstmt.setString(5, getStudentid());
                 pstmt.setString(6, priModel.getSclass());
+                pstmt.setBoolean(7, true);
 
                 pstmt.executeUpdate();
                 System.out.println("o" + priModel.getSclass());
             } else if (secModel != null && secModel.getClasstype().equalsIgnoreCase("secondary")) {
-                String personalDetails = "update tbsecondary set imagelink=?,"
-                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
+                String personalDetails = "update tbstudentclass set imagelink=?,"
+                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=? and currentclass=?";
 
                 pstmt = con.prepareStatement(personalDetails);
 
@@ -1178,6 +1180,7 @@ public class EditStudent implements Serializable {
                 pstmt.setString(4, DateManipulation.dateAndTime());
                 pstmt.setString(5, getStudentid());
                 pstmt.setString(6, secModel.getSclass());
+                pstmt.setBoolean(7, true);
 
                 pstmt.executeUpdate();
                 System.out.println("o" + secModel.getSclass());
