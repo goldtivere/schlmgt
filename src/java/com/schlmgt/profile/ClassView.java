@@ -26,8 +26,8 @@ public class ClassView implements Serializable {
     }
 
     public void testMic() {
-        edits.studDetails();
-        System.out.println(edits.getStudentid());
+
+       
     }
 
     public EditStudent getEdits() {

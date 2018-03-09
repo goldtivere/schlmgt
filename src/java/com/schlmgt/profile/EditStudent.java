@@ -118,8 +118,6 @@ public class EditStudent implements Serializable {
     private String from;
     private String imageLocation;
     private SecondaryModel secModel = new SecondaryModel();
-    private PrimaryModel priModel = new PrimaryModel();
-    private NurseryModel nurModel = new NurseryModel();
 
     @PostConstruct
     public void init() {
@@ -716,17 +714,10 @@ public class EditStudent implements Serializable {
 
             FacesContext ctx = FacesContext.getCurrentInstance();
             SecondaryModel secResult = (SecondaryModel) ctx.getExternalContext().getApplicationMap().get("SecData");
-            PrimaryModel priResult = (PrimaryModel) ctx.getExternalContext().getApplicationMap().get("priData");
-            NurseryModel nurResult = (NurseryModel) ctx.getExternalContext().getApplicationMap().get("nurData");
             //test for null...
             secModel = secResult;
-            priModel = priResult;
-            nurModel = nurResult;
-            if (nurModel != null && "Nursery".equalsIgnoreCase(nurModel.getClasstype())) {
-                setStudentid(nurModel.getStudentid());
-            } else if (priModel != null && "Primary".equalsIgnoreCase(priModel.getClasstype())) {
-                setStudentid(priModel.getStudentid());
-            } else if (secModel != null && "Secondary".equalsIgnoreCase(secModel.getClasstype())) {
+
+            if (secModel != null) {
                 setStudentid(secModel.getStudentid());
             }
 
@@ -812,61 +803,24 @@ public class EditStudent implements Serializable {
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
             String dobs = format.format(getDateOfBirth());
             con = dbConnections.mySqlDBconnection();
-            if (nurModel != null && nurModel.getClasstype().equalsIgnoreCase("nursery")) {
-                String personalDetails = "update tbstudentclass set first_name=? ,middle_name=?, last_name=?, full_name=?,"
-                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
 
-                pstmt = con.prepareStatement(personalDetails);
+            String personalDetails = "update tbstudentclass set first_name=? ,middle_name=?, last_name=?, full_name=?,"
+                    + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
 
-                pstmt.setString(1, getFname());
-                pstmt.setString(2, getMname());
-                pstmt.setString(3, getLname());
-                pstmt.setString(4, fullname);
-                pstmt.setString(5, createdby);
-                pstmt.setInt(6, createdId);
-                pstmt.setString(7, DateManipulation.dateAndTime());
-                pstmt.setString(8, getStudentid());
-                pstmt.setString(9, nurModel.getSclass());
+            pstmt = con.prepareStatement(personalDetails);
 
-                pstmt.executeUpdate();
-                System.out.println("o" + nurModel.getSclass());
-            } else if (priModel != null && priModel.getClasstype().equalsIgnoreCase("primary")) {
-                String personalDetails = "update tbstudentclass set first_name=? ,middle_name=?, last_name=?, full_name=?,"
-                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
+            pstmt.setString(1, getFname());
+            pstmt.setString(2, getMname());
+            pstmt.setString(3, getLname());
+            pstmt.setString(4, fullname);
+            pstmt.setString(5, createdby);
+            pstmt.setInt(6, createdId);
+            pstmt.setString(7, DateManipulation.dateAndTime());
+            pstmt.setString(8, getStudentid());
+            pstmt.setString(9, secModel.getSclass());
 
-                pstmt = con.prepareStatement(personalDetails);
-
-                pstmt.setString(1, getFname());
-                pstmt.setString(2, getMname());
-                pstmt.setString(3, getLname());
-                pstmt.setString(4, fullname);
-                pstmt.setString(5, createdby);
-                pstmt.setInt(6, createdId);
-                pstmt.setString(7, DateManipulation.dateAndTime());
-                pstmt.setString(8, getStudentid());
-                pstmt.setString(9, priModel.getSclass());
-
-                pstmt.executeUpdate();
-                System.out.println("o" + priModel.getSclass());
-            } else if (secModel != null && secModel.getClasstype().equalsIgnoreCase("secondary")) {
-                String personalDetails = "update tbstudentclass set first_name=? ,middle_name=?, last_name=?, full_name=?,"
-                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=?";
-
-                pstmt = con.prepareStatement(personalDetails);
-
-                pstmt.setString(1, getFname());
-                pstmt.setString(2, getMname());
-                pstmt.setString(3, getLname());
-                pstmt.setString(4, fullname);
-                pstmt.setString(5, createdby);
-                pstmt.setInt(6, createdId);
-                pstmt.setString(7, DateManipulation.dateAndTime());
-                pstmt.setString(8, getStudentid());
-                pstmt.setString(9, secModel.getSclass());
-
-                pstmt.executeUpdate();
-                System.out.println("o" + secModel.getSclass());
-            }
+            pstmt.executeUpdate();
+            System.out.println("o" + secModel.getSclass());
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1136,55 +1090,22 @@ public class EditStudent implements Serializable {
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
             String dobs = format.format(getDateOfBirth());
             con = dbConnections.mySqlDBconnection();
-            if (nurModel != null && nurModel.getClasstype().equalsIgnoreCase("nursery")) {
-                String personalDetails = "update tbstudentclass set imagelink=?,"
-                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=? and currentclass=?";
 
-                pstmt = con.prepareStatement(personalDetails);
+            String personalDetails = "update tbstudentclass set imagelink=?,"
+                    + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=? and currentclass=?";
 
-                pstmt.setString(1, getPassport_url());
-                pstmt.setString(2, createdby);
-                pstmt.setInt(3, createdId);
-                pstmt.setString(4, DateManipulation.dateAndTime());
-                pstmt.setString(5, getStudentid());
-                pstmt.setString(6, nurModel.getSclass());
-                pstmt.setBoolean(7, true);
+            pstmt = con.prepareStatement(personalDetails);
 
-                pstmt.executeUpdate();
-                System.out.println("o" + nurModel.getSclass());
-            } else if (priModel != null && priModel.getClasstype().equalsIgnoreCase("primary")) {
-                String personalDetails = "update tbstudentclass set imagelink=?,"
-                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=? and currentclass=?";
+            pstmt.setString(1, getPassport_url());
+            pstmt.setString(2, createdby);
+            pstmt.setInt(3, createdId);
+            pstmt.setString(4, DateManipulation.dateAndTime());
+            pstmt.setString(5, getStudentid());
+            pstmt.setString(6, secModel.getSclass());
+            pstmt.setBoolean(7, true);
 
-                pstmt = con.prepareStatement(personalDetails);
-
-                pstmt.setString(1, getPassport_url());
-                pstmt.setString(2, createdby);
-                pstmt.setInt(3, createdId);
-                pstmt.setString(4, DateManipulation.dateAndTime());
-                pstmt.setString(5, getStudentid());
-                pstmt.setString(6, priModel.getSclass());
-                pstmt.setBoolean(7, true);
-
-                pstmt.executeUpdate();
-                System.out.println("o" + priModel.getSclass());
-            } else if (secModel != null && secModel.getClasstype().equalsIgnoreCase("secondary")) {
-                String personalDetails = "update tbstudentclass set imagelink=?,"
-                        + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and class=? and currentclass=?";
-
-                pstmt = con.prepareStatement(personalDetails);
-
-                pstmt.setString(1, getPassport_url());
-                pstmt.setString(2, createdby);
-                pstmt.setInt(3, createdId);
-                pstmt.setString(4, DateManipulation.dateAndTime());
-                pstmt.setString(5, getStudentid());
-                pstmt.setString(6, secModel.getSclass());
-                pstmt.setBoolean(7, true);
-
-                pstmt.executeUpdate();
-                System.out.println("o" + secModel.getSclass());
-            }
+            pstmt.executeUpdate();
+            System.out.println("o" + secModel.getSclass());
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1217,22 +1138,6 @@ public class EditStudent implements Serializable {
 
     public void setSecModel(SecondaryModel secModel) {
         this.secModel = secModel;
-    }
-
-    public PrimaryModel getPriModel() {
-        return priModel;
-    }
-
-    public void setPriModel(PrimaryModel priModel) {
-        this.priModel = priModel;
-    }
-
-    public NurseryModel getNurModel() {
-        return nurModel;
-    }
-
-    public void setNurModel(NurseryModel nurModel) {
-        this.nurModel = nurModel;
     }
 
     public String getFrom() {

@@ -63,49 +63,12 @@ public class Profile implements Serializable {
         }
     }
 
-    public void selectRe(NurseryModel nurRecord) {
-
-        try {
-            FacesContext ctx = FacesContext.getCurrentInstance();
-            NavigationHandler nav = ctx.getApplication().getNavigationHandler();
-            ctx.getExternalContext().getApplicationMap().remove("SecData");
-            ctx.getExternalContext().getApplicationMap().remove("priData");
-            ctx.getExternalContext().getApplicationMap().put("nurData", nurRecord);
-            String url = "editprofile.xhtml?faces-redirect=true";
-            nav.handleNavigation(ctx, null, url);
-            ctx.renderResponse();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
-    public void selectRec(PrimaryModel priRecord) {
-
-        try {
-            FacesContext ctx = FacesContext.getCurrentInstance();
-            NavigationHandler nav = ctx.getApplication().getNavigationHandler();
-            ctx.getExternalContext().getApplicationMap().remove("SecData");
-            ctx.getExternalContext().getApplicationMap().remove("nurData");
-            ctx.getExternalContext().getApplicationMap().put("priData", priRecord);
-            String url = "editprofile.xhtml?faces-redirect=true";
-            nav.handleNavigation(ctx, null, url);
-            ctx.renderResponse();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
     public void selectReco(SecondaryModel secRecord) {
 
         try {
             FacesContext ctx = FacesContext.getCurrentInstance();
             NavigationHandler nav = ctx.getApplication().getNavigationHandler();
-            ctx.getExternalContext().getApplicationMap().remove("nurData");
-            ctx.getExternalContext().getApplicationMap().remove("priData");
+            ctx.getExternalContext().getApplicationMap().remove("SecData");
             ctx.getExternalContext().getApplicationMap().put("SecData", secRecord);
             String url = "editprofile.xhtml?faces-redirect=true";
             nav.handleNavigation(ctx, null, url);
@@ -119,124 +82,14 @@ public class Profile implements Serializable {
 
     public void searchTab() {
         try {
-            if (model.getTbclass().equalsIgnoreCase("nursery") && !getNfname().isEmpty()) {
-                nursModel = onNurserySearch(getNfname());
 
-            } else if (model.getTbclass().equalsIgnoreCase("primary") && !getPfname().isEmpty()) {
-                priModel = onPrimarySearch(getPfname());
+            secModel = onSecondarySearch(getSfname());
 
-            } else if (model.getTbclass().equalsIgnoreCase("secondary") && !getSfname().isEmpty()) {
-                secModel = onSecondarySearch(getSfname());
-            }
             System.out.println(getNfname() + " f " + getPfname() + " a " + getSfname());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-    }
-
-    public List<NurseryModel> onNurserySearch(String fullname) throws SQLException {
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        ResultSet rs = null;
-        PreparedStatement pstmt = null;
-        try {
-
-            con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbnursery where full_name=?";
-            pstmt = con.prepareStatement(query);
-            pstmt.setString(1, fullname);
-            rs = pstmt.executeQuery();
-            //
-            List<NurseryModel> lst = new ArrayList<>();
-            while (rs.next()) {
-
-                NurseryModel coun = new NurseryModel();
-                coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getString("studentid"));
-                coun.setFirst_name(rs.getString("first_name"));
-                coun.setMiddle_name(rs.getString("middle_name"));
-                coun.setLast_name(rs.getString("last_name"));
-                coun.setFull_name(rs.getString("full_name"));
-                coun.setSclass(rs.getString("class"));
-                coun.setClasstype(rs.getString("classtype"));
-                coun.setPromoted(rs.getBoolean("promoted"));
-                coun.setImageLink(rs.getString("imagelink"));
-                coun.setArm(rs.getString("arm"));
-
-                //
-                lst.add(coun);
-            }
-
-            return lst;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
-        } finally {
-
-            if (!(con == null)) {
-                con.close();
-                con = null;
-            }
-            if (!(pstmt == null)) {
-                pstmt.close();
-                pstmt = null;
-            }
-
-        }
-    }
-
-    public List<PrimaryModel> onPrimarySearch(String fullname) throws SQLException {
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        ResultSet rs = null;
-        PreparedStatement pstmt = null;
-        try {
-
-            con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbprimary where full_name=?";
-            pstmt = con.prepareStatement(query);
-            pstmt.setString(1, fullname);
-            rs = pstmt.executeQuery();
-            //
-            List<PrimaryModel> lst = new ArrayList<>();
-            while (rs.next()) {
-
-                PrimaryModel coun = new PrimaryModel();
-                coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getString("studentid"));
-                coun.setFirst_name(rs.getString("first_name"));
-                coun.setMiddle_name(rs.getString("middle_name"));
-                coun.setLast_name(rs.getString("last_name"));
-                coun.setFull_name(rs.getString("full_name"));
-                coun.setSclass(rs.getString("class"));
-                coun.setClasstype(rs.getString("classtype"));
-                coun.setPromoted(rs.getBoolean("promoted"));
-                coun.setImageLink(rs.getString("imagelink"));
-                coun.setArm(rs.getString("arm"));
-
-                //
-                lst.add(coun);
-            }
-
-            return lst;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
-        } finally {
-
-            if (!(con == null)) {
-                con.close();
-                con = null;
-            }
-            if (!(pstmt == null)) {
-                pstmt.close();
-                pstmt = null;
-            }
-
-        }
     }
 
     public List<SecondaryModel> onSecondarySearch(String fullname) throws SQLException {
@@ -245,11 +98,90 @@ public class Profile implements Serializable {
         ResultSet rs = null;
         PreparedStatement pstmt = null;
         try {
-
+            List<SecondaryModel> lst = new ArrayList<>();
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbsecondary where full_name=?";
+            if (!fullname.isEmpty()) {
+
+                String query = "SELECT * FROM tbstudentclass where full_name=?";
+                pstmt = con.prepareStatement(query);
+                pstmt.setString(1, fullname);
+                rs = pstmt.executeQuery();
+                //
+
+                while (rs.next()) {
+
+                    SecondaryModel coun = new SecondaryModel();
+                    coun.setId(rs.getInt("id"));
+                    coun.setStudentid(rs.getString("studentid"));
+                    coun.setFirst_name(rs.getString("first_name"));
+                    coun.setMiddle_name(rs.getString("middle_name"));
+                    coun.setLast_name(rs.getString("last_name"));
+                    coun.setFull_name(rs.getString("full_name"));
+                    coun.setSclass(rs.getString("class"));
+                    coun.setClasstype(rs.getString("classtype"));
+                    coun.setPromoted(rs.getBoolean("promoted"));
+                    coun.setImageLink(rs.getString("imagelink"));
+                    coun.setArm(rs.getString("arm"));
+
+                    //
+                    lst.add(coun);
+                }
+            } else {
+                String query = "SELECT * FROM tbstudentclass where classtype=?";
+                pstmt = con.prepareStatement(query);
+                pstmt.setString(1, model.getTbclass());
+                rs = pstmt.executeQuery();
+                //
+
+                while (rs.next()) {
+
+                    SecondaryModel coun = new SecondaryModel();
+                    coun.setId(rs.getInt("id"));
+                    coun.setStudentid(rs.getString("studentid"));
+                    coun.setFirst_name(rs.getString("first_name"));
+                    coun.setMiddle_name(rs.getString("middle_name"));
+                    coun.setLast_name(rs.getString("last_name"));
+                    coun.setFull_name(rs.getString("full_name"));
+                    coun.setSclass(rs.getString("class"));
+                    coun.setClasstype(rs.getString("classtype"));
+                    coun.setPromoted(rs.getBoolean("promoted"));
+                    coun.setImageLink(rs.getString("imagelink"));
+                    coun.setArm(rs.getString("arm"));
+
+                    //
+                    lst.add(coun);
+                }
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public List<SecondaryModel> onSecondaryChange(String tbclas) throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        try {
+            System.out.println(tbclas);
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbstudentclass where classtype=?";
             pstmt = con.prepareStatement(query);
-            pstmt.setString(1, fullname);
+            pstmt.setString(1, tbclas);
             rs = pstmt.executeQuery();
             //
             List<SecondaryModel> lst = new ArrayList<>();
@@ -289,286 +221,6 @@ public class Profile implements Serializable {
             }
 
         }
-    }
-
-    public List<NurseryModel> onNurseryChange() throws SQLException {
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        ResultSet rs = null;
-        PreparedStatement pstmt = null;
-        try {
-
-            con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbstudentclass where classtype=?";
-            pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "Nursery");
-            rs = pstmt.executeQuery();
-            //
-            List<NurseryModel> lst = new ArrayList<>();
-            while (rs.next()) {
-
-                NurseryModel coun = new NurseryModel();
-                coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getString("studentid"));
-                coun.setFirst_name(rs.getString("first_name"));
-                coun.setMiddle_name(rs.getString("middle_name"));
-                coun.setLast_name(rs.getString("last_name"));
-                coun.setFull_name(rs.getString("full_name"));
-                coun.setSclass(rs.getString("class"));
-                coun.setClasstype(rs.getString("classtype"));
-                coun.setPromoted(rs.getBoolean("promoted"));
-                coun.setImageLink(rs.getString("imagelink"));
-                coun.setArm(rs.getString("arm"));
-
-                //
-                lst.add(coun);
-            }
-
-            return lst;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
-        } finally {
-
-            if (!(con == null)) {
-                con.close();
-                con = null;
-            }
-            if (!(pstmt == null)) {
-                pstmt.close();
-                pstmt = null;
-            }
-
-        }
-    }
-
-    public List<PrimaryModel> onPrimaryChange() throws SQLException {
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        ResultSet rs = null;
-        PreparedStatement pstmt = null;
-        try {
-
-            con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbstudentclass where classtype=?";
-            pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "Primary");
-            rs = pstmt.executeQuery();
-            //
-            List<PrimaryModel> lst = new ArrayList<>();
-            while (rs.next()) {
-
-                PrimaryModel coun = new PrimaryModel();
-                coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getString("studentid"));
-                coun.setFirst_name(rs.getString("first_name"));
-                coun.setMiddle_name(rs.getString("middle_name"));
-                coun.setLast_name(rs.getString("last_name"));
-                coun.setFull_name(rs.getString("full_name"));
-                coun.setSclass(rs.getString("class"));
-                coun.setClasstype(rs.getString("classtype"));
-                coun.setPromoted(rs.getBoolean("promoted"));
-                coun.setImageLink(rs.getString("imagelink"));
-                coun.setArm(rs.getString("arm"));
-
-                //
-                lst.add(coun);
-            }
-
-            return lst;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
-        } finally {
-
-            if (!(con == null)) {
-                con.close();
-                con = null;
-            }
-            if (!(pstmt == null)) {
-                pstmt.close();
-                pstmt = null;
-            }
-
-        }
-    }
-
-    public List<SecondaryModel> onSecondaryChange() throws SQLException {
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        ResultSet rs = null;
-        PreparedStatement pstmt = null;
-        try {
-
-            con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbstudentclass where classtype=?";
-            pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "Secondary");
-            rs = pstmt.executeQuery();
-            //
-            List<SecondaryModel> lst = new ArrayList<>();
-            while (rs.next()) {
-
-                SecondaryModel coun = new SecondaryModel();
-                coun.setId(rs.getInt("id"));
-                coun.setStudentid(rs.getString("studentid"));
-                coun.setFirst_name(rs.getString("first_name"));
-                coun.setMiddle_name(rs.getString("middle_name"));
-                coun.setLast_name(rs.getString("last_name"));
-                coun.setFull_name(rs.getString("full_name"));
-                coun.setSclass(rs.getString("class"));
-                coun.setClasstype(rs.getString("classtype"));
-                coun.setPromoted(rs.getBoolean("promoted"));
-                coun.setImageLink(rs.getString("imagelink"));
-                coun.setArm(rs.getString("arm"));
-
-                //
-                lst.add(coun);
-            }
-
-            return lst;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
-        } finally {
-
-            if (!(con == null)) {
-                con.close();
-                con = null;
-            }
-            if (!(pstmt == null)) {
-                pstmt.close();
-                pstmt = null;
-            }
-
-        }
-    }
-
-    public List<String> nuseryAuto() throws Exception {
-        FacesContext context = FacesContext.getCurrentInstance();
-
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try {
-
-            con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbstudentclass where classtype=?";
-            pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "Nursery");
-            rs = pstmt.executeQuery();
-            //
-            List<String> lst = new ArrayList<>();
-            String fullname;
-            while (rs.next()) {
-
-                fullname = rs.getString("full_name");
-
-                lst.add(fullname);
-            }
-
-            return lst;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
-        } finally {
-
-            if (!(con == null)) {
-                con.close();
-                con = null;
-            }
-            if (!(pstmt == null)) {
-                pstmt.close();
-                pstmt = null;
-            }
-
-        }
-    }
-
-    public List<String> completNursery(String val) {
-        List<String> com = new ArrayList();
-        try {
-            for (String value : nuseryAuto()) {
-                if (value.toUpperCase().contains(val.toUpperCase())) {
-                    com.add(value);
-                }
-
-            }
-            return com;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
-        }
-
-    }
-
-    public List<String> primaryAuto() throws Exception {
-        FacesContext context = FacesContext.getCurrentInstance();
-
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try {
-
-            con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbstudentclass where classtype=?";
-            pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "Primary");
-            rs = pstmt.executeQuery();
-            //
-            List<String> lst = new ArrayList<>();
-            String fullname;
-            while (rs.next()) {
-
-                fullname = rs.getString("full_name");
-
-                lst.add(fullname);
-            }
-
-            return lst;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
-        } finally {
-
-            if (!(con == null)) {
-                con.close();
-                con = null;
-            }
-            if (!(pstmt == null)) {
-                pstmt.close();
-                pstmt = null;
-            }
-
-        }
-    }
-
-    public List<String> completPrimary(String val) {
-        List<String> com = new ArrayList();
-        try {
-            for (String value : primaryAuto()) {
-                if (value.toUpperCase().contains(val.toUpperCase())) {
-                    com.add(value);
-                }
-
-            }
-            return com;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
-        }
-
     }
 
     public List<String> secondaryAuto() throws Exception {
@@ -584,7 +236,7 @@ public class Profile implements Serializable {
             con = dbConnections.mySqlDBconnection();
             String query = "SELECT * FROM tbstudentclass where classtype=?";
             pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "Secondary");
+            pstmt.setString(1, model.getTbclass());
             rs = pstmt.executeQuery();
             //
             List<String> lst = new ArrayList<>();
@@ -635,37 +287,9 @@ public class Profile implements Serializable {
 
     public void onClassChange() throws Exception {
 
-        if (model.getTbclass().equalsIgnoreCase("nursery")) {
-            nursModel = onNurseryChange();
-            setNursery(true);
-            setPrimary(false);
-            setSecondary(false);
-            setNbool(true);
-            setFbool(false);
-            setPbool(false);
-            setSbool(false);
+        secModel = onSecondaryChange(model.getTbclass());
+        setSecondary(true);
 
-        } else if (model.getTbclass().equalsIgnoreCase("primary")) {
-            priModel = onPrimaryChange();
-            setPrimary(true);
-            setNursery(false);
-            setSecondary(false);
-            setNbool(false);
-            setFbool(false);
-            setPbool(true);
-            setSbool(false);
-
-        } else if (model.getTbclass().equalsIgnoreCase("secondary")) {
-            secModel = onSecondaryChange();
-            setSecondary(true);
-            setNursery(false);
-            setPrimary(false);
-            setNbool(false);
-            setFbool(false);
-            setPbool(false);
-            setSbool(true);
-
-        }
     }
 
     public List<ClassModel> classDropdown() throws Exception {
