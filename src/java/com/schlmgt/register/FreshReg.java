@@ -68,6 +68,8 @@ public class FreshReg implements Serializable {
     private String disab;
     private String arm;
     private String sex;
+    private String year;
+    private String term;
     private Boolean armStatus;
     private UploadedFile uploadImage;
     private List<RelationshipModel> relation;
@@ -101,6 +103,7 @@ public class FreshReg implements Serializable {
     private String relationOption;
     private String displaydate;
     private String imageLocation;
+    private List<GradeModel> modeGrade;
 
     @PostConstruct
     public void init() {
@@ -772,8 +775,8 @@ public class FreshReg implements Serializable {
             con = dbConnections.mySqlDBconnection();
 
             String nurseryInsert = "insert into tbstudentclass (studentid,first_name,middle_name,last_name,full_name,class,"
-                    + "classtype,isdeleted,datecreated,datetime_created,createdby,imagelink,Arm,currentclass) values "
-                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + "classtype,isdeleted,datecreated,datetime_created,createdby,imagelink,Arm,currentclass,term,year) values "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
             pstmt = con.prepareStatement(nurseryInsert);
 
@@ -791,6 +794,8 @@ public class FreshReg implements Serializable {
             pstmt.setString(12, imgLink);
             pstmt.setString(13, getArm());
             pstmt.setBoolean(14, true);
+            pstmt.setString(15, getTerm());
+            pstmt.setString(16, getYear());
             pstmt.executeUpdate();
 
         } catch (Exception ex) {
@@ -1076,6 +1081,31 @@ public class FreshReg implements Serializable {
         setStudentPanel(true);
     }
 
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public List<GradeModel> getModeGrade() {
+        return modeGrade;
+    }
+
+    public void setModeGrade(List<GradeModel> modeGrade) {
+        this.modeGrade = modeGrade;
+    }
+
+    
     public String getImageLocation() {
         return imageLocation;
     }

@@ -31,6 +31,7 @@ public class ClassGrade implements Serializable {
     private List<GradeModel> grademodels;
     private List<String> termList;
     private List<String> term;
+    private List<String> arm;
 
     @PostConstruct
     public void init() {
@@ -134,6 +135,12 @@ public class ClassGrade implements Serializable {
         System.out.println(tbclass);
 
     }
+    
+    public void onarmChanges() throws Exception {
+
+        arm = armDropdown();        
+
+    }
 
 
     public List<GradeModel> gradeDropdowns(String tbclass) throws Exception {
@@ -200,7 +207,34 @@ public class ClassGrade implements Serializable {
 
         }
     }
+    
+     public List<String> armDropdown() throws Exception {
 
+        //
+        try {
+            List<String> lst = new ArrayList<>();
+            lst.add("A");
+            lst.add("B");
+            lst.add("C");
+            lst.add("D");
+            return lst;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        }
+    }
+
+    public List<String> getArm() {
+        return arm;
+    }
+
+    public void setArm(List<String> arm) {
+        this.arm = arm;
+    }
+
+     
     public void ongradeChanges() throws Exception {
 
         termList = termDropdown();

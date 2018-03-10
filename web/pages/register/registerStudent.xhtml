@@ -233,7 +233,7 @@
                                                    itemValue="#{singlevalue.tbclass}"/>
                                 </p:selectOneMenu>   
                                 <p:message for="class"/>
-                            </div>
+                            </div>                           
                         </div>
                         <div class="col-md-4">
 
@@ -249,7 +249,7 @@
                                                    itemValue="#{singlevalue.grade}"/>
                                 </p:selectOneMenu>   
                                 <p:message for="grade"/>
-                            </div>
+                            </div>                            
                         </div>
                     </fieldset>
                 </div>
@@ -273,13 +273,25 @@
                                 <p:message for="sclass"/>                               
 
                             </div>
+                            <div class="form-group">
+
+                                <p:outputLabel for="gra" value="Term: "></p:outputLabel>
+                                <br/>
+                                <p:selectOneMenu id="gra" class="form-control" value="#{freg.term}" required="true" requiredMessage="Grade required">                                
+                                    <p:ajax listener="#{classmode.ontermChanges(freg.term)}" update="gr" />
+                                    <f:selectItem itemLabel="--Select Term--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{classmode.termList}"/>
+                                </p:selectOneMenu> 
+                                <p:message for="gra"/>
+
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <p:outputLabel for="grad" value="Grade: "/>
                                 <br/>
                                 <p:selectOneMenu id="grad" class="form-control" value="#{freg.gradeMode.grade}" required="true" requiredMessage="Grade required">
-                                    <p:ajax listener="#{freg.onGradChan()}" update="arm" />
+                                    <p:ajax listener="#{classmode.onarmChanges()}" update="arm" />
                                     <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems value="#{freg.grademodels}"
                                                    var="singlevalue"  
@@ -288,18 +300,30 @@
                                 </p:selectOneMenu>  
                                 <p:message for="grad"/>
                             </div>
+                            <div class="form-group">
+
+                                <p:outputLabel for="gr" value="Year:"></p:outputLabel>
+                                <br/>
+                                <p:selectOneMenu id="gr" class="form-control" value="#{freg.year}" required="true" requiredMessage="Year is required" >                                                                    
+                                    <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{classmode.term}"/>
+                                </p:selectOneMenu> 
+                                <p:message for="gr"/>
+                            </div>
                         </div>
                         <div class="col-md-4">
-                            <p:outputLabel for="arm" value="Arm: "/>
-                            <br/>
-                            <p:selectOneMenu id="arm" value="#{freg.arm}" disabled="#{freg.armStatus}" class="form-control" requiredMessage="Arm is required" style="width:125px" required="true">
-                                <f:selectItem itemLabel="Select Arm" itemValue="" noSelectionOption="true" />
-                                <f:selectItem itemLabel="A" itemValue="A" />
-                                <f:selectItem itemLabel="B" itemValue="B" />
-                                <f:selectItem itemLabel="C" itemValue="C" />
-                                <f:selectItem itemLabel="D" itemValue="D" />
-                            </p:selectOneMenu>
-                            <p:message for="arm"/>
+                            <div class="form-group">
+                                <p:outputLabel for="arm" value="Arm: "/>
+                                <br/>
+                                <p:selectOneMenu id="arm" value="#{freg.arm}"  class="form-control" requiredMessage="Arm is required" style="width:125px" required="true">
+                                    <p:ajax listener="#{classmode.ongradeChanges()}" update="gra" />
+                                    <f:selectItem itemLabel="--Select Arm--" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems value="#{classmode.arm}"/>
+                                </p:selectOneMenu>
+                                <p:message for="arm"/>
+                            </div>
+
+
                         </div>
 
                     </fieldset>
@@ -372,7 +396,7 @@
                     <p:commandButton value="Save" actionListener="#{freg.confirmDetails}" process="@this fname,dob,mname,uname,lname,
                                      email,gfname,relation,city,distat,
                                      city,country,add,gmname,pnum,state,glname,
-                                     mail,lga,pschool,class,grade,sclass,grad,
+                                     mail,lga,pschool,class,grade,sclass,grad,gr,gra,
                                      arm,sex,dis,bgroup,upload_pix_data"
                                      update="reg,messages,confirm"/>
                 </div>
@@ -487,9 +511,17 @@
                             <p:outputLabel class="first" value="Grade: "/><p:outputLabel class="first" value="#{freg.gradeMode.grade}"/>
                         </div>  
                         <div class="col-md-4">
-                            <p:outputLabel class="first" value="Grade: "/><p:outputLabel class="first" value="#{freg.arm}"/>
+                            <p:outputLabel class="first" value="Arm: "/><p:outputLabel class="first" value="#{freg.arm}"/>
                         </div>  
-                    </div>                    
+                    </div> 
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p:outputLabel class="first" value="Term: "/><p:outputLabel class="first" value="#{freg.term}"/>
+                        </div>
+                        <div class="col-md-4">
+                            <p:outputLabel class="first" value="Year: "/><p:outputLabel class="first" value="#{freg.year}"/>
+                        </div>                          
+                    </div> 
                 </fieldset>
                 <br/>
                 <fieldset>
