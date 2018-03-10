@@ -12,7 +12,7 @@
     </ui:define>
 
     <ui:define name="Subtitle">
-        View Subject
+        Edit Subject
     </ui:define>
 
 
@@ -23,7 +23,7 @@
                 <h3><p:outputLabel value="#{vaClass.term} Subject Offered, #{vaClass.year}"></p:outputLabel></h3>
                 <p:dataList value="#{vaClass.sub}" var="sub" type="ordered">
                     <f:facet name="header">
-                     #{vaClass.currentClass}
+                        #{vaClass.currentClass}
                     </f:facet>
                     #{sub.subject}
                 </p:dataList>

@@ -11,9 +11,12 @@ import java.io.Serializable;
  *
  * @author Gold
  */
-public class SubjectModel implements Serializable{
+public class SubjectModel implements Serializable {
+
     private int id;
     private String subject;
+    private String term;
+    private String year;
     private String studentClass;
 
     public int getId() {
@@ -39,8 +42,22 @@ public class SubjectModel implements Serializable{
     public void setStudentClass(String studentClass) {
         this.studentClass = studentClass;
     }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
     
-    
-    
-    
+
 }

@@ -102,9 +102,11 @@ public class Profile implements Serializable {
             con = dbConnections.mySqlDBconnection();
             if (!fullname.isEmpty()) {
 
-                String query = "SELECT * FROM tbstudentclass where full_name=?";
+                String query = "SELECT * FROM tbstudentclass where full_name=? and classtype=? and currentclass=?";
                 pstmt = con.prepareStatement(query);
                 pstmt.setString(1, fullname);
+                pstmt.setString(2, model.getTbclass());
+                pstmt.setBoolean(3, true);
                 rs = pstmt.executeQuery();
                 //
 
@@ -179,9 +181,10 @@ public class Profile implements Serializable {
         try {
             System.out.println(tbclas);
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbstudentclass where classtype=?";
+            String query = "SELECT * FROM tbstudentclass where classtype=? and currentclass=?";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, tbclas);
+            pstmt.setBoolean(2, true);
             rs = pstmt.executeQuery();
             //
             List<SecondaryModel> lst = new ArrayList<>();
