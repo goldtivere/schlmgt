@@ -36,6 +36,7 @@ public class ClassGrade implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            
             classmodel = classDropdown();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -128,20 +129,19 @@ public class ClassGrade implements Serializable {
 
         }
     }
-    
+
     public void ontermChanges(String tbclass) throws Exception {
 
         term = yearDropdown(tbclass);
         System.out.println(tbclass);
 
     }
-    
+
     public void onarmChanges() throws Exception {
 
-        arm = armDropdown();        
+        arm = armDropdown();
 
     }
-
 
     public List<GradeModel> gradeDropdowns(String tbclass) throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -207,8 +207,8 @@ public class ClassGrade implements Serializable {
 
         }
     }
-    
-     public List<String> armDropdown() throws Exception {
+
+    public List<String> armDropdown() throws Exception {
 
         //
         try {
@@ -234,7 +234,6 @@ public class ClassGrade implements Serializable {
         this.arm = arm;
     }
 
-     
     public void ongradeChanges() throws Exception {
 
         termList = termDropdown();
@@ -255,7 +254,6 @@ public class ClassGrade implements Serializable {
         this.term = term;
     }
 
-    
     public List<String> getTermList() {
         return termList;
     }

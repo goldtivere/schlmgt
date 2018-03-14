@@ -24,6 +24,10 @@ public class SecondaryModel implements Serializable{
     private Boolean promoted;
     private String imageLink;
     private String arm;
+    private String currentClass;
+    private String term;
+    private String year;
+    private String noOfTimesRepeated;
 
     public String getClasstype() {
         return classtype;
@@ -110,6 +114,38 @@ public class SecondaryModel implements Serializable{
 
     public void setPromoted(Boolean promoted) {
         this.promoted = promoted;
+    }
+
+    public String getCurrentClass() {
+        return currentClass;
+    }
+
+    public void setCurrentClass(String currentClass) {
+        this.currentClass = currentClass;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getNoOfTimesRepeated() {
+        return noOfTimesRepeated;
+    }
+
+    public void setNoOfTimesRepeated(String noOfTimesRepeated) {
+        this.noOfTimesRepeated = noOfTimesRepeated;
     }
 
 }

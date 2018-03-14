@@ -6,6 +6,7 @@
 package com.schlmgt.profile;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.updateSubject.SessionTable;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +17,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -31,14 +33,142 @@ public class ClassView implements Serializable {
     private String year;
     private String term;
     private String classType;
+    private List<String> terms;
+    private List<String> years;
 
     @PostConstruct
     public void init() {
 
         try {
             sub = testMic();
+            terms = termDropdown();
+            years = yearDropdown(getTerm());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void onYearChange(String term, String year) throws Exception {
+        System.out.println(term + " " + year);
+        sub = testMic(term, year);
+    }
+
+    public List<SubjectModel> testMic(String term, String year) throws SQLException {
+        studentCurrentClass();
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs
+                = null;
+        con = dbConnections.mySqlDBconnection();
+        String studId;
+
+        System.out.println(term + " " + year);
+
+        try {
+            setTerm(term);
+            setYear(year);
+            String testguid = "Select * from sessiontable where term=? and grade =? and year=?";
+            pstmt = con.prepareStatement(testguid);
+            pstmt.setString(1, term);
+            pstmt.setString(2, getCurrentClass());
+            pstmt.setString(3, year);
+            rs = pstmt.executeQuery();
+
+            List<SubjectModel> lst = new ArrayList<>();
+            while (rs.next()) {
+                SubjectModel coun = new SubjectModel();
+                coun.setId(rs.getInt("id"));
+                coun.setSubject(rs.getString("subject"));
+
+                lst.add(coun);
+            }
+            System.out.println(edits.getStudentid());
+            return lst;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+
+    }
+
+    public void ontermchange(String term) {
+        try {
+            years = yearDropdown(term);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public List<String> yearDropdown(String term) throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT distinct year FROM yearterm where term=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, term);
+            rs = pstmt.executeQuery();
+            //
+            List<String> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                lst.add(rs.getString("year"));
+
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public List<String> termDropdown() throws Exception {
+
+        //
+        try {
+            List<String> lst = new ArrayList<>();
+            lst.add("First Term");
+            lst.add("Second Term");
+            lst.add("Third Term");
+            return lst;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
         }
     }
 
@@ -63,12 +193,6 @@ public class ClassView implements Serializable {
                 setTerm(rs.getString("term"));
                 setYear(rs.getString("year"));
             }
-            
-            System.out.println(edits.getStudentid());
-            System.out.println(getCurrentClass());
-            System.out.println(getClassType());
-            System.out.println(getTerm());
-            System.out.println(getYear());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,12 +247,28 @@ public class ClassView implements Serializable {
 
     }
 
+    public List<String> getTerms() {
+        return terms;
+    }
+
+    public void setTerms(List<String> terms) {
+        this.terms = terms;
+    }
+
     public String getYear() {
         return year;
     }
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public List<String> getYears() {
+        return years;
+    }
+
+    public void setYears(List<String> years) {
+        this.years = years;
     }
 
     public String getTerm() {
