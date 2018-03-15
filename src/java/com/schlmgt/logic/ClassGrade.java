@@ -207,6 +207,11 @@ public class ClassGrade implements Serializable {
 
         }
     }
+    
+    public void onTermDropDown()
+    {
+        
+    }
 
     public List<String> armDropdown() throws Exception {
 

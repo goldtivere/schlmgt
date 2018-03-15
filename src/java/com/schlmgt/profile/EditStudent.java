@@ -118,6 +118,10 @@ public class EditStudent implements Serializable {
     private String from;
     private String imageLocation;
     private SecondaryModel secModel = new SecondaryModel();
+    private String tbarm;
+    private String term;
+    private String year;
+    private int sid;
 
     @PostConstruct
     public void init() {
@@ -757,6 +761,22 @@ public class EditStudent implements Serializable {
                 setBgroup(rs.getString("bgroup"));
                 setImagelink(rs.getString("image"));
                 setImageLocation(rs.getString("imgLocation"));
+            }
+
+            //for studentclass
+            String testStud = "Select * from tbstudentclass where studentid=? and currentclass=?";
+            pstmt = con.prepareStatement(testStud);
+            pstmt.setString(1, getStudentid());
+            pstmt.setBoolean(2, true);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                setSid(rs.getInt("id"));
+                setCurrentClass(rs.getString("class"));
+                setCurrentGrade(rs.getString("classtype"));
+                setTbarm(rs.getString("arm"));
+                setTerm(rs.getString("term"));
+                setYear(rs.getString("year"));
 
             }
             System.out.println(getImageLocation() + " l");
@@ -1110,6 +1130,38 @@ public class EditStudent implements Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public int getSid() {
+        return sid;
+    }
+
+    public void setSid(int sid) {
+        this.sid = sid;
+    }
+
+    public String getTbarm() {
+        return tbarm;
+    }
+
+    public void setTbarm(String tbarm) {
+        this.tbarm = tbarm;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public String getPassportLocation() {
