@@ -84,12 +84,13 @@ public class SubjectUpdate implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM sessiontable where class=? and term=? and year=? and isdeleted=? order by id desc";
+            String query = "SELECT * FROM sessiontable where class=? and Grade=? and term=? and year=? and isdeleted=? order by id desc";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, getStudentClass());
-            pstmt.setString(2, getTerm());
-            pstmt.setString(3, getYear());
-            pstmt.setBoolean(4, false);
+            pstmt.setString(2, getStudentGrade());
+            pstmt.setString(3, getTerm());
+            pstmt.setString(4, getYear());
+            pstmt.setBoolean(5, false);
             rs = pstmt.executeQuery();
             //
             List<SessionTable> lst = new ArrayList<>();

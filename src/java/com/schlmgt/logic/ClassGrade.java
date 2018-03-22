@@ -36,7 +36,7 @@ public class ClassGrade implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            
+
             classmodel = classDropdown();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -131,7 +131,7 @@ public class ClassGrade implements Serializable {
     }
 
     public void ontermChanges(String tbclass) throws Exception {
-
+        System.out.println(tbclass);
         term = yearDropdown(tbclass);
         System.out.println(tbclass);
 
@@ -207,10 +207,9 @@ public class ClassGrade implements Serializable {
 
         }
     }
-    
-    public void onTermDropDown()
-    {
-        
+
+    public void onTermDropDown() {
+
     }
 
     public List<String> armDropdown() throws Exception {
