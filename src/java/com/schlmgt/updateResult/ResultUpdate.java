@@ -9,16 +9,22 @@ import com.schlmgt.dbconn.DbConnectionX;
 import com.schlmgt.imgupload.UploadImagesX;
 import com.schlmgt.logic.DateManipulation;
 import com.schlmgt.login.UserDetails;
+import com.schlmgt.profile.SecondaryModel;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import org.apache.poi.ss.util.CellRangeAddress;
 import javax.faces.context.FacesContext;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -46,10 +52,108 @@ public class ResultUpdate implements Serializable {
     public void init() {
         setStatus(false);
     }
-    
-    public void onyearchange()
-    {
+
+    public void onyearchange() {
         setStatus(true);
+    }
+
+    public Boolean statusOfStudent(List<String> excelValue) throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Boolean valueStatus = false;
+        try {
+            List<String> lst = new ArrayList<>();
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM sessiontable where class=? and Grade=? and term=? and year=? and isdeleted=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, getSclass());
+            pstmt.setString(2, getGrade());
+            pstmt.setString(3, getTerm());
+            pstmt.setString(4, getYear());
+            pstmt.setBoolean(5, false);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                lst.add(rs.getString("subject"));
+            }
+
+            int actualSize = excelValue.size();
+
+            if (numberOfSubjects() == lst.size()) {
+                for (int i = 0; i < lst.size(); i++) {
+                    if (excelValue.get(i).equalsIgnoreCase(lst.get(i))) {
+                        valueStatus = true;
+                    } else {
+                        valueStatus = false;
+                        break;
+                    }
+                }
+            } else {
+                valueStatus = false;
+
+            }
+            return valueStatus;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+
+    }
+
+    public int numberOfSubjects() throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int count = 0;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT count(*) countValue FROM sessiontable where class=? and Grade=? and term=? and year=? and isdeleted=? order by id desc";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, getSclass());
+            pstmt.setString(2, getGrade());
+            pstmt.setString(3, getTerm());
+            pstmt.setString(4, getYear());
+            pstmt.setBoolean(5, false);
+            rs = pstmt.executeQuery();
+            
+            rs.next();
+            count = rs.getInt("countValue");
+            System.out.println(count);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+        return count;
     }
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -77,52 +181,45 @@ public class ResultUpdate implements Serializable {
             XSSFSheet ws = wb.getSheetAt(0);
             Row row;
             row = (Row) ws.getRow(0);
+            CellRangeAddress regions = (CellRangeAddress) ws.getMergedRegion(0);
+            //int colNum = regions.getLastColumn();
+            int colNum = ws.getRow(0).getLastCellNum();
+            int finalSize = colNum - 1;
+            List<String> lst = new ArrayList<>();
 
-            if ("subject".equalsIgnoreCase(row.getCell(0).toString())) {
-                con.setAutoCommit(false);
-                String subjectDetail = "insert into sessiontable (term,class,grade,year,subject,createdby,datecreated,isdeleted) values("
-                        + "?,?,?,?,?,?,?,?)";
-                pstmt = con.prepareStatement(subjectDetail);
-                for (int i = 1; i <= ws.getLastRowNum(); i++) {
-                    row = (Row) ws.getRow(i);
+            for (int i = 0; i < 1; i++) {
+                row = (Row) ws.getRow(0);
 
-                    if (row.getCell(0) == null) {
-                        int s = i + 1;
-                        setMessangerOfTruth("Cell in row " + String.valueOf(s) + " is empty");
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                        context.addMessage(null, message);
-                        break;
+                for (Cell cell : row) {
+                    if (cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+
+                    } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                        
+                        if (cell.getStringCellValue().equalsIgnoreCase("regnumber")) {
+
+                        } else {
+                            lst.add(cell.getStringCellValue());
+                        }
                     }
-
-                    /**
-                     * pstmt.setString(1, getTerm()); pstmt.setString(2,
-                     * getStudentClass()); pstmt.setString(3,
-                     * getStudentGrade()); pstmt.setString(4, getYear());
-                     * pstmt.setString(5, row.getCell(0).toString());
-                     * pstmt.setString(6, createdby); pstmt.setString(7,
-                     * DateManipulation.dateAndTime()); pstmt.setBoolean(8,
-                     * false); pstmt.executeUpdate();
-                     * System.out.println(row.getCell(0).toString()); stat =
-                     * true;
-                     *
-                     */
                 }
-                if (stat == true) {
-                    con.commit();
-                    //sesTab = displaySubject();
-                    setMessangerOfTruth("File Upload Successful");
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                    context.addMessage(null, message);
-                } else {
 
-                }
+            }
+
+            if (statusOfStudent(lst)) {
+                 setMessangerOfTruth("Good work Gold!!!");
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, message);
+                
+
             } else {
-                setMessangerOfTruth("Excel not in correct format");
+
+                setMessangerOfTruth("Please make sure subject match in Database and also equal to total subjects in Database");
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, message);
             }
+            
             setCsv(null);
-            mn.close();
+
         } catch (Exception ex) {
 
             ex.printStackTrace();

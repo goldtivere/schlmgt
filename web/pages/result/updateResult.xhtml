@@ -12,7 +12,8 @@
     </ui:define>
 
     <ui:define name="content">
-        <div class="row">           
+        <div class="row"> 
+            <p:messages id="wow" closable="true" />
             <div class="ibox-content" style="height: 80px;">
                 <div class="form-group">
                     <div class="text-center">
@@ -75,7 +76,7 @@
                                           allowTypes="/(\.|\/)(xls|xlsx)$/"
                                           invalidFileMessage="Excel is only Required"
                                           mode="advanced"  dragDropSupport="false"
-                                          sizeLimit="2097152" fileLimit="1" />                                                               
+                                          sizeLimit="2097152" fileLimit="1" update="wow" />                                                               
                         </h:panelGrid>
                     </div>
                 </div>
