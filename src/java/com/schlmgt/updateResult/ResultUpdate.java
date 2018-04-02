@@ -133,10 +133,10 @@ public class ResultUpdate implements Serializable {
             pstmt.setString(4, getYear());
             pstmt.setBoolean(5, false);
             rs = pstmt.executeQuery();
-            
+
             rs.next();
             count = rs.getInt("countValue");
-            System.out.println(count);
+            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -179,8 +179,9 @@ public class ResultUpdate implements Serializable {
             InputStream mn = event.getFile().getInputstream();
             XSSFWorkbook wb = new XSSFWorkbook(mn);
             XSSFSheet ws = wb.getSheetAt(0);
-            Row row;
-            row = (Row) ws.getRow(0);
+            Row rows;
+            rows = (Row) ws.getRow(0);
+            int wsCount = ws.getLastRowNum() - 1;
             CellRangeAddress regions = (CellRangeAddress) ws.getMergedRegion(0);
             //int colNum = regions.getLastColumn();
             int colNum = ws.getRow(0).getLastCellNum();
@@ -188,13 +189,13 @@ public class ResultUpdate implements Serializable {
             List<String> lst = new ArrayList<>();
 
             for (int i = 0; i < 1; i++) {
-                row = (Row) ws.getRow(0);
+                rows = (Row) ws.getRow(0);
 
-                for (Cell cell : row) {
+                for (Cell cell : rows) {
                     if (cell.getCellType() == Cell.CELL_TYPE_BLANK) {
 
                     } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-                        
+
                         if (cell.getStringCellValue().equalsIgnoreCase("regnumber")) {
 
                         } else {
@@ -206,10 +207,46 @@ public class ResultUpdate implements Serializable {
             }
 
             if (statusOfStudent(lst)) {
-                 setMessangerOfTruth("Good work Gold!!!");
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                context.addMessage(null, message);
-                
+                con.setAutoCommit(false);
+                int rowCount = 1;
+                String testId = "select * from tbstudentclass where studentid=?";
+                pstmt = con.prepareStatement(testId);
+
+                for (Row row : ws) {
+
+                    for (Cell cell : row) {
+                        if (cell.getRowIndex() >= 2 && cell.getColumnIndex() == 0 && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {                            
+                            int b=(int)cell.getNumericCellValue();
+                            pstmt.setString(1, String.valueOf(b));
+                            
+                            rs = pstmt.executeQuery();
+
+                            if (rs.next()) {
+                                System.out.println("Perfect:" +b);
+                                rowCount++;
+                            } else {
+                                setMessangerOfTruth("Student with Id: "+ b +" in row: "+ cell.getRowIndex()+" doesnt exist in "+ getGrade());
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                            }
+                        } else if (cell.getRowIndex() >= 2 && cell.getColumnIndex() > 0 && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                           
+
+                        } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+
+                            if (cell.getStringCellValue().equalsIgnoreCase("regnumber")) {
+
+                            } else {
+                                // System.out.println(cell.getStringCellValue());
+                            }
+                        }
+                    }
+
+                }
+                if (rowCount == wsCount) {
+                    con.commit();
+                    System.out.println("Dude Gold: " + rowCount);
+                }
 
             } else {
 
@@ -217,7 +254,7 @@ public class ResultUpdate implements Serializable {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, message);
             }
-            
+
             setCsv(null);
 
         } catch (Exception ex) {
