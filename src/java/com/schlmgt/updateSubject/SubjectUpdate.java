@@ -84,7 +84,7 @@ public class SubjectUpdate implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM sessiontable where class=? and Grade=? and term=? and year=? and isdeleted=? order by id desc";
+            String query = "SELECT * FROM sessiontable where class=? and Grade=? and term=? and year=? and isdeleted=? order by id asc";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, getStudentClass());
             pstmt.setString(2, getStudentGrade());
@@ -214,6 +214,7 @@ public class SubjectUpdate implements Serializable {
                 context.addMessage(null, message);
             }
             setCsv(null);
+            csv=null;
             mn.close();
         } catch (Exception ex) {
 

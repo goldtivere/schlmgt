@@ -17,7 +17,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -66,7 +68,7 @@ public class ResultUpdate implements Serializable {
         try {
             List<String> lst = new ArrayList<>();
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM sessiontable where class=? and Grade=? and term=? and year=? and isdeleted=?";
+            String query = "SELECT * FROM sessiontable where class=? and Grade=? and term=? and year=? and isdeleted=? order by id asc";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, getSclass());
             pstmt.setString(2, getGrade());
@@ -77,6 +79,7 @@ public class ResultUpdate implements Serializable {
 
             while (rs.next()) {
                 lst.add(rs.getString("subject"));
+
             }
 
             int actualSize = excelValue.size();
@@ -136,7 +139,6 @@ public class ResultUpdate implements Serializable {
 
             rs.next();
             count = rs.getInt("countValue");
-            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,7 +158,7 @@ public class ResultUpdate implements Serializable {
         return count;
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
+    public void handleFileUpload(FileUploadEvent event) throws SQLException {
 
         FacesMessage message;
         FacesContext context = FacesContext.getCurrentInstance();
@@ -185,8 +187,11 @@ public class ResultUpdate implements Serializable {
             CellRangeAddress regions = (CellRangeAddress) ws.getMergedRegion(0);
             //int colNum = regions.getLastColumn();
             int colNum = ws.getRow(0).getLastCellNum();
+            int rowNum = ws.getLastRowNum() + 1;
             int finalSize = colNum - 1;
+            Boolean testCol = false;
             List<String> lst = new ArrayList<>();
+            List<String> studentId = new ArrayList<>();
 
             for (int i = 0; i < 1; i++) {
                 rows = (Row) ws.getRow(0);
@@ -208,64 +213,178 @@ public class ResultUpdate implements Serializable {
 
             if (statusOfStudent(lst)) {
                 con.setAutoCommit(false);
-                int rowCount = 1;
-                String testId = "select * from tbstudentclass where studentid=?";
-                pstmt = con.prepareStatement(testId);
+                int rowCount = 0;
+                String testId = "select * from tbstudentclass where studentid=? and arm=?";
+
+                String resultDetail = "insert into tbstudentresult (studentreg,firsttest,secondtest,exam,subject,studentclass,term,arm,year,createdby,datecreated,datetimecreated) values("
+                        + "?,?,?,?,?,?,?,?,?,?,?,?)";
 
                 for (Row row : ws) {
 
                     for (Cell cell : row) {
-                        if (cell.getRowIndex() >= 2 && cell.getColumnIndex() == 0 && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {                            
-                            int b=(int)cell.getNumericCellValue();
-                            pstmt.setString(1, String.valueOf(b));
-                            
-                            rs = pstmt.executeQuery();
+                        if (cell.getRowIndex() >= 2 && cell.getColumnIndex() == 0 && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                            int b = (int) cell.getNumericCellValue();
+                            studentId.add(String.valueOf(b));
 
-                            if (rs.next()) {
-                                System.out.println("Perfect:" +b);
-                                rowCount++;
-                            } else {
-                                setMessangerOfTruth("Student with Id: "+ b +" in row: "+ cell.getRowIndex()+" doesnt exist in "+ getGrade());
-                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                                context.addMessage(null, message);
-                            }
-                        } else if (cell.getRowIndex() >= 2 && cell.getColumnIndex() > 0 && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                           
-
-                        } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-
-                            if (cell.getStringCellValue().equalsIgnoreCase("regnumber")) {
-
-                            } else {
-                                // System.out.println(cell.getStringCellValue());
-                            }
                         }
+
                     }
 
-                }
-                if (rowCount == wsCount) {
-                    con.commit();
-                    System.out.println("Dude Gold: " + rowCount);
-                }
+                    Set<String> hs = new HashSet<>();
+                    hs.addAll(studentId);
+                    studentId.clear();
+                    studentId.addAll(hs);
 
-            } else {
+                    //
+                    for (Row row : ws) {
+
+                        for (Cell cell : row) {
+                            if (cell.getRowIndex() >= 2 && cell.getColumnIndex() == 0 && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                int b = (int) cell.getNumericCellValue();
+                                pstmt = con.prepareStatement(testId);
+                                pstmt.setString(1, String.valueOf(b));
+                                pstmt.setString(2, getArm());
+
+                                rs = pstmt.executeQuery();
+
+                                if (rs.next()) {
+                                    testCol = true;
+                                    rowCount++;
+                                } else {
+                                    int rowNumber = cell.getRowIndex();
+                                    setMessangerOfTruth("Student with Id: " + b + " in row: " + rowNumber + " doesnt exist in " + getGrade() + " and Arm: " + getArm());
+                                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                    context.addMessage(null, message);
+                                }
+                            } else if (cell.getRowIndex() >= 2 && cell.getColumnIndex() > 0 && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+
+                            } else if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+
+                                if (cell.getStringCellValue().equalsIgnoreCase("regnumber")) {
+
+                                } else {
+                                    // System.out.println(cell.getStringCellValue());
+                                }
+                            }
+                        }
+
+                    }
+
+                    //
+                    if (rowCount == wsCount) {
+                        if (testCol == true) {
+                            pstmt = con.prepareStatement(resultDetail);
+
+                            Row ro = null;
+                            String nm = null;
+                            int y = 0;
+                            int x = 0;
+
+                            int val = 2;
+                            for (int i = 2; i < rowNum; i++) {
+                                ro = (Row) ws.getRow(i);
+                                for (int j = 0; j < colNum; j++) {
+
+                                    if (x == 0) {
+                                        nm = String.valueOf(ro.getCell(x));
+                                        pstmt.setString(1, nm);
+
+                                        x++;
+                                    }
+
+                                    if (val > 4) {
+
+                                        val = 2;
+
+                                    }
+                                    if (j > 0) {
+
+                                        pstmt.setDouble(val, ro.getCell(j).getNumericCellValue());
+
+                                        if (lst.size() == y) {
+                                            y = 0;
+                                        }
+
+                                        if (j % 3 == 0) {
+                                            pstmt.setString(5, lst.get(y));
+                                            pstmt.setString(6, getGrade());
+                                            pstmt.setString(7, getTerm());
+                                            pstmt.setString(8, getArm());
+                                            pstmt.setString(9, getYear());
+                                            pstmt.setString(10, createdby);
+                                            pstmt.setString(11, DateManipulation.dateAlone());
+                                            pstmt.setString(12, DateManipulation.dateAndTime());
+                                            pstmt.executeUpdate();
+                                            y++;
+                                            x = 0;
+                                        }
+                                        val++;
+                                    }
+
+                                }
+
+                            }
+
+                            con.commit();
+                            setMessangerOfTruth("Records Successfully Updated!!!.");
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
+                        } else {
+                            setMessangerOfTruth("Student Registration number do not match.");
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
+                        }
+                    } else {
+                        setMessangerOfTruth("Student Registration number do not match.");
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                        context.addMessage(null, message);
+                    }
+
+                }else {
 
                 setMessangerOfTruth("Please make sure subject match in Database and also equal to total subjects in Database");
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, message);
             }
 
-            setCsv(null);
+                setCsv(null);
+                csv = null;
+                mn.close();
+            }catch (IllegalStateException e) {
+            setMessangerOfTruth("Cell is not numeric." + e.getMessage());
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, message);
+        }catch (NullPointerException e) {
+            setMessangerOfTruth("Empty cell present in excel sheet." + e.getMessage());
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, message);
 
-        } catch (Exception ex) {
+        }catch (Exception ex) {
 
             ex.printStackTrace();
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, message);
 
+        }finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
         }
 
-    }
+        }
+
+    
+
+    
+
+    
 
     public String getMessangerOfTruth() {
         return messangerOfTruth;
