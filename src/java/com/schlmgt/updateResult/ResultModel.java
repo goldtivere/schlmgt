@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class ResultModel implements Serializable {
 
+    private String studentName;
     private String studentId;
     private String subject;
     private double firstTest;
@@ -22,6 +23,23 @@ public class ResultModel implements Serializable {
     private String Studentclass;
     private String year;
 
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    
     public String getStudentId() {
         return studentId;
     }

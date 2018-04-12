@@ -52,7 +52,7 @@
                                 <f:selectItems value="#{classmode.termList}"/>
                             </p:selectOneMenu>                 
                             <p:selectOneMenu id="gr" class="form-control" value="#{result.year}" required="true" requiredMessage="Year required">  
-                                <p:ajax listener="#{result.onyearchange()}" update="nur" />
+                                <p:ajax listener="#{result.onyearchange()}" update="nur,nurs" />
                                 <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{classmode.term}"/>
                             </p:selectOneMenu>  
@@ -80,6 +80,70 @@
                         </h:panelGrid>
                     </div>
                 </div>
+                <p:panel visible="#{result.status}" id="nurs" style="border: none;">
+                    <p:dataTable id="n" class="table table-responsive" scrollable="true" var="papprv_rpt" 
+                                 value="#{subjectUpdate.sesTab}"
+                                 selection="#{subjectUpdate.sesTab1}"
+                                 rowKey="#{papprv_rpt.id}"
+                                 paginatorTemplate="{CurrentPageReport}  
+                                 {FirstPageLink} {PreviousPageLink} 
+                                 {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                 paginator="true"
+                                 rowsPerPageTemplate="5,10,15"
+                                 draggableColumns="true" rows="15" style="margin-bottom:20px">  
+                        <f:facet name="{Exporters}">
+                            <h:commandLink immediate="true">
+                                <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
+                                <p:dataExporter type="xls" target="n" fileName="report" pageOnly="true"/>
+                            </h:commandLink>
+
+                            <h:commandLink immediate="true">
+                                <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
+                                <p:dataExporter type="pdf" target="n" fileName="report" pageOnly="true" />
+                            </h:commandLink>
+
+                            <h:commandLink immediate="true">
+                                <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
+                                <p:dataExporter type="csv" target="n" fileName="report" pageOnly="true" />
+                            </h:commandLink>
+
+                            <h:commandLink immediate="true" >
+                                <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
+                                <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
+                            </h:commandLink>
+                        </f:facet>                            
+                        <p:column selectionMode="multiple" style="width:30px;text-align:center"/>
+                        <p:column headerText="Student Name">
+                            <h:outputText value="#{papprv_rpt.subject}"/>
+
+                        </p:column>
+                        <p:column headerText="Subject">
+                            <h:outputText value="#{papprv_rpt.subject}"/>
+
+                        </p:column>
+                       <p:column headerText="First Test">
+                            <h:outputText value="#{papprv_rpt.subject}"/>
+
+                        </p:column>
+                        <p:column headerText="Second Test">
+                            <h:outputText value="#{papprv_rpt.subject}"/>
+
+                        </p:column>
+                        <p:column headerText="Exam">
+                            <h:outputText value="#{papprv_rpt.subject}"/>
+
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton style="margin-right: 380px;" process="@this n" actionListener="#{subjectUpdate.deleteRecord}" update=":templateForm:n,:templateForm:wat" icon="ui-icon-trash" value="delete">
+                                <p:confirm header="Delete" message="Are you sure you want to delete record?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:confirmDialog id="pop" global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="Yes" immediate="true" process="@this" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" process="@this" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </f:facet>
+                    </p:dataTable> 
+                </p:panel>                    
             </p:panel>
         </div>
 
