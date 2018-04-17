@@ -12,8 +12,10 @@
     </ui:define>
 
     <ui:define name="content">
-
-        <p:commandButton value="Report"/>
+        <h:form>
+            
+            <p:commandButton value="Report" ajax="false" actionListener="#{studentReport.generateReport}" onclick="this.form.target='_blank'"  />
+        </h:form>
 
     </ui:define>
 

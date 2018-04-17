@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class ResultModel implements Serializable {
 
+    private int id;
     private String studentName;
     private String studentId;
     private String subject;
@@ -23,6 +24,14 @@ public class ResultModel implements Serializable {
     private String Studentclass;
     private String year;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public String getStudentName() {
         return studentName;
     }
@@ -39,7 +48,6 @@ public class ResultModel implements Serializable {
         this.subject = subject;
     }
 
-    
     public String getStudentId() {
         return studentId;
     }

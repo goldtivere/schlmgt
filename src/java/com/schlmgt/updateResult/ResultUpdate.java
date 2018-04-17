@@ -10,6 +10,7 @@ import com.schlmgt.imgupload.UploadImagesX;
 import com.schlmgt.logic.DateManipulation;
 import com.schlmgt.login.UserDetails;
 import com.schlmgt.profile.SecondaryModel;
+import com.schlmgt.updateSubject.SessionTable;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -178,8 +179,7 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(1, excelValue.get(i));
 
                     pstmt.setString(2, getGrade());
-                    System.out.println("Id: " + excelValue.get(i) + " StudentClass: " + getGrade()
-                            + " Arm: " + getArm() + " Term: " + getTerm() + " Year: " + getYear() + " Subject: " + sub.get(ii));
+                    
                     pstmt.setString(3, getArm());
                     pstmt.setString(4, getTerm());
                     pstmt.setString(5, getYear());
@@ -194,7 +194,7 @@ public class ResultUpdate implements Serializable {
                     }
                 }
             }
-            System.out.println(valExist);
+            
             return valExist;
 
         } catch (Exception e) {
@@ -286,6 +286,8 @@ public class ResultUpdate implements Serializable {
             hss.addAll(studentIds);
             studentIds.clear();
             studentIds.addAll(hss);
+            
+            int total=0;
 
             if (resultExist(studentIds, lst).equalsIgnoreCase("true")) {
                 if (statusOfStudent(lst)) {
@@ -293,8 +295,8 @@ public class ResultUpdate implements Serializable {
                     int rowCount = 0;
                     String testId = "select * from tbstudentclass where studentid=? and arm=?";
 
-                    String resultDetail = "insert into tbstudentresult (studentreg,firsttest,secondtest,exam,subject,studentclass,term,arm,year,createdby,datecreated,datetimecreated,isdeleted) values("
-                            + "?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    String resultDetail = "insert into tbstudentresult (studentreg,firsttest,secondtest,exam,totalscore,subject,studentclass,term,arm,year,createdby,datecreated,datetimecreated,isdeleted) values("
+                            + "?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
                     for (Row row : ws) {
 
@@ -360,25 +362,29 @@ public class ResultUpdate implements Serializable {
                                         val = 2;
 
                                     }
-                                    if (j > 0) {
+                                    if (j > 0) {                                        
 
                                         pstmt.setDouble(val, ro.getCell(j).getNumericCellValue());
+                                        total+=ro.getCell(j).getNumericCellValue();
 
                                         if (lst.size() == y) {
                                             y = 0;
                                         }
 
                                         if (j % 3 == 0) {
-                                            pstmt.setString(5, lst.get(y));
-                                            pstmt.setString(6, getGrade());
-                                            pstmt.setString(7, getTerm());
-                                            pstmt.setString(8, getArm());
-                                            pstmt.setString(9, getYear());
-                                            pstmt.setString(10, createdby);
-                                            pstmt.setString(11, DateManipulation.dateAlone());
-                                            pstmt.setString(12, DateManipulation.dateAndTime());
-                                            pstmt.setBoolean(13, false);
+                                            pstmt.setDouble(5, total);
+                                            pstmt.setString(6, lst.get(y));
+                                            pstmt.setString(7, getGrade());
+                                            pstmt.setString(8, getTerm());
+                                            pstmt.setString(9, getArm());
+                                            pstmt.setString(10, getYear());
+                                            pstmt.setString(11, createdby);
+                                            pstmt.setString(12, DateManipulation.dateAlone());
+                                            pstmt.setString(13, DateManipulation.dateAndTime());
+                                            pstmt.setBoolean(14, false);
                                             pstmt.executeUpdate();
+                                            System.out.println(" Total: "+ total);
+                                            total=0;
                                             y++;
                                             x = 0;
                                         }
@@ -449,6 +455,60 @@ public class ResultUpdate implements Serializable {
         }
 
     }
+    
+    public List<ResultModel> displayResult() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbstudentresult where studentclass=? and arm=? and term=? and year=? and isdeleted=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getArm());
+            pstmt.setString(3, getTerm());
+            pstmt.setString(4, getYear());
+            pstmt.setBoolean(5, false);
+            rs = pstmt.executeQuery();
+            //
+            List<ResultModel> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                ResultModel coun = new ResultModel();
+                coun.setId(rs.getInt("id"));
+                coun.setStudentId(rs.getString("studentreg"));
+                coun.setSubject(rs.getString("subject"));
+                coun.setFirstTest(rs.getDouble("firsttest"));
+                coun.setSecondTest(rs.getDouble("secondtest"));
+                coun.setExam(rs.getDouble("exam"));
+
+                //
+                lst.add(coun);
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }  
 
     public String getMessangerOfTruth() {
         return messangerOfTruth;
