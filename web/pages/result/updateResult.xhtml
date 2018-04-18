@@ -52,7 +52,7 @@
                                 <f:selectItems value="#{classmode.termList}"/>
                             </p:selectOneMenu>                 
                             <p:selectOneMenu id="gr" class="form-control" value="#{result.year}" required="true" requiredMessage="Year required">  
-                                <p:ajax listener="#{result.onyearchange()}" update="nur,nurs" />
+                                <p:ajax listener="#{result.onyearchange()}" update="nur,nurs,n" />
                                 <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{classmode.term}"/>
                             </p:selectOneMenu>  
@@ -76,14 +76,14 @@
                                           allowTypes="/(\.|\/)(xls|xlsx)$/"
                                           invalidFileMessage="Excel is only Required"
                                           mode="advanced"  dragDropSupport="false"
-                                          sizeLimit="2097152" fileLimit="1" update="wow,upload_pix_data" />                                                               
+                                          sizeLimit="2097152" fileLimit="1" update="wow,upload_pix_data,n" />                                                               
                         </h:panelGrid>
                     </div>
                 </div>
                 <p:panel visible="#{result.status}" id="nurs" style="border: none;">
                     <p:dataTable id="n" class="table table-responsive" scrollable="true" var="papprv_rpt" 
-                                 value="#{subjectUpdate.sesTab}"
-                                 selection="#{subjectUpdate.sesTab1}"
+                                 value="#{result.resultmodel}"
+                                 selection="#{result.resultmodel1}"
                                  rowKey="#{papprv_rpt.id}"
                                  paginatorTemplate="{CurrentPageReport}  
                                  {FirstPageLink} {PreviousPageLink} 
@@ -113,25 +113,35 @@
                             </h:commandLink>
                         </f:facet>                            
                         <p:column selectionMode="multiple" style="width:30px;text-align:center"/>
-                        <p:column headerText="Student Name">
-                            <h:outputText value="#{papprv_rpt.subject}"/>
+                        <p:column headerText="Student Reg">
+                            <h:outputText value="#{papprv_rpt.studentId}"/>
 
                         </p:column>
                         <p:column headerText="Subject">
                             <h:outputText value="#{papprv_rpt.subject}"/>
 
                         </p:column>
-                       <p:column headerText="First Test">
-                            <h:outputText value="#{papprv_rpt.subject}"/>
+                        <p:column headerText="First Test">
+                            <h:outputText value="#{papprv_rpt.firstTest}"/>
 
                         </p:column>
                         <p:column headerText="Second Test">
-                            <h:outputText value="#{papprv_rpt.subject}"/>
+                            <h:outputText value="#{papprv_rpt.secondTest}"/>
 
                         </p:column>
                         <p:column headerText="Exam">
-                            <h:outputText value="#{papprv_rpt.subject}"/>
+                            <h:outputText value="#{papprv_rpt.exam}"/>
 
+                        </p:column>
+                        <p:column headerText="Total">
+                            <h:outputText value="#{papprv_rpt.total}"/>
+
+                        </p:column>
+                        <p:column headerText="Action" style="width:60px" exportable="false">                                
+                            <p:commandButton value="" alt="search" id="please" icon="ui-icon-pencil" update=":templateForm:ooo:okay,:templateForm:ooo:upda" process="@this" 
+                                             oncomplete="PF('dlg2').show()"> 
+                                <f:setPropertyActionListener value="#{papprv_rpt}" target="#{result.modelResult}" />
+                            </p:commandButton>                               
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton style="margin-right: 380px;" process="@this n" actionListener="#{subjectUpdate.deleteRecord}" update=":templateForm:n,:templateForm:wat" icon="ui-icon-trash" value="delete">
@@ -146,8 +156,28 @@
                 </p:panel>                    
             </p:panel>
         </div>
+        <p:dialog header="Edit" style="margin-top: -200px; margin-left: -250px;" position="center" widgetVar="dlg2">                                        
+            <h:form id="ooo">
+                <p:panel id="okay">                                          
+                    <p:outputPanel id="upda">
+                        <h:panelGrid columns="2">
+                          
+                        </h:panelGrid>
+                    </p:outputPanel>
 
-
+                </p:panel>
+            </h:form>
+        </p:dialog> 
+        <script type="text/javascript">
+            function handleLoginRequest(xhr, status, args) {
+                if (args.validationFailed || !args.loggedIn) {
+                    PF('dlg2').jq.effect("shake", {times: 5}, 100);
+                } else {
+                    PF('dlg2').hide();
+                    $('#loginLink').fadeOut();
+                }
+            }
+        </script>  
     </ui:define>
 
 

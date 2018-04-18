@@ -50,14 +50,18 @@ public class ResultUpdate implements Serializable {
     private String messangerOfTruth;
     private boolean status;
     private UploadedFile csv;
+    private List<ResultModel> resultmodel;
+    private List<ResultModel> resultmodel1;
+    private ResultModel modelResult = new ResultModel(); 
 
     @PostConstruct
     public void init() {
         setStatus(false);
     }
 
-    public void onyearchange() {
+    public void onyearchange() throws Exception {
         setStatus(true);
+        resultmodel = displayResult();
     }
 
     public Boolean statusOfStudent(List<String> excelValue) throws SQLException {
@@ -179,7 +183,7 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(1, excelValue.get(i));
 
                     pstmt.setString(2, getGrade());
-                    
+
                     pstmt.setString(3, getArm());
                     pstmt.setString(4, getTerm());
                     pstmt.setString(5, getYear());
@@ -188,13 +192,13 @@ public class ResultUpdate implements Serializable {
                     rs = pstmt.executeQuery();
 
                     if (rs.next()) {
-                        valExist = "Student Registration Number: " + excelValue.get(i) + " and Subject: " + sub.get(ii) +" already have record for this term and year";
+                        valExist = "Student Registration Number: " + excelValue.get(i) + " and Subject: " + sub.get(ii) + " already have record for this term and year";
                         return valExist;
-                        
+
                     }
                 }
             }
-            
+
             return valExist;
 
         } catch (Exception e) {
@@ -286,8 +290,8 @@ public class ResultUpdate implements Serializable {
             hss.addAll(studentIds);
             studentIds.clear();
             studentIds.addAll(hss);
-            
-            int total=0;
+
+            int total = 0;
 
             if (resultExist(studentIds, lst).equalsIgnoreCase("true")) {
                 if (statusOfStudent(lst)) {
@@ -362,10 +366,10 @@ public class ResultUpdate implements Serializable {
                                         val = 2;
 
                                     }
-                                    if (j > 0) {                                        
+                                    if (j > 0) {
 
                                         pstmt.setDouble(val, ro.getCell(j).getNumericCellValue());
-                                        total+=ro.getCell(j).getNumericCellValue();
+                                        total += ro.getCell(j).getNumericCellValue();
 
                                         if (lst.size() == y) {
                                             y = 0;
@@ -383,8 +387,8 @@ public class ResultUpdate implements Serializable {
                                             pstmt.setString(13, DateManipulation.dateAndTime());
                                             pstmt.setBoolean(14, false);
                                             pstmt.executeUpdate();
-                                            System.out.println(" Total: "+ total);
-                                            total=0;
+                                            System.out.println(" Total: " + total);
+                                            total = 0;
                                             y++;
                                             x = 0;
                                         }
@@ -396,6 +400,7 @@ public class ResultUpdate implements Serializable {
                             }
 
                             con.commit();
+                            resultmodel = displayResult();
                             setMessangerOfTruth("Records Successfully Updated!!!.");
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
@@ -455,7 +460,7 @@ public class ResultUpdate implements Serializable {
         }
 
     }
-    
+
     public List<ResultModel> displayResult() throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -486,6 +491,7 @@ public class ResultUpdate implements Serializable {
                 coun.setFirstTest(rs.getDouble("firsttest"));
                 coun.setSecondTest(rs.getDouble("secondtest"));
                 coun.setExam(rs.getDouble("exam"));
+                coun.setTotal(rs.getDouble("totalscore"));
 
                 //
                 lst.add(coun);
@@ -508,7 +514,31 @@ public class ResultUpdate implements Serializable {
             }
 
         }
-    }  
+    }
+
+    public ResultModel getModelResult() {
+        return modelResult;
+    }
+
+    public void setModelResult(ResultModel modelResult) {
+        this.modelResult = modelResult;
+    }
+
+    public List<ResultModel> getResultmodel1() {
+        return resultmodel1;
+    }
+
+    public void setResultmodel1(List<ResultModel> resultmodel1) {
+        this.resultmodel1 = resultmodel1;
+    }
+
+    public List<ResultModel> getResultmodel() {
+        return resultmodel;
+    }
+
+    public void setResultmodel(List<ResultModel> resultmodel) {
+        this.resultmodel = resultmodel;
+    }
 
     public String getMessangerOfTruth() {
         return messangerOfTruth;

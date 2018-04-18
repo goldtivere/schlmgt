@@ -23,6 +23,7 @@ public class ResultModel implements Serializable {
     private String term;
     private String Studentclass;
     private String year;
+    private double total;
 
     public int getId() {
         return id;
@@ -102,6 +103,14 @@ public class ResultModel implements Serializable {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 
 }
