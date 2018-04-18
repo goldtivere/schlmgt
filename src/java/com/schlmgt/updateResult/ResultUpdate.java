@@ -22,15 +22,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+import javax.el.PropertyNotFoundException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import org.apache.poi.ss.util.CellRangeAddress;
 import javax.faces.context.FacesContext;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -52,7 +55,7 @@ public class ResultUpdate implements Serializable {
     private UploadedFile csv;
     private List<ResultModel> resultmodel;
     private List<ResultModel> resultmodel1;
-    private ResultModel modelResult = new ResultModel(); 
+    private ResultModel modelResult = new ResultModel();
 
     @PostConstruct
     public void init() {
@@ -513,6 +516,96 @@ public class ResultUpdate implements Serializable {
                 pstmt = null;
             }
 
+        }
+    }
+
+    public void updateResult() {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        boolean loggedIn = true;
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            con = dbConnections.mySqlDBconnection();
+
+            String updateSubject = "update tbstudentresult set firsttest=?,secondtest=?,exam=?,totalscore=? ,updatedby=?,dateupdated=?,datetimeupdated=? where id=?";
+
+            pstmt = con.prepareStatement(updateSubject);
+            double total = modelResult.getFirstTest() + modelResult.getSecondTest() + modelResult.getExam();
+            pstmt.setDouble(1, modelResult.getFirstTest());
+            pstmt.setDouble(2, modelResult.getSecondTest());
+            pstmt.setDouble(3, modelResult.getExam());
+            pstmt.setDouble(4, total);
+            pstmt.setString(5, createdby);
+            pstmt.setString(6, DateManipulation.dateAlone());
+            pstmt.setString(7, DateManipulation.dateAndTime());
+            pstmt.setInt(8, modelResult.getId());
+            pstmt.executeUpdate();
+            resultmodel = displayResult();
+            setMessangerOfTruth("Result Updated!!");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, msg);
+            cont.addCallbackParam("loggedIn", loggedIn);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void deleteRecord() {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            con = dbConnections.mySqlDBconnection();
+            if (resultmodel1 == null) {                
+                setMessangerOfTruth("Item(s) not selected!!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+            } else {
+
+                String updateSubject = "update tbstudentresult set isdeleted=?,deletedby=?,datetimeDeleted=? where id=?";
+
+                pstmt = con.prepareStatement(updateSubject);
+                for (ResultModel ta : resultmodel1) {
+                    pstmt.setBoolean(1, true);
+                    pstmt.setString(2, createdby);
+                    pstmt.setString(3, DateManipulation.dateAndTime());
+                    pstmt.setInt(4, ta.getId());
+                    pstmt.executeUpdate();
+
+                }
+                resultmodel = displayResult();
+                setMessangerOfTruth("Result Deleted!!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+            }
+        } catch (PropertyNotFoundException e) {
+
+            setMessangerOfTruth("Item(s) not selected!!");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, msg);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

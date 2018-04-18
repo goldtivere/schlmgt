@@ -144,7 +144,7 @@
                             </p:commandButton>                               
                         </p:column>
                         <f:facet name="footer">
-                            <p:commandButton style="margin-right: 380px;" process="@this n" actionListener="#{subjectUpdate.deleteRecord}" update=":templateForm:n,:templateForm:wat" icon="ui-icon-trash" value="delete">
+                            <p:commandButton style="margin-right: 380px;" process="@this n" actionListener="#{result.deleteRecord}" update=":templateForm:n,:templateForm:wow" icon="ui-icon-trash" value="delete">
                                 <p:confirm header="Delete" message="Are you sure you want to delete record?" icon="ui-icon-alert" />
                             </p:commandButton>
                             <p:confirmDialog id="pop" global="true" showEffect="fade" hideEffect="fade">
@@ -161,7 +161,17 @@
                 <p:panel id="okay">                                          
                     <p:outputPanel id="upda">
                         <h:panelGrid columns="2">
-                          
+                            <p:outputLabel value="First Test: "/>
+                            <p:inputNumber id="ftest" value="#{result.modelResult.firstTest}" required="true" requiredMessage="First Test is required"  >                                  
+                            </p:inputNumber>
+                            <p:outputLabel value="Second Test: "/>
+                            <p:inputNumber id="stest" value="#{result.modelResult.secondTest}" required="true" requiredMessage="Second Test is required"  >                                  
+                            </p:inputNumber>
+                            <p:outputLabel value="Exam Test: "/>
+                            <p:inputNumber id="exam" value="#{result.modelResult.exam}" required="true" requiredMessage="Exam is required" >                                  
+                            </p:inputNumber>
+
+                            <p:commandButton value="update"  update=":templateForm:n,:templateForm:wow" process="@this ftest,stest,exam" actionListener="#{result.updateResult}" oncomplete="handleLoginRequest(xhr, status, args)"/>
                         </h:panelGrid>
                     </p:outputPanel>
 
