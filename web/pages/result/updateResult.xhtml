@@ -90,7 +90,15 @@
                                  {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                  paginator="true"
                                  rowsPerPageTemplate="5,10,15"
-                                 draggableColumns="true" rows="15" style="margin-bottom:20px">  
+                                 draggableColumns="true" rows="15" style="margin-bottom:20px"
+                                 widgetVar="resultTable"
+                                 emptyMessage="No Result found with given criteria" filteredValue="#{result.resultmodel2}">  
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="Search all fields:" />
+                                <p:inputText id="globalFilter" onkeyup="PF('resultTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+                            </p:outputPanel>
+                        </f:facet> 
                         <f:facet name="{Exporters}">
                             <h:commandLink immediate="true">
                                 <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
@@ -111,29 +119,33 @@
                                 <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
                                 <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
                             </h:commandLink>
-                        </f:facet>                            
+                        </f:facet>                                                  
                         <p:column selectionMode="multiple" style="width:30px;text-align:center"/>
-                        <p:column headerText="Student Reg">
+                        <p:column headerText="Student Reg" filterBy="#{papprv_rpt.studentId}">
                             <h:outputText value="#{papprv_rpt.studentId}"/>
 
                         </p:column>
-                        <p:column headerText="Subject">
+                        <p:column headerText="Student Arm" filterBy="#{papprv_rpt.arm}">
+                            <h:outputText value="#{papprv_rpt.arm}"/>
+
+                        </p:column>
+                        <p:column headerText="Subject" filterBy="#{papprv_rpt.subject}">
                             <h:outputText value="#{papprv_rpt.subject}"/>
 
                         </p:column>
-                        <p:column headerText="First Test">
+                        <p:column headerText="First Test" filterBy="#{papprv_rpt.firstTest}">
                             <h:outputText value="#{papprv_rpt.firstTest}"/>
 
                         </p:column>
-                        <p:column headerText="Second Test">
+                        <p:column headerText="Second Test" filterBy="#{papprv_rpt.secondTest}">
                             <h:outputText value="#{papprv_rpt.secondTest}"/>
 
                         </p:column>
-                        <p:column headerText="Exam">
+                        <p:column headerText="Exam" filterBy="#{papprv_rpt.exam}">
                             <h:outputText value="#{papprv_rpt.exam}"/>
 
                         </p:column>
-                        <p:column headerText="Total">
+                        <p:column headerText="Total" filterBy="#{papprv_rpt.total}">
                             <h:outputText value="#{papprv_rpt.total}"/>
 
                         </p:column>

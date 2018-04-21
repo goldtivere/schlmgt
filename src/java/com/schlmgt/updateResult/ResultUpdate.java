@@ -55,6 +55,7 @@ public class ResultUpdate implements Serializable {
     private UploadedFile csv;
     private List<ResultModel> resultmodel;
     private List<ResultModel> resultmodel1;
+    private List<ResultModel> resultmodel2;
     private ResultModel modelResult = new ResultModel();
 
     @PostConstruct
@@ -495,6 +496,7 @@ public class ResultUpdate implements Serializable {
                 coun.setSecondTest(rs.getDouble("secondtest"));
                 coun.setExam(rs.getDouble("exam"));
                 coun.setTotal(rs.getDouble("totalscore"));
+                coun.setArm(rs.getString("arm"));
 
                 //
                 lst.add(coun);
@@ -560,7 +562,7 @@ public class ResultUpdate implements Serializable {
             ex.printStackTrace();
         }
     }
-    
+
     public void deleteRecord() {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
@@ -577,7 +579,7 @@ public class ResultUpdate implements Serializable {
             String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
             int createdId = userObj.getId();
             con = dbConnections.mySqlDBconnection();
-            if (resultmodel1 == null) {                
+            if (resultmodel1 == null) {
                 setMessangerOfTruth("Item(s) not selected!!");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);
@@ -607,6 +609,14 @@ public class ResultUpdate implements Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public List<ResultModel> getResultmodel2() {
+        return resultmodel2;
+    }
+
+    public void setResultmodel2(List<ResultModel> resultmodel2) {
+        this.resultmodel2 = resultmodel2;
     }
 
     public ResultModel getModelResult() {

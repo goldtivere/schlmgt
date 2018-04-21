@@ -24,6 +24,7 @@ public class ResultModel implements Serializable {
     private String Studentclass;
     private String year;
     private double total;
+    private String arm;
 
     public int getId() {
         return id;
@@ -111,6 +112,14 @@ public class ResultModel implements Serializable {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public String getArm() {
+        return arm;
+    }
+
+    public void setArm(String arm) {
+        this.arm = arm;
     }
 
 }
