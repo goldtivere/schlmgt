@@ -178,7 +178,7 @@ public class ResultUpdate implements Serializable {
             String value = null;
             con = dbConnections.mySqlDBconnection();
             String valExist = "true";
-            String query = "SELECT * FROM tbstudentresult where studentreg=? and studentclass=? and arm=? and term=? and year=? and subject=? and isdeleted=?";
+            String query = "SELECT * FROM tbstudentresult where studentreg=? and studentclass=? and term=? and year=? and subject=? and isdeleted=?";
 
             for (int i = 0; i < excelValue.size(); i++) {
 
@@ -188,11 +188,10 @@ public class ResultUpdate implements Serializable {
 
                     pstmt.setString(2, getGrade());
 
-                    pstmt.setString(3, getArm());
-                    pstmt.setString(4, getTerm());
-                    pstmt.setString(5, getYear());
-                    pstmt.setString(6, sub.get(ii));
-                    pstmt.setBoolean(7, false);
+                    pstmt.setString(3, getTerm());
+                    pstmt.setString(4, getYear());
+                    pstmt.setString(5, sub.get(ii));
+                    pstmt.setBoolean(6, false);
                     rs = pstmt.executeQuery();
 
                     if (rs.next()) {
@@ -259,6 +258,7 @@ public class ResultUpdate implements Serializable {
             List<String> lst = new ArrayList<>();
             List<String> studentId = new ArrayList<>();
             List<String> studentIds = new ArrayList<>();
+            List<String> studentArm = new ArrayList<>();
 
             for (int i = 0; i < 1; i++) {
                 rows = (Row) ws.getRow(0);
@@ -301,7 +301,7 @@ public class ResultUpdate implements Serializable {
                 if (statusOfStudent(lst)) {
                     con.setAutoCommit(false);
                     int rowCount = 0;
-                    String testId = "select * from tbstudentclass where studentid=? and arm=?";
+                    String testId = "select * from tbstudentclass where studentid=? and class=? and currentclass=?";
 
                     String resultDetail = "insert into tbstudentresult (studentreg,firsttest,secondtest,exam,totalscore,subject,studentclass,term,arm,year,createdby,datecreated,datetimecreated,isdeleted) values("
                             + "?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -326,7 +326,8 @@ public class ResultUpdate implements Serializable {
                     for (int i = 0; i < studentId.size(); i++) {
                         pstmt = con.prepareStatement(testId);
                         pstmt.setString(1, studentId.get(i));
-                        pstmt.setString(2, getArm());
+                        pstmt.setString(2, getGrade());
+                        pstmt.setBoolean(3, true);
 
                         rs = pstmt.executeQuery();
 
@@ -335,7 +336,7 @@ public class ResultUpdate implements Serializable {
                             rowCount++;
                         } else {
 
-                            setMessangerOfTruth("Student with Id: " + studentId.get(i) + " doesnt exist in " + getGrade() + " and Arm: " + getArm());
+                            setMessangerOfTruth("Student with Id: " + studentId.get(i) + " doesnt exist in " + getGrade());
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
                         }
@@ -391,7 +392,6 @@ public class ResultUpdate implements Serializable {
                                             pstmt.setString(13, DateManipulation.dateAndTime());
                                             pstmt.setBoolean(14, false);
                                             pstmt.executeUpdate();
-                                            System.out.println(" Total: " + total);
                                             total = 0;
                                             y++;
                                             x = 0;
@@ -404,7 +404,8 @@ public class ResultUpdate implements Serializable {
                             }
 
                             con.commit();
-                            resultmodel = displayResult();
+                            updateStudentArm();
+                            resultmodel = displayResult();                            
                             setMessangerOfTruth("Records Successfully Updated!!!.");
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
@@ -446,9 +447,9 @@ public class ResultUpdate implements Serializable {
 
         } catch (Exception ex) {
 
-            ex.printStackTrace();
-            message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+            setMessangerOfTruth(ex.getMessage());
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, message);
 
         } finally {
 
@@ -476,13 +477,12 @@ public class ResultUpdate implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbstudentresult where studentclass=? and arm=? and term=? and year=? and isdeleted=?";
+            String query = "SELECT * FROM tbstudentresult where studentclass=? and term=? and year=? and isdeleted=?";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, getGrade());
-            pstmt.setString(2, getArm());
-            pstmt.setString(3, getTerm());
-            pstmt.setString(4, getYear());
-            pstmt.setBoolean(5, false);
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
             rs = pstmt.executeQuery();
             //
             List<ResultModel> lst = new ArrayList<>();
@@ -613,6 +613,60 @@ public class ResultUpdate implements Serializable {
 
     public List<ResultModel> getResultmodel2() {
         return resultmodel2;
+    }
+
+    public void updateStudentArm() {
+        try {
+
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            List<String> studentID = new ArrayList<>();
+            List<String> arm = new ArrayList<>();
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT distinct(studentreg) FROM tbstudentresult where studentclass=? and term=? and year=? and isdeleted=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                studentID.add(rs.getString("studentreg"));
+            }
+
+            String query1 = "SELECT arm FROM tbstudentclass where studentid=? and isdeleted=? and currentclass=?";
+            pstmt = con.prepareStatement(query1);
+
+            for (int i = 0; i < studentID.size(); i++) {
+                pstmt.setString(1, studentID.get(i));
+                pstmt.setBoolean(2, false);
+                pstmt.setBoolean(3, true);
+                rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    arm.add(rs.getString("arm"));
+                }
+
+            }
+            String query2 = "update tbstudentresult set arm=? where studentclass=? and term=? and year=? and isdeleted=? and studentreg=?";
+            pstmt = con.prepareStatement(query2);
+            for (int i = 0; i < studentID.size(); i++) {
+                pstmt.setString(1, arm.get(i));
+                pstmt.setString(2, getGrade());
+                pstmt.setString(3, getTerm());
+                pstmt.setString(4, getYear());
+                pstmt.setBoolean(5, false);
+                pstmt.setString(6, studentID.get(i));
+               pstmt.executeUpdate();                
+
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void setResultmodel2(List<ResultModel> resultmodel2) {

@@ -33,19 +33,13 @@
 
 
                             <p:selectOneMenu id="grad" class="form-control" value="#{result.grade}" required="true" requiredMessage="Grade required">                                
-                                <p:ajax listener="#{classmode.onarmChanges()}" update="arm" />
+                                <p:ajax listener="#{classmode.ongradeChanges}" update="gra" /> 
                                 <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{classmode.grademodels}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.grade}"
                                                itemValue="#{singlevalue.grade}"/>
-                            </p:selectOneMenu> 
-                            <p:selectOneMenu id="arm" class="form-control" value="#{result.arm}" required="true" requiredMessage="Arm required">                                
-                                <p:ajax listener="#{classmode.ongradeChanges}" update="gra" />                    
-                                <f:selectItem itemLabel="--Select Arm--" itemValue="" noSelectionOption="true"/>
-                                <f:selectItems value="#{classmode.arm}"/>
-                            </p:selectOneMenu> 
-
+                            </p:selectOneMenu>                             
                             <p:selectOneMenu id="gra" class="form-control" value="#{result.term}" required="true" requiredMessage="Term required">                                
                                 <p:ajax listener="#{classmode.ontermChanges(result.term)}" update="gr" />
                                 <f:selectItem itemLabel="--Select Term--" itemValue="" noSelectionOption="true"/>
@@ -85,11 +79,9 @@
                                  value="#{result.resultmodel}"
                                  selection="#{result.resultmodel1}"
                                  rowKey="#{papprv_rpt.id}"
-                                 paginatorTemplate="{CurrentPageReport}  
-                                 {FirstPageLink} {PreviousPageLink} 
-                                 {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                 paginatorTemplate="{Exporters}"
                                  paginator="true"
-                                 rowsPerPageTemplate="5,10,15"
+                                 scrollHeight="350"                                 
                                  draggableColumns="true" rows="15" style="margin-bottom:20px"
                                  widgetVar="resultTable"
                                  emptyMessage="No Result found with given criteria" filteredValue="#{result.resultmodel2}">  
@@ -149,7 +141,7 @@
                             <h:outputText value="#{papprv_rpt.total}"/>
 
                         </p:column>
-                        <p:column headerText="Action" style="width:60px" exportable="false">                                
+                        <p:column headerText="Action" style="width:70px" exportable="false">                                
                             <p:commandButton value="" alt="search" id="please" icon="ui-icon-pencil" update=":templateForm:ooo:okay,:templateForm:ooo:upda" process="@this" 
                                              oncomplete="PF('dlg2').show()"> 
                                 <f:setPropertyActionListener value="#{papprv_rpt}" target="#{result.modelResult}" />
