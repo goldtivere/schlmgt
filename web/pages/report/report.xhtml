@@ -13,8 +13,70 @@
 
     <ui:define name="content">
         <h:form>
-            
-            <p:commandButton value="Report" ajax="false" actionListener="#{studentReport.generateReport}" onclick="this.form.target='_blank'"  />
+
+            <p:commandButton value="Report" ajax="false" onclick="this.form.target = '_blank'"  />
+            <h:form>
+
+                <p:dataTable id="tbl" var="result" draggableColumns="true" resizableColumns="true" scrollable="true"
+                             value="#{studentReport.tableData}">
+
+                    <f:facet name="header">  header table </f:facet>
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Student Reg." />
+                                </f:facet>
+                                <h:outputText value="#{rowIndex+1}" />
+                            </p:column>
+                            <p:columns colspan="2" value="#{studentReport.tableHeaderNames}"
+                                       var="mycolHeader">
+                                <f:facet name="header">
+                                    <h:outputText value="#{mycolHeader}" />
+
+                                </f:facet>
+
+                                <br />
+                            </p:columns>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="" />
+                                </f:facet>                                
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Grand Total" />
+                                </f:facet>                                
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Class Avereage" />
+                                </f:facet>                                
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Position" />
+                                </f:facet>                                
+                            </p:column>
+
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="" />
+                            <p:columns value="#{studentReport.subHead}"
+                                       var="mycolH">
+                                <f:facet name="header">
+                                    <h:outputText value="#{mycolH}" />
+
+                                </f:facet>
+
+                                <br />
+                            </p:columns>
+                        </p:row>
+                    </p:columnGroup>
+
+
+                </p:dataTable>
+            </h:form>
         </h:form>
 
     </ui:define>

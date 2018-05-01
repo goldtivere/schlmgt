@@ -112,7 +112,7 @@
                                 <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
                             </h:commandLink>
                         </f:facet>                                                  
-                        <p:column selectionMode="multiple" style="width:30px;text-align:center"/>
+                        <p:column exportable="false" selectionMode="multiple" style="width:30px;text-align:center"/>
                         <p:column headerText="Student Reg" filterBy="#{papprv_rpt.studentId}">
                             <h:outputText value="#{papprv_rpt.studentId}"/>
 
