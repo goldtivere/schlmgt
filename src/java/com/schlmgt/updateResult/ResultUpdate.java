@@ -405,7 +405,8 @@ public class ResultUpdate implements Serializable {
 
                             con.commit();
                             updateStudentArm();
-                            resultmodel = displayResult();                            
+                            resultmodel = displayResult();
+                            updateStudentGrade();
                             setMessangerOfTruth("Records Successfully Updated!!!.");
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
@@ -660,7 +661,72 @@ public class ResultUpdate implements Serializable {
                 pstmt.setString(4, getYear());
                 pstmt.setBoolean(5, false);
                 pstmt.setString(6, studentID.get(i));
-               pstmt.executeUpdate();                
+                pstmt.executeUpdate();
+
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void updateStudentGrade() {
+        try {
+
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            List<Double> studentID = new ArrayList<>();
+            List<Integer> arm = new ArrayList<>();
+            con = dbConnections.mySqlDBconnection();
+            
+            String query = "SELECT * FROM tbstudentresult where studentclass=? and term=? and year=? and isdeleted=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                studentID.add(rs.getDouble("totalscore"));
+                arm.add(rs.getInt("id"));
+            }
+
+            String query2 = "update tbstudentresult set grade=? where studentclass=? and term=? and year=? and isdeleted=? and id=?";
+            pstmt = con.prepareStatement(query2);
+            for (int i = 0; i < studentID.size(); i++) {
+                 if (studentID.get(i) > 74) {
+                    pstmt.setString(1, "A");
+                    System.out.println(studentID.get(i));
+                    
+                } 
+               else if (studentID.get(i) < 40) {
+                    pstmt.setString(1, "F");
+                    System.out.println(studentID.get(i));
+                    
+                } 
+               else if (studentID.get(i) > 39 && studentID.get(i) < 50) {
+                    pstmt.setString(1, "D");
+                    System.out.println(studentID.get(i));
+                    
+                }
+               else if (studentID.get(i) >= 50 && studentID.get(i) < 65) {
+                    pstmt.setString(1, "C");
+                    System.out.println(studentID.get(i));
+                    
+                } 
+               else if (studentID.get(i) > 64 && studentID.get(i) < 75) {
+                    pstmt.setString(1, "B");
+                    System.out.println(studentID.get(i));
+                }
+                pstmt.setString(2, getGrade());
+                pstmt.setString(3, getTerm());
+                pstmt.setString(4, getYear());
+                pstmt.setBoolean(5, false);
+                pstmt.setInt(6, arm.get(i));
+                pstmt.executeUpdate();
 
             }
 

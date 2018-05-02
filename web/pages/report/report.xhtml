@@ -12,13 +12,39 @@
     </ui:define>
 
     <ui:define name="content">
-        <h:form>
+        
 
             <p:commandButton value="Report" ajax="false" onclick="this.form.target = '_blank'"  />
-            <h:form>
+            
 
-                <p:dataTable id="tbl" var="result" draggableColumns="true" resizableColumns="true" scrollable="true"
+                <p:dataTable id="np" var="result" draggableColumns="true"
+                             paginatorTemplate="{CurrentPageReport}  
+                             {FirstPageLink} {PreviousPageLink} 
+                             {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             resizableColumns="true"
+                             scrollable="true" scrollWidth="100%" scrollHeight="300"
                              value="#{studentReport.tableData}">
+                    <f:facet name="{Exporters}">
+                        <h:commandLink immediate="true">
+                            <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
+                            <p:dataExporter type="xls" target="np" fileName="report" pageOnly="true"/>
+                        </h:commandLink>
+
+                        <h:commandLink immediate="true">
+                            <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
+                            <p:dataExporter type="pdf" target="np" fileName="report" pageOnly="true" />
+                        </h:commandLink>
+
+                        <h:commandLink immediate="true">
+                            <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
+                            <p:dataExporter type="csv" target="np" fileName="report" pageOnly="true" />
+                        </h:commandLink>
+
+                        <h:commandLink immediate="true" >
+                            <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
+                            <p:dataExporter type="xml" target="np" fileName="report" pageOnly="true" />
+                        </h:commandLink>
+                    </f:facet>                            
 
                     <f:facet name="header">  header table </f:facet>
                     <p:columnGroup type="header">
@@ -75,9 +101,9 @@
                     </p:columnGroup>
 
 
-                </p:dataTable>
-            </h:form>
-        </h:form>
+                </p:dataTable>                
+            
+        
 
     </ui:define>
 

@@ -110,12 +110,7 @@ public class StudentReport {
                 suHead.add("Grade");
                
             }
-            
-            for(int i=0;i<suHead.size();i++)
-            {
-                System.out.println(suHead.get(i));
-            }
-            
+                     
             subHead = suHead;
             tableHeaderNames = lst;
         } catch (Exception e) {
