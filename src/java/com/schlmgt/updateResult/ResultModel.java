@@ -25,6 +25,15 @@ public class ResultModel implements Serializable {
     private String year;
     private double total;
     private String arm;
+    private String grade;
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
 
     public int getId() {
         return id;
@@ -33,7 +42,7 @@ public class ResultModel implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getStudentName() {
         return studentName;
     }

@@ -540,7 +540,7 @@ public class ResultUpdate implements Serializable {
             int createdId = userObj.getId();
             con = dbConnections.mySqlDBconnection();
 
-            String updateSubject = "update tbstudentresult set firsttest=?,secondtest=?,exam=?,totalscore=? ,updatedby=?,dateupdated=?,datetimeupdated=? where id=?";
+            String updateSubject = "update tbstudentresult set firsttest=?,secondtest=?,exam=?,totalscore=? ,updatedby=?,dateupdated=?,datetimeupdated=?,grade=? where id=?";
 
             pstmt = con.prepareStatement(updateSubject);
             double total = modelResult.getFirstTest() + modelResult.getSecondTest() + modelResult.getExam();
@@ -551,7 +551,27 @@ public class ResultUpdate implements Serializable {
             pstmt.setString(5, createdby);
             pstmt.setString(6, DateManipulation.dateAlone());
             pstmt.setString(7, DateManipulation.dateAndTime());
-            pstmt.setInt(8, modelResult.getId());
+            if (total > 74) {
+                pstmt.setString(8, "A");
+                
+
+            } else if (total < 40) {
+                pstmt.setString(8, "F");
+                
+
+            } else if (total > 39 && total < 50) {
+                pstmt.setString(8, "D");
+                
+
+            } else if (total >= 50 && total < 65) {
+                pstmt.setString(8, "C");
+                
+
+            } else if (total > 64 && total < 75) {
+                pstmt.setString(8, "B");
+                
+            }
+            pstmt.setInt(9, modelResult.getId());
             pstmt.executeUpdate();
             resultmodel = displayResult();
             setMessangerOfTruth("Result Updated!!");
@@ -680,7 +700,7 @@ public class ResultUpdate implements Serializable {
             List<Double> studentID = new ArrayList<>();
             List<Integer> arm = new ArrayList<>();
             con = dbConnections.mySqlDBconnection();
-            
+
             String query = "SELECT * FROM tbstudentresult where studentclass=? and term=? and year=? and isdeleted=?";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, getGrade());
@@ -697,27 +717,23 @@ public class ResultUpdate implements Serializable {
             String query2 = "update tbstudentresult set grade=? where studentclass=? and term=? and year=? and isdeleted=? and id=?";
             pstmt = con.prepareStatement(query2);
             for (int i = 0; i < studentID.size(); i++) {
-                 if (studentID.get(i) > 74) {
+                if (studentID.get(i) > 74) {
                     pstmt.setString(1, "A");
                     System.out.println(studentID.get(i));
-                    
-                } 
-               else if (studentID.get(i) < 40) {
+
+                } else if (studentID.get(i) < 40) {
                     pstmt.setString(1, "F");
                     System.out.println(studentID.get(i));
-                    
-                } 
-               else if (studentID.get(i) > 39 && studentID.get(i) < 50) {
+
+                } else if (studentID.get(i) > 39 && studentID.get(i) < 50) {
                     pstmt.setString(1, "D");
                     System.out.println(studentID.get(i));
-                    
-                }
-               else if (studentID.get(i) >= 50 && studentID.get(i) < 65) {
+
+                } else if (studentID.get(i) >= 50 && studentID.get(i) < 65) {
                     pstmt.setString(1, "C");
                     System.out.println(studentID.get(i));
-                    
-                } 
-               else if (studentID.get(i) > 64 && studentID.get(i) < 75) {
+
+                } else if (studentID.get(i) > 64 && studentID.get(i) < 75) {
                     pstmt.setString(1, "B");
                     System.out.println(studentID.get(i));
                 }

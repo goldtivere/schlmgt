@@ -100,6 +100,50 @@ public class StudentReport {
         this.subHead = subHead;
     }
 
+    public List<String> studentNum() throws Exception {
+
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "select distinct(Studentreg) from tbstudentresult where studentclass=? and Term=? and year=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "Primary 4");
+            pstmt.setString(2, "First Term");
+            pstmt.setString(3, "2018");
+            rs = pstmt.executeQuery();
+            //
+            List<String> lst = new ArrayList<>();
+            List<String> suHead = new ArrayList<>();
+            while (rs.next()) {
+                lst.add(rs.getString("studentreg"));
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+
+    }
+
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
@@ -158,7 +202,7 @@ public class StudentReport {
         }
     }
 
-    public List<ResultModel> displaySub() throws Exception {
+    public List<String> displaySub() throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
         DbConnectionX dbConnections = new DbConnectionX();
@@ -169,26 +213,22 @@ public class StudentReport {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "select * from tbstudentresult where studentclass=? and Term=? and year=?";
-            pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "Primary 4");
-            pstmt.setString(2, "First Term");
-            pstmt.setString(3, "2018");
-            rs = pstmt.executeQuery();
-            //
-            List<ResultModel> lst = new ArrayList<>();
-            while (rs.next()) {
+            List<String> lst = new ArrayList<>();
+            for (int i = 0; i < studentNum().size(); i++) {
+                String query = "select totalscore,grade from tbstudentresult where studentclass=? and Term=? and year=? and studentreg=?";
+                pstmt = con.prepareStatement(query);
+                pstmt.setString(1, "Primary 4");
+                pstmt.setString(2, "First Term");
+                pstmt.setString(3, "2018");
+                pstmt.setString(4, studentNum().get(i));
+                rs = pstmt.executeQuery();
+                //                
+                while (rs.next()) {
 
-                ResultModel coun = new ResultModel();
-                coun.setId(rs.getInt("id"));
-                coun.setStudentId(rs.getString("studentreg"));
-                coun.setSubject(rs.getString("subject"));
-                coun.setFirstTest(rs.getDouble("firsttest"));
-                coun.setSecondTest(rs.getDouble("secondtest"));
-                coun.setExam(rs.getDouble("exam"));
-                coun.setTotal(rs.getDouble("totalscore"));
-
-                lst.add(coun);
+                    ResultModel coun = new ResultModel();
+                    lst.add(String.valueOf(rs.getDouble("totalscore")));
+                    lst.add(rs.getString("grade"));
+                }
             }
 
             return lst;
@@ -215,7 +255,6 @@ public class StudentReport {
         try {
             //Generate table header.
 
-            tableData = displaySub();
         } catch (Exception ex) {
             Logger.getLogger(StudentReport.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -232,11 +271,20 @@ public class StudentReport {
 
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
-
-        Row headerRow = sheet.createRow(6);
         tableHeaderNames = displaySubject();
+
+        List<String> subHeading = new ArrayList<>();
+        int valu = tableHeaderNames.size() * 2;
+
+        //write code for subheads
+        for (int i = 0; i < tableHeaderNames.size(); i++) {
+            subHeading.add("Total");
+            subHeading.add("Grade");
+        }
         int val = 1;
         int lav = 2;
+
+        Row headerRow = sheet.createRow(6);
 
         Cell cells = headerRow.createCell(0);
         cells.setCellValue("Student Number");
@@ -244,9 +292,6 @@ public class StudentReport {
             Cell cell = headerRow.createCell(val);
             cell.setCellValue(tableHeaderNames.get(i));
 
-            System.out.println("Done" + val);
-            System.out.println("Done" + lav);
-            System.out.println(tableHeaderNames.get(i));
             sheet.addMergedRegion(new CellRangeAddress(
                     6, //first row (0-based)
                     6, //last row  (0-based)
@@ -257,16 +302,58 @@ public class StudentReport {
             val = val + 2;
             lav = lav + 2;
         }
+
         Cell cel = headerRow.createCell(lav);
         cel.setCellValue("Grand Total");
-        Cell ce = headerRow.createCell(lav+1);
+        Cell ce = headerRow.createCell(lav + 1);
         ce.setCellValue("Class Average");
-        Cell c = headerRow.createCell(lav+2);
+        Cell c = headerRow.createCell(lav + 2);
         c.setCellValue("Position");
+
+        // write code for subheading
+        Row headerRows = sheet.createRow(7);
+        int nn = 1;
+        for (int i = 0; i < subHeading.size(); i++) {
+            Cell cell = headerRows.createCell(nn);
+            cell.setCellValue(subHeading.get(i));
+            nn++;
+        }
+        int rowNum = 8;
+        int rowNums = 8;
+        int cellNum = 0;
+        int valNum = 1;
+        int numCell = 1;
+        Row row;
+        for (int i = 0; i < studentNum().size(); i++) {
+            row = sheet.createRow(rowNums);
+            System.out.println(rowNums);
+            row.createCell(0).setCellValue(studentNum().get(i));
+            rowNums++;
+        }
+        int vala = displaySubject().size() * 2;
+        for (int i = 0; i < studentNum().size(); i++) {
+            //paste score and grade of each student in excel
+          row = sheet.getRow(rowNum);
+
+            for (int p = 0; p < displaySub().size(); p++) {
+
+                Cell cell = row.createCell(numCell);
+                cell.setCellValue(displaySub().get(cellNum));
+
+                cellNum++;
+                if (p == vala - 1) {
+                    numCell = 1;
+                    break;
+                }
+                numCell++;
+
+            }
+            rowNum++;
+        }
+
         FileOutputStream fileOut = new FileOutputStream("C:/contact.xlsx");
         workbook.write(fileOut);
         fileOut.close();
-        System.out.println("Done");
 
 //        Workbook wb = new XSSFWorkbook();
 //        Sheet sheet = wb.createSheet("new sheet");
