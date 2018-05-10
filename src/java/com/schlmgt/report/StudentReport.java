@@ -100,6 +100,53 @@ public class StudentReport {
         this.subHead = subHead;
     }
 
+    public List<Double> scoreSum() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            List<Double> lst = new ArrayList<>();
+            for (int i = 0; i < studentNum().size(); i++) {
+                String query = "select sum(totalscore) as total from tbstudentresult where studentclass=? and Term=? and year=? and studentreg=?";
+                pstmt = con.prepareStatement(query);
+                pstmt.setString(1, "Primary 4");
+                pstmt.setString(2, "First Term");
+                pstmt.setString(3, "2018");
+                pstmt.setString(4, studentNum().get(i));
+                rs = pstmt.executeQuery();
+                //                
+                while (rs.next()) {
+
+                    ResultModel coun = new ResultModel();
+                    lst.add(rs.getDouble("total"));
+                }
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
     public List<String> studentNum() throws Exception {
 
         FacesContext context = FacesContext.getCurrentInstance();
@@ -333,7 +380,7 @@ public class StudentReport {
         int vala = displaySubject().size() * 2;
         for (int i = 0; i < studentNum().size(); i++) {
             //paste score and grade of each student in excel
-          row = sheet.getRow(rowNum);
+            row = sheet.getRow(rowNum);
 
             for (int p = 0; p < displaySub().size(); p++) {
 
@@ -349,6 +396,19 @@ public class StudentReport {
 
             }
             rowNum++;
+        }
+
+        
+        int rowValue = 8;
+        for (int i = 0; i < scoreSum().size(); i++) {
+            Row header = sheet.getRow(rowValue);
+            Cell cell = header.createCell(lav);
+            cell.setCellValue(scoreSum().get(i));
+
+            header.createCell(lav+1).setCellValue(String.format("%.2f",scoreSum().get(i)/displaySubject().size()));
+
+            header.createCell(lav+2).setCellValue(scoreSum().get(i));
+            rowValue++;
         }
 
         FileOutputStream fileOut = new FileOutputStream("C:/contact.xlsx");
