@@ -407,7 +407,7 @@ public class ResultUpdate implements Serializable {
                             updateStudentArm();
                             resultmodel = displayResult();
                             updateStudentGrade();
-                            updateCompute();
+                            updateCompute(studentId);
                             setMessangerOfTruth("Records Successfully Updated!!!.");
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
@@ -793,7 +793,7 @@ public class ResultUpdate implements Serializable {
 
     }
 
-    public void updateCompute() {
+    public void updateCompute(List<String> studentId) {
         try {
 
             DbConnectionX dbConnections = new DbConnectionX();
@@ -809,13 +809,13 @@ public class ResultUpdate implements Serializable {
             String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
             int createdId = userObj.getId();
             List<ResultModel> arrayDude = new ArrayList<>();
-            for (int i = 0; i < studentNum().size(); i++) {
+            for (int i = 0; i < studentId.size(); i++) {
                 String query = "SELECT distinct(studentreg) as regNum,sum(totalscore) as total,studentclass,term,year FROM tbstudentresult where studentclass=? and term=? and year=? and studentreg=? and isdeleted=?";                
                 pstmt = con.prepareStatement(query);
                 pstmt.setString(1, getGrade());
                 pstmt.setString(2, getTerm());
                 pstmt.setString(3, getYear());
-                pstmt.setString(4, studentNum().get(i));
+                pstmt.setString(4, studentId.get(i));
                 pstmt.setBoolean(5, false);
                 rs = pstmt.executeQuery();
 
