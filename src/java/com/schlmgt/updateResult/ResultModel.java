@@ -26,6 +26,8 @@ public class ResultModel implements Serializable {
     private double total;
     private String arm;
     private String grade;
+    private double avg;
+    private int numofsub;
 
     public String getGrade() {
         return grade;
@@ -130,5 +132,22 @@ public class ResultModel implements Serializable {
     public void setArm(String arm) {
         this.arm = arm;
     }
+
+    public double getAvg() {
+        return avg;
+    }
+
+    public void setAvg(double avg) {
+        this.avg = avg;
+    }
+
+    public int getNumofsub() {
+        return numofsub;
+    }
+
+    public void setNumofsub(int numofsub) {
+        this.numofsub = numofsub;
+    }
+    
 
 }

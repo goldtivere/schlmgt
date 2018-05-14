@@ -407,6 +407,7 @@ public class ResultUpdate implements Serializable {
                             updateStudentArm();
                             resultmodel = displayResult();
                             updateStudentGrade();
+                            updateCompute();
                             setMessangerOfTruth("Records Successfully Updated!!!.");
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
@@ -553,23 +554,19 @@ public class ResultUpdate implements Serializable {
             pstmt.setString(7, DateManipulation.dateAndTime());
             if (total > 74) {
                 pstmt.setString(8, "A");
-                
 
             } else if (total < 40) {
                 pstmt.setString(8, "F");
-                
 
             } else if (total > 39 && total < 50) {
                 pstmt.setString(8, "D");
-                
 
             } else if (total >= 50 && total < 65) {
                 pstmt.setString(8, "C");
-                
 
             } else if (total > 64 && total < 75) {
                 pstmt.setString(8, "B");
-                
+
             }
             pstmt.setInt(9, modelResult.getId());
             pstmt.executeUpdate();
@@ -744,6 +741,113 @@ public class ResultUpdate implements Serializable {
                 pstmt.setInt(6, arm.get(i));
                 pstmt.executeUpdate();
 
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public List<String> studentNum() throws Exception {
+
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "select distinct(Studentreg) from tbstudentresult where studentclass=? and Term=? and year=? and isdeleted=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
+            rs = pstmt.executeQuery();
+            //
+            List<String> lst = new ArrayList<>();
+            List<String> suHead = new ArrayList<>();
+            while (rs.next()) {
+                lst.add(rs.getString("studentreg"));
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+
+    }
+
+    public void updateCompute() {
+        try {
+
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            List<Double> studentID = new ArrayList<>();
+            List<Integer> arm = new ArrayList<>();
+            con = dbConnections.mySqlDBconnection();
+            FacesContext context = FacesContext.getCurrentInstance();
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            List<ResultModel> arrayDude = new ArrayList<>();
+            for (int i = 0; i < studentNum().size(); i++) {
+                String query = "SELECT distinct(studentreg) as regNum,sum(totalscore) as total,studentclass,term,year FROM tbstudentresult where studentclass=? and term=? and year=? and studentreg=? and isdeleted=?";                
+                pstmt = con.prepareStatement(query);
+                pstmt.setString(1, getGrade());
+                pstmt.setString(2, getTerm());
+                pstmt.setString(3, getYear());
+                pstmt.setString(4, studentNum().get(i));
+                pstmt.setBoolean(5, false);
+                rs = pstmt.executeQuery();
+
+                while (rs.next()) {
+                    ResultModel mode = new ResultModel();
+                    mode.setStudentId(rs.getString("regNum"));
+                    mode.setTotal(rs.getDouble("total"));
+                    mode.setAvg(rs.getDouble("total") / numberOfSubjects());
+                    mode.setNumofsub(numberOfSubjects());
+                    mode.setStudentclass(rs.getString("studentclass"));
+                    mode.setTerm(rs.getString("term"));
+                    mode.setYear(rs.getString("year"));
+
+                    arrayDude.add(mode);
+                }
+            }
+
+            String resultDetail = "insert into tbresultcompute (studentreg,studentclass,term,year,totalscore,numberofsubject,average,createdby,datecreated) values("
+                    + "?,?,?,?,?,?,?,?,?)";
+            pstmt = con.prepareStatement(resultDetail);
+
+            for (ResultModel mm : arrayDude) {
+                pstmt.setString(1, mm.getStudentId());
+                pstmt.setString(2, mm.getStudentclass());
+                pstmt.setString(3, mm.getTerm());
+                pstmt.setString(4, mm.getYear());
+                pstmt.setDouble(5, mm.getTotal());
+                pstmt.setInt(6, mm.getNumofsub());
+                pstmt.setDouble(7, mm.getAvg());
+                pstmt.setString(8, createdby);
+                pstmt.setString(9, DateManipulation.dateAndTime());
+                pstmt.executeUpdate();
             }
 
         } catch (Exception ex) {
