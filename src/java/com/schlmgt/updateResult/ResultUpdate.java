@@ -523,6 +523,41 @@ public class ResultUpdate implements Serializable {
         }
     }
 
+    public void updateResultCompute(double total, String reg) {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        boolean loggedIn = true;
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            con = dbConnections.mySqlDBconnection();
+
+            String updateSubject = "update tbresultcompute set totalscore=?,Average=?,updatedby=?,dateupdated=? where studentreg=?";
+
+            pstmt = con.prepareStatement(updateSubject);
+            System.out.println(total + " total");
+
+            pstmt.setDouble(1, total);
+            pstmt.setDouble(2, total / numberOfSubjects());
+            pstmt.setString(3, createdby);
+            pstmt.setString(4, DateManipulation.dateAndTime());
+            pstmt.setString(5, reg);
+            pstmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void updateResult() {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
@@ -570,12 +605,59 @@ public class ResultUpdate implements Serializable {
             }
             pstmt.setInt(9, modelResult.getId());
             pstmt.executeUpdate();
+            updateStudentGrade();
             resultmodel = displayResult();
+            updateResultCompute(totalScore(modelResult.getStudentId()), modelResult.getStudentId());
+            System.out.println(modelResult.getStudentId());
             setMessangerOfTruth("Result Updated!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
             cont.addCallbackParam("loggedIn", loggedIn);
 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void deleteRecordCompute(List<ResultModel> mode) {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            con = dbConnections.mySqlDBconnection();
+            if (resultmodel1 == null) {
+                setMessangerOfTruth("Item(s) not selected!!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+            } else {
+
+                String updateSubject = "update tbresultcompute set isdeleted=?,deletedby=?,dateDeleted=? where id=?";
+
+                pstmt = con.prepareStatement(updateSubject);
+                for (ResultModel ta : mode) {
+                    pstmt.setBoolean(1, true);
+                    pstmt.setString(2, createdby);
+                    pstmt.setString(3, DateManipulation.dateAndTime());
+                    pstmt.setInt(4, ta.getId());
+                    pstmt.executeUpdate();
+
+                }
+            }
+        } catch (PropertyNotFoundException e) {
+
+            setMessangerOfTruth("Item(s) not selected!!");
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, msg);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -615,6 +697,7 @@ public class ResultUpdate implements Serializable {
 
                 }
                 resultmodel = displayResult();
+                deleteRecordCompute(resultmodel1);
                 setMessangerOfTruth("Result Deleted!!");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);
@@ -666,6 +749,7 @@ public class ResultUpdate implements Serializable {
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
                     arm.add(rs.getString("arm"));
+
                 }
 
             }
@@ -716,23 +800,19 @@ public class ResultUpdate implements Serializable {
             for (int i = 0; i < studentID.size(); i++) {
                 if (studentID.get(i) > 74) {
                     pstmt.setString(1, "A");
-                    System.out.println(studentID.get(i));
 
                 } else if (studentID.get(i) < 40) {
                     pstmt.setString(1, "F");
-                    System.out.println(studentID.get(i));
 
                 } else if (studentID.get(i) > 39 && studentID.get(i) < 50) {
                     pstmt.setString(1, "D");
-                    System.out.println(studentID.get(i));
 
                 } else if (studentID.get(i) >= 50 && studentID.get(i) < 65) {
                     pstmt.setString(1, "C");
-                    System.out.println(studentID.get(i));
 
                 } else if (studentID.get(i) > 64 && studentID.get(i) < 75) {
                     pstmt.setString(1, "B");
-                    System.out.println(studentID.get(i));
+
                 }
                 pstmt.setString(2, getGrade());
                 pstmt.setString(3, getTerm());
@@ -793,6 +873,44 @@ public class ResultUpdate implements Serializable {
 
     }
 
+    public double totalScore(String id) {
+        try {
+
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            List<Double> studentID = new ArrayList<>();
+            List<Integer> arm = new ArrayList<>();
+            con = dbConnections.mySqlDBconnection();
+            FacesContext context = FacesContext.getCurrentInstance();
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+
+            String query = "SELECT sum(totalscore) as total FROM tbstudentresult where studentclass=? and term=? and year=? and studentreg=? and isdeleted=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setString(4, id);
+            pstmt.setBoolean(5, false);
+            System.out.println(id + " This");
+            rs = pstmt.executeQuery();
+            double total = 0;
+            if (rs.next()) {
+
+                total = rs.getDouble("total");                
+            }
+            System.out.println(total + "guy");
+            return total;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     public void updateCompute(List<String> studentId) {
         try {
 
@@ -810,7 +928,7 @@ public class ResultUpdate implements Serializable {
             int createdId = userObj.getId();
             List<ResultModel> arrayDude = new ArrayList<>();
             for (int i = 0; i < studentId.size(); i++) {
-                String query = "SELECT distinct(studentreg) as regNum,sum(totalscore) as total,studentclass,term,year FROM tbstudentresult where studentclass=? and term=? and year=? and studentreg=? and isdeleted=?";                
+                String query = "SELECT distinct(studentreg) as regNum,sum(totalscore) as total,studentclass,term,year FROM tbstudentresult where studentclass=? and term=? and year=? and studentreg=? and isdeleted=?";
                 pstmt = con.prepareStatement(query);
                 pstmt.setString(1, getGrade());
                 pstmt.setString(2, getTerm());
@@ -833,8 +951,8 @@ public class ResultUpdate implements Serializable {
                 }
             }
 
-            String resultDetail = "insert into tbresultcompute (studentreg,studentclass,term,year,totalscore,numberofsubject,average,createdby,datecreated) values("
-                    + "?,?,?,?,?,?,?,?,?)";
+            String resultDetail = "insert into tbresultcompute (studentreg,studentclass,term,year,totalscore,numberofsubject,average,createdby,datecreated,isdeleted) values("
+                    + "?,?,?,?,?,?,?,?,?,?)";
             pstmt = con.prepareStatement(resultDetail);
 
             for (ResultModel mm : arrayDude) {
@@ -847,6 +965,7 @@ public class ResultUpdate implements Serializable {
                 pstmt.setDouble(7, mm.getAvg());
                 pstmt.setString(8, createdby);
                 pstmt.setString(9, DateManipulation.dateAndTime());
+                pstmt.setBoolean(10, false);
                 pstmt.executeUpdate();
             }
 
