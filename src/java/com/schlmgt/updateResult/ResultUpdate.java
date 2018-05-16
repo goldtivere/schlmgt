@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.el.PropertyNotFoundException;
@@ -223,6 +224,78 @@ public class ResultUpdate implements Serializable {
 
     }
 
+    public void populatePosition() throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbresultcompute where studentclass=? and term=? and year=? and isdeleted=? order by average desc";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
+            rs = pstmt.executeQuery();
+            //
+            List<String> lst = new ArrayList<>();
+            List<Double> dbd = new ArrayList<>();
+
+            while (rs.next()) {
+
+                ReportModel coun = new ReportModel();
+                coun.setId(rs.getInt("id"));
+                lst.add(rs.getString("studentreg"));
+                dbd.add(rs.getDouble("average"));
+                //
+
+            }
+
+            String updatePosition = "update tbresultcompute set postion=? where average=? and studentclass=? and term=? and year=?";
+            pstmt = con.prepareStatement(updatePosition);
+            for (int i = 0; i < lst.size(); i++) {
+                for (int j = i + 1; j < lst.size(); j++) {
+
+                    if (Objects.equals(lst.get(i), lst.get(j))) {
+                        pstmt.setString(1, String.valueOf(i + 1));
+                        pstmt.setDouble(2, dbd.get(i));
+                        pstmt.setString(3, getGrade());
+                        pstmt.setString(4, getTerm());
+                        pstmt.setString(5, getYear());
+                        pstmt.executeUpdate();
+                    } else {
+                        pstmt.setString(1, String.valueOf(i + 1));
+                        pstmt.setDouble(2, dbd.get(i));
+                        pstmt.setString(3, getGrade());
+                        pstmt.setString(4, getTerm());
+                        pstmt.setString(5, getYear());
+                        pstmt.executeUpdate();
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
     public void handleFileUpload(FileUploadEvent event) throws SQLException {
 
         FacesMessage message;
@@ -408,6 +481,7 @@ public class ResultUpdate implements Serializable {
                             resultmodel = displayResult();
                             updateStudentGrade();
                             updateCompute(studentId);
+                            populatePosition();
                             setMessangerOfTruth("Records Successfully Updated!!!.");
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
@@ -541,7 +615,7 @@ public class ResultUpdate implements Serializable {
             int createdId = userObj.getId();
             con = dbConnections.mySqlDBconnection();
 
-            String updateSubject = "update tbresultcompute set totalscore=?,Average=?,updatedby=?,dateupdated=? where studentreg=?";
+            String updateSubject = "update tbresultcompute set totalscore=?,Average=?,updatedby=?,dateupdated=? where studentreg=? and studentClass=? and term=? and year=?";
 
             pstmt = con.prepareStatement(updateSubject);
             System.out.println(total + " total");
@@ -551,6 +625,9 @@ public class ResultUpdate implements Serializable {
             pstmt.setString(3, createdby);
             pstmt.setString(4, DateManipulation.dateAndTime());
             pstmt.setString(5, reg);
+            pstmt.setString(6, getGrade());
+            pstmt.setString(7, getTerm());
+            pstmt.setString(8, getYear());
             pstmt.executeUpdate();
 
         } catch (Exception ex) {
@@ -901,7 +978,7 @@ public class ResultUpdate implements Serializable {
             double total = 0;
             if (rs.next()) {
 
-                total = rs.getDouble("total");                
+                total = rs.getDouble("total");
             }
             System.out.println(total + "guy");
             return total;
