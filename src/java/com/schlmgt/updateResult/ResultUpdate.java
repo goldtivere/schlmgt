@@ -235,7 +235,7 @@ public class ResultUpdate implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbresultcompute where studentclass=? and term=? and year=? and isdeleted=? order by average desc";
+            String query = "select average, COUNT(average) as countPosition from tbresultcompute where studentclass=? and term=? and year=? and isdeleted=? GROUP BY average HAVING COUNT(average) > 0 order by average desc";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, getGrade());
             pstmt.setString(2, getTerm());
@@ -243,40 +243,32 @@ public class ResultUpdate implements Serializable {
             pstmt.setBoolean(4, false);
             rs = pstmt.executeQuery();
             //
-            List<String> lst = new ArrayList<>();
+            List<Double> lst = new ArrayList<>();
             List<Double> dbd = new ArrayList<>();
 
             while (rs.next()) {
 
                 ReportModel coun = new ReportModel();
-                coun.setId(rs.getInt("id"));
-                lst.add(rs.getString("studentreg"));
-                dbd.add(rs.getDouble("average"));
+
+                lst.add(rs.getDouble("average"));
+                dbd.add(rs.getDouble("countPosition"));
                 //
 
             }
 
             String updatePosition = "update tbresultcompute set postion=? where average=? and studentclass=? and term=? and year=?";
             pstmt = con.prepareStatement(updatePosition);
+            int rank = 0;
             for (int i = 0; i < lst.size(); i++) {
-                for (int j = i + 1; j < lst.size(); j++) {
 
-                    if (Objects.equals(lst.get(i), lst.get(j))) {
-                        pstmt.setString(1, String.valueOf(i + 1));
-                        pstmt.setDouble(2, dbd.get(i));
-                        pstmt.setString(3, getGrade());
-                        pstmt.setString(4, getTerm());
-                        pstmt.setString(5, getYear());
-                        pstmt.executeUpdate();
-                    } else {
-                        pstmt.setString(1, String.valueOf(i + 1));
-                        pstmt.setDouble(2, dbd.get(i));
-                        pstmt.setString(3, getGrade());
-                        pstmt.setString(4, getTerm());
-                        pstmt.setString(5, getYear());
-                        pstmt.executeUpdate();
-                    }
-                }
+                pstmt.setString(1, String.valueOf(rank + 1));
+                System.out.println(i + " I plus 1= " + (i + 1) + " value: " + dbd.get(i));
+                pstmt.setDouble(2, lst.get(i));
+                pstmt.setString(3, getGrade());
+                pstmt.setString(4, getTerm());
+                pstmt.setString(5, getYear());
+                pstmt.executeUpdate();
+                rank += dbd.get(i);
             }
 
         } catch (Exception e) {
