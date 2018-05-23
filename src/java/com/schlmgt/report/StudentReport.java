@@ -361,6 +361,7 @@ public class StudentReport {
     public void writeToExcel() throws Exception {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("resultSheet");
+
         Font headerFont = workbook.createFont();
         headerFont.setBoldweight((short) 20);
         headerFont.setFontHeightInPoints((short) 17);
@@ -385,10 +386,11 @@ public class StudentReport {
 
         Cell cells = headerRow.createCell(0);
         cells.setCellValue("Student Number");
+        cells.setCellStyle(headerCellStyle);
         for (int i = 0; i < tableHeaderNames.size(); i++) {
             Cell cell = headerRow.createCell(val);
             cell.setCellValue(tableHeaderNames.get(i));
-
+            cell.setCellStyle(headerCellStyle);
             sheet.addMergedRegion(new CellRangeAddress(
                     6, //first row (0-based)
                     6, //last row  (0-based)
@@ -402,10 +404,13 @@ public class StudentReport {
 
         Cell cel = headerRow.createCell(lav);
         cel.setCellValue("Grand Total");
+        cel.setCellStyle(headerCellStyle);
         Cell ce = headerRow.createCell(lav + 1);
         ce.setCellValue("Class Average");
+        ce.setCellStyle(headerCellStyle);
         Cell c = headerRow.createCell(lav + 2);
         c.setCellValue("Position");
+        c.setCellStyle(headerCellStyle);
 
         // write code for subheading
         Row headerRows = sheet.createRow(7);
@@ -453,10 +458,15 @@ public class StudentReport {
         for (int i = 0; i < studentNum().size(); i++) {
             Row header = sheet.getRow(rowValue);
             header.createCell(lav).setCellValue(scoreSums().get(i).gettSum());
-            header.createCell(lav+1).setCellValue(String.format("%.2f",scoreSums().get(i).getAverage()));
-            header.createCell(lav+2).setCellValue(scoreSums().get(i).getPosition());
+            header.createCell(lav + 1).setCellValue(String.format("%.2f", scoreSums().get(i).getAverage()));
+            header.createCell(lav + 2).setCellValue(scoreSums().get(i).getPosition());
 
             rowValue++;
+        }
+        
+        for(int i=0;i< tableHeaderNames.size()*2;i++)
+        {
+            sheet.autoSizeColumn(i);
         }
 
         FileOutputStream fileOut = new FileOutputStream("C:/contact.xlsx");
