@@ -453,7 +453,7 @@ public class StudentReport {
         for (int i = 0; i < studentNum().size(); i++) {
             Row header = sheet.getRow(rowValue);
             header.createCell(lav).setCellValue(scoreSums().get(i).gettSum());
-            header.createCell(lav+1).setCellValue(scoreSums().get(i).getAverage());
+            header.createCell(lav+1).setCellValue(String.format("%.2f",scoreSums().get(i).getAverage()));
             header.createCell(lav+2).setCellValue(scoreSums().get(i).getPosition());
 
             rowValue++;
