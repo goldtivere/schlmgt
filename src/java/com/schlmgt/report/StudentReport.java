@@ -363,9 +363,9 @@ public class StudentReport {
         Sheet sheet = workbook.createSheet("resultSheet");
 
         Font headerFont = workbook.createFont();
-        headerFont.setBoldweight((short) 20);
-        headerFont.setFontHeightInPoints((short) 17);
-        headerFont.setColor(IndexedColors.RED.getIndex());
+        headerFont.setBoldweight((short) 10);
+        headerFont.setFontHeightInPoints((short) 10);
+        headerFont.setColor(IndexedColors.BLACK.getIndex());
 
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
@@ -464,9 +464,9 @@ public class StudentReport {
             rowValue++;
         }
         
-        for(int i=0;i< tableHeaderNames.size()*2;i++)
+        for(int i=0;i< tableHeaderNames.size()+4;i++)
         {
-            sheet.autoSizeColumn(i);
+            sheet.autoSizeColumn(i,true);
         }
 
         FileOutputStream fileOut = new FileOutputStream("C:/contact.xlsx");
