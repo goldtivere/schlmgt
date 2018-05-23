@@ -24,10 +24,20 @@ public class ResultModel implements Serializable {
     private String Studentclass;
     private String year;
     private double total;
+    private int position;
     private String arm;
     private String grade;
     private double avg;
     private int numofsub;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+    
 
     public String getGrade() {
         return grade;
@@ -148,6 +158,5 @@ public class ResultModel implements Serializable {
     public void setNumofsub(int numofsub) {
         this.numofsub = numofsub;
     }
-    
 
 }

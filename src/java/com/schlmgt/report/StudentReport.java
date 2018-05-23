@@ -159,7 +159,7 @@ public class StudentReport {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "select distinct(Studentreg) from tbstudentresult where studentclass=? and Term=? and year=?";
+            String query = "select * from tbresultcompute where studentclass=? and Term=? and year=? order by average desc";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, "Primary 4");
             pstmt.setString(2, "First Term");
@@ -308,6 +308,56 @@ public class StudentReport {
 
     }
 
+    public List<PositionModel> scoreSums() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            List<PositionModel> lst = new ArrayList<>();
+            for (int i = 0; i < studentNum().size(); i++) {
+                String query = "select * from tbresultcompute where studentclass=? and Term=? and year=? order by average desc";
+                pstmt = con.prepareStatement(query);
+                pstmt.setString(1, "Primary 4");
+                pstmt.setString(2, "First Term");
+                pstmt.setString(3, "2018");
+                rs = pstmt.executeQuery();
+                //                
+                while (rs.next()) {
+
+                    PositionModel coun = new PositionModel();
+                    coun.settSum(rs.getDouble("totalscore"));
+                    coun.setAverage(rs.getDouble("average"));
+                    coun.setPosition(rs.getInt("postion"));
+                    lst.add(coun);
+
+                }
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
     public void writeToExcel() throws Exception {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("resultSheet");
@@ -373,7 +423,7 @@ public class StudentReport {
         Row row;
         for (int i = 0; i < studentNum().size(); i++) {
             row = sheet.createRow(rowNums);
-            System.out.println(rowNums);
+
             row.createCell(0).setCellValue(studentNum().get(i));
             rowNums++;
         }
@@ -398,16 +448,14 @@ public class StudentReport {
             rowNum++;
         }
 
-        
         int rowValue = 8;
-        for (int i = 0; i < scoreSum().size(); i++) {
+
+        for (int i = 0; i < studentNum().size(); i++) {
             Row header = sheet.getRow(rowValue);
-            Cell cell = header.createCell(lav);
-            cell.setCellValue(scoreSum().get(i));
+            header.createCell(lav).setCellValue(scoreSums().get(i).gettSum());
+            header.createCell(lav+1).setCellValue(scoreSums().get(i).getAverage());
+            header.createCell(lav+2).setCellValue(scoreSums().get(i).getPosition());
 
-            header.createCell(lav+1).setCellValue(String.format("%.2f",scoreSum().get(i)/displaySubject().size()));
-
-            header.createCell(lav+2).setCellValue(scoreSum().get(i));
             rowValue++;
         }
 
