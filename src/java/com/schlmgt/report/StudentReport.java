@@ -62,14 +62,59 @@ public class StudentReport {
     private List<ResultModel> tableData;
     private List<String> tableHeaderNames;
     private List<String> subHead;
+    private String sclass;
+    private String grade;
+    private String term;
+    private String year;
+    private boolean vis;
 
     @PostConstruct
     public void init() {
         try {
-
+            vis = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isVis() {
+        return vis;
+    }
+
+    public void setVis(boolean vis) {
+        this.vis = vis;
+    }
+
+    public String getSclass() {
+        return sclass;
+    }
+
+    public void setSclass(String sclass) {
+        this.sclass = sclass;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public List<ResultModel> getTableData() {
@@ -100,6 +145,10 @@ public class StudentReport {
         this.subHead = subHead;
     }
 
+    public void onyearchange() throws Exception {
+        setVis(true);        
+    }
+
     public List<Double> scoreSum() throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -113,12 +162,13 @@ public class StudentReport {
             con = dbConnections.mySqlDBconnection();
             List<Double> lst = new ArrayList<>();
             for (int i = 0; i < studentNum().size(); i++) {
-                String query = "select sum(totalscore) as total from tbstudentresult where studentclass=? and Term=? and year=? and studentreg=?";
+                String query = "select sum(totalscore) as total from tbstudentresult where studentclass=? and Term=? and year=? and studentreg=? and isdeleted=?";
                 pstmt = con.prepareStatement(query);
-                pstmt.setString(1, "Primary 4");
-                pstmt.setString(2, "First Term");
-                pstmt.setString(3, "2018");
+                pstmt.setString(1, getGrade());
+                pstmt.setString(2, getTerm());
+                pstmt.setString(3, getYear());
                 pstmt.setString(4, studentNum().get(i));
+                pstmt.setBoolean(5, false);
                 rs = pstmt.executeQuery();
                 //                
                 while (rs.next()) {
@@ -159,11 +209,12 @@ public class StudentReport {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "select * from tbresultcompute where studentclass=? and Term=? and year=? order by average desc";
+            String query = "select * from tbresultcompute where studentclass=? and Term=? and year=? and isdeleted=? order by average desc";
             pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "Primary 4");
-            pstmt.setString(2, "First Term");
-            pstmt.setString(3, "2018");
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
             rs = pstmt.executeQuery();
             //
             List<String> lst = new ArrayList<>();
@@ -218,11 +269,12 @@ public class StudentReport {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "select distinct(subject) from tbstudentresult where studentclass=? and Term=? and year=?";
+            String query = "select distinct(subject) from tbstudentresult where studentclass=? and Term=? and year=? and isdeleted=?";
             pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "Primary 4");
-            pstmt.setString(2, "First Term");
-            pstmt.setString(3, "2018");
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
             rs = pstmt.executeQuery();
             //
             List<String> lst = new ArrayList<>();
@@ -262,12 +314,13 @@ public class StudentReport {
             con = dbConnections.mySqlDBconnection();
             List<String> lst = new ArrayList<>();
             for (int i = 0; i < studentNum().size(); i++) {
-                String query = "select totalscore,grade from tbstudentresult where studentclass=? and Term=? and year=? and studentreg=?";
+                String query = "select totalscore,grade from tbstudentresult where studentclass=? and Term=? and year=? and studentreg=? and isdeleted=?";
                 pstmt = con.prepareStatement(query);
-                pstmt.setString(1, "Primary 4");
-                pstmt.setString(2, "First Term");
-                pstmt.setString(3, "2018");
+                pstmt.setString(1, getGrade());
+                pstmt.setString(2, getTerm());
+                pstmt.setString(3, getYear());
                 pstmt.setString(4, studentNum().get(i));
+                pstmt.setBoolean(5, false);
                 rs = pstmt.executeQuery();
                 //                
                 while (rs.next()) {
@@ -321,11 +374,12 @@ public class StudentReport {
             con = dbConnections.mySqlDBconnection();
             List<PositionModel> lst = new ArrayList<>();
             for (int i = 0; i < studentNum().size(); i++) {
-                String query = "select * from tbresultcompute where studentclass=? and Term=? and year=? order by average desc";
+                String query = "select * from tbresultcompute where studentclass=? and Term=? and year=? and isdeleted=? order by average desc";
                 pstmt = con.prepareStatement(query);
-                pstmt.setString(1, "Primary 4");
-                pstmt.setString(2, "First Term");
-                pstmt.setString(3, "2018");
+                pstmt.setString(1, getGrade());
+                pstmt.setString(2, getTerm());
+                pstmt.setString(3, getYear());
+                pstmt.setBoolean(4, false);
                 rs = pstmt.executeQuery();
                 //                
                 while (rs.next()) {
@@ -463,10 +517,9 @@ public class StudentReport {
 
             rowValue++;
         }
-        
-        for(int i=0;i< tableHeaderNames.size()+4;i++)
-        {
-            sheet.autoSizeColumn(i,true);
+
+        for (int i = 0; i < tableHeaderNames.size() + 4; i++) {
+            sheet.autoSizeColumn(i, true);
         }
 
         FileOutputStream fileOut = new FileOutputStream("C:/contact.xlsx");

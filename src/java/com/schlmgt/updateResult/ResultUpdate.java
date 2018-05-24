@@ -678,6 +678,7 @@ public class ResultUpdate implements Serializable {
             resultmodel = displayResult();
             updateResultCompute(totalScore(modelResult.getStudentId()), modelResult.getStudentId());
             System.out.println(modelResult.getStudentId());
+            populatePosition();
             setMessangerOfTruth("Result Updated!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
@@ -767,6 +768,7 @@ public class ResultUpdate implements Serializable {
                 }
                 resultmodel = displayResult();
                 deleteRecordCompute(resultmodel1);
+                populatePosition();
                 setMessangerOfTruth("Result Deleted!!");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);
