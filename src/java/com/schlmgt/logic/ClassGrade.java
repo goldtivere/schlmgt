@@ -131,9 +131,9 @@ public class ClassGrade implements Serializable {
     }
 
     public void ontermChanges(String tbclass) throws Exception {
-        System.out.println(tbclass);
+        
         term = yearDropdown(tbclass);
-        System.out.println(tbclass);
+        
 
     }
 
@@ -156,7 +156,7 @@ public class ClassGrade implements Serializable {
             con = dbConnections.mySqlDBconnection();
             String query = "SELECT * FROM tbgrade where class=?";
             pstmt = con.prepareStatement(query);
-            System.out.println(tbclass);
+            
             pstmt.setString(1, tbclass);
             rs = pstmt.executeQuery();
             //

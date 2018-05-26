@@ -149,7 +149,7 @@
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton style="margin-right: 380px;" process="@this n" actionListener="#{result.deleteRecord}" update=":templateForm:n,:templateForm:wow" icon="ui-icon-trash" value="delete">
-                                <p:confirm header="Delete" message="Are you sure you want to delete record?" icon="ui-icon-alert" />
+                                <p:confirm header="Delete" message="Are you sure you want to delete record? This will delete all record with this Reg number" icon="ui-icon-alert" />
                             </p:commandButton>
                             <p:confirmDialog id="pop" global="true" showEffect="fade" hideEffect="fade">
                                 <p:commandButton value="Yes" immediate="true" process="@this" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

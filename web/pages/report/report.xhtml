@@ -14,11 +14,12 @@
     <ui:define name="content">
 
         <div class="row"> 
+            <p:growl id="wat"></p:growl>
             <p:messages id="wow" closable="true" />
             <div class="ibox-content" style="height: 80px;">
                 <div class="form-group">
                     <div class="text-center">
-                        <p:growl id="wat"></p:growl>
+
                         <p:panel id="dude" style="border: none;">
                             <p:selectOneMenu id="sclass" class="form-control" value="#{studentReport.sclass}" required="true" requiredMessage="Class required">
 
@@ -47,7 +48,7 @@
                                 <f:selectItems value="#{classmode.termList}"/>
                             </p:selectOneMenu>                 
                             <p:selectOneMenu id="gr" class="form-control" value="#{studentReport.year}" required="true" requiredMessage="Year required">  
-                                <p:ajax listener="#{studentReport.onyearchange()}" update="vis" />
+                                <p:ajax listener="#{studentReport.onyearchange(studentReport.term)}" update="vis,zz" />
                                 <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{classmode.term}"/>
                             </p:selectOneMenu>  
@@ -63,9 +64,13 @@
                 <div class="form-group">
                     <div class="text-center">
                         <p:panel visible="#{studentReport.vis}" id="vis">
-                            <p:commandButton value="Generate Report"  actionListener="#{studentReport.writeToExcel()}" >
-                                <i class="far fa-address-book"></i>
-                            </p:commandButton>
+                            <p:commandButton value="Generate Report"  actionListener="#{studentReport.writeToExcel()}" update="wat,wow"/>
+                          
+                        </p:panel>
+                        
+                        
+                         <p:panel visible="#{studentReport.bis}" id="zz">                            
+                             <p:commandButton value="Generate Report For Session"  actionListener="#{studentReport.dudeO()}" update="wat,wow"/>
                         </p:panel>
                     </div>
                 </div>

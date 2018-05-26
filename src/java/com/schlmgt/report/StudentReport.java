@@ -22,8 +22,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.ServletOutputStream;
@@ -49,6 +51,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -67,14 +70,24 @@ public class StudentReport {
     private String term;
     private String year;
     private boolean vis;
+    private boolean bis;
 
     @PostConstruct
     public void init() {
         try {
             vis = false;
+            bis = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isBis() {
+        return bis;
+    }
+
+    public void setBis(boolean bis) {
+        this.bis = bis;
     }
 
     public boolean isVis() {
@@ -145,8 +158,15 @@ public class StudentReport {
         this.subHead = subHead;
     }
 
-    public void onyearchange() throws Exception {
-        setVis(true);        
+    public void onyearchange(String terms) throws Exception {
+        System.out.println(" Yes Ma'am" + terms + getTerm()+ " Okay");
+        if ("Third Term".equalsIgnoreCase(terms)) {
+            setBis(true);
+            setVis(true);
+        } else {
+            setVis(true);
+            setBis(true);
+        }
     }
 
     public List<Double> scoreSum() throws Exception {
@@ -411,8 +431,17 @@ public class StudentReport {
 
         }
     }
+    public void dudeO()
+    {
+        System.out.println("F: " + getGrade()+ " G: "+ getTerm()+ " T: "+ getYear());
+    }
 
     public void writeToExcel() throws Exception {
+
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("resultSheet");
 
@@ -525,7 +554,8 @@ public class StudentReport {
         FileOutputStream fileOut = new FileOutputStream("C:/contact.xlsx");
         workbook.write(fileOut);
         fileOut.close();
-
+        msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Report Generated", "Report Generated");
+        context.addMessage(null, msg);
 //        Workbook wb = new XSSFWorkbook();
 //        Sheet sheet = wb.createSheet("new sheet");
 //
