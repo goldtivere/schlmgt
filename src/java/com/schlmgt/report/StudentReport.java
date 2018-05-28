@@ -159,7 +159,7 @@ public class StudentReport {
     }
 
     public void onyearchange(String terms) throws Exception {
-        System.out.println(" Yes Ma'am" + terms + getTerm()+ " Okay");
+
         if ("Third Term".equalsIgnoreCase(terms)) {
             setBis(true);
             setVis(true);
@@ -431,17 +431,24 @@ public class StudentReport {
 
         }
     }
-    public void dudeO()
-    {
-        System.out.println("F: " + getGrade()+ " G: "+ getTerm()+ " T: "+ getYear());
-    }
 
-    public void writeToExcel() throws Exception {
-
+    public void printReport() throws Exception {
         FacesMessage msg;
         FacesContext context = FacesContext.getCurrentInstance();
         RequestContext cont = RequestContext.getCurrentInstance();
         ExternalContext externalContext = context.getExternalContext();
+        if (displaySub().size() > 0) {
+            writeToExcel();
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Report Generated", "Report Generated");
+            context.addMessage(null, msg);
+        } else {
+            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "No Report Found", "No Report Found");
+            context.addMessage(null, msg);
+        }
+    }
+
+    public void writeToExcel() throws Exception {
+
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("resultSheet");
 
@@ -554,8 +561,8 @@ public class StudentReport {
         FileOutputStream fileOut = new FileOutputStream("C:/contact.xlsx");
         workbook.write(fileOut);
         fileOut.close();
-        msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Report Generated", "Report Generated");
-        context.addMessage(null, msg);
+        printReport();
+
 //        Workbook wb = new XSSFWorkbook();
 //        Sheet sheet = wb.createSheet("new sheet");
 //
