@@ -68,7 +68,7 @@
                         <f:selectItems value="#{classmode.term}"/>
                     </p:selectOneMenu>  
                     <br/>
-                    <p:commandButton value="Set Current Class" process="@this gr,gra,grad,sclass,arm" actionListener="#{editClass.currentClass()}" update="dude,up"/>
+                    <p:commandButton value="Set Current Class" process="@this gr,gra,grad,sclass,arm" actionListener="#{editClass.currentClass()}" update="dude,up,s"/>
 
                     <p:dataTable id="s" class="table table-responsive" var="papprv_rpt" 
                                  value="#{editClass.subModel}"

@@ -144,6 +144,45 @@ public class SubjectUpdate implements Serializable {
 
     }
 
+    public String checkSubjectExist(List<String> sub) {
+
+        FacesMessage message;
+        FacesContext context = FacesContext.getCurrentInstance();
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String returnValue = "yes";
+        con = dbConnections.mySqlDBconnection();
+
+        try {
+
+            String subjectDetail = "select * from sessiontable where grade=? and term=? and year=? and subject=? and isdeleted=?";
+            pstmt = con.prepareStatement(subjectDetail);
+            for (int i = 0; i < sub.size(); i++) {
+                pstmt.setString(1, getStudentGrade());
+                pstmt.setString(2, getTerm());
+                pstmt.setString(3, getYear());
+                pstmt.setString(4, sub.get(i));
+                pstmt.setBoolean(5, false);
+                rs = pstmt.executeQuery();
+                System.out.println("a: " + getStudentGrade() + " b: " + getTerm() + " " + getYear() + " " + sub.get(i));
+
+                if (rs.next()) {
+                    returnValue = "Subject " + sub.get(i) + " already exist";
+                    return returnValue;
+                }
+            }
+
+            return returnValue;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
     public void handleFileUpload(FileUploadEvent event) {
 
         FacesMessage message;
@@ -168,53 +207,78 @@ public class SubjectUpdate implements Serializable {
             XSSFWorkbook wb = new XSSFWorkbook(mn);
             XSSFSheet ws = wb.getSheetAt(0);
             Row row;
+            Row rows;
             row = (Row) ws.getRow(0);
+            rows = (Row) ws.getRow(0);
+            List<String> subjectValue = new ArrayList<>();
+            for (int i = 1; i <= ws.getLastRowNum(); i++) {
+                rows = (Row) ws.getRow(i);
 
-            if ("subject".equalsIgnoreCase(row.getCell(0).toString())) {
-                con.setAutoCommit(false);
-                String subjectDetail = "insert into sessiontable (term,class,grade,year,subject,createdby,datecreated,isdeleted) values("
-                        + "?,?,?,?,?,?,?,?)";
-                pstmt = con.prepareStatement(subjectDetail);
-                for (int i = 1; i <= ws.getLastRowNum(); i++) {
-                    row = (Row) ws.getRow(i);
-
-                    if (row.getCell(0) == null) {
-                        int s = i + 1;
-                        setMessangerOfTruth("Cell in row " + String.valueOf(s) + " is empty");
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                        context.addMessage(null, message);
-                        break;
-                    }
-
-                    pstmt.setString(1, getTerm());
-                    pstmt.setString(2, getStudentClass());
-                    pstmt.setString(3, getStudentGrade());
-                    pstmt.setString(4, getYear());
-                    pstmt.setString(5, row.getCell(0).toString());
-                    pstmt.setString(6, createdby);
-                    pstmt.setString(7, DateManipulation.dateAndTime());
-                    pstmt.setBoolean(8, false);
-                    pstmt.executeUpdate();
-                    System.out.println(row.getCell(0).toString());
-                    stat = true;
-
-                }
-                if (stat == true) {
-                    con.commit();
-                    sesTab = displaySubject();
-                    setMessangerOfTruth("File Upload Successful");
+                if (rows.getCell(0) == null) {
+                    int s = i + 1;
+                    setMessangerOfTruth("Cell in row " + String.valueOf(s) + " is empty");
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                     context.addMessage(null, message);
+                    break;
+                }
+
+                subjectValue.add(rows.getCell(0).toString());
+
+            }
+
+            if (checkSubjectExist(subjectValue).equalsIgnoreCase("yes")) {
+                if ("subject".equalsIgnoreCase(row.getCell(0).toString())) {
+                    con.setAutoCommit(false);
+                    String subjectDetail = "insert into sessiontable (term,class,grade,year,subject,createdby,datecreated,isdeleted) values("
+                            + "?,?,?,?,?,?,?,?)";
+                    pstmt = con.prepareStatement(subjectDetail);
+                    for (int i = 1; i <= ws.getLastRowNum(); i++) {
+                        row = (Row) ws.getRow(i);
+
+                        if (row.getCell(0) == null) {
+                            int s = i + 1;
+                            setMessangerOfTruth("Cell in row " + String.valueOf(s) + " is empty");
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
+                            break;
+                        }
+
+                        pstmt.setString(1, getTerm());
+                        pstmt.setString(2, getStudentClass());
+                        pstmt.setString(3, getStudentGrade());
+                        pstmt.setString(4, getYear());
+                        pstmt.setString(5, row.getCell(0).toString());
+                        pstmt.setString(6, createdby);
+                        pstmt.setString(7, DateManipulation.dateAndTime());
+                        pstmt.setBoolean(8, false);
+                        pstmt.executeUpdate();
+
+                        stat = true;
+
+                    }
+                    if (stat == true) {
+                        con.commit();
+                        sesTab = displaySubject();
+                        setMessangerOfTruth("File Upload Successful");
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                        context.addMessage(null, message);
+                    } else {
+                        setMessangerOfTruth("File Upload unSuccessful");
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                        context.addMessage(null, message);
+                    }
                 } else {
+                    setMessangerOfTruth("Excel not in correct format");
 
                 }
             } else {
-                setMessangerOfTruth("Excel not in correct format");
+                setMessangerOfTruth(checkSubjectExist(subjectValue));
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, message);
             }
+
             setCsv(null);
-            csv=null;
+            csv = null;
             mn.close();
         } catch (Exception ex) {
 
@@ -280,7 +344,7 @@ public class SubjectUpdate implements Serializable {
             String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
             int createdId = userObj.getId();
             con = dbConnections.mySqlDBconnection();
-            if (sesTab1 == null) {                
+            if (sesTab1 == null) {
                 setMessangerOfTruth("Item(s) not selected!!");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);

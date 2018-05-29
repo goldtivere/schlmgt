@@ -13,6 +13,7 @@
 
     <ui:define name="content">
         <div class="row">
+            <p:messages id="wat" closable="true"></p:messages>
             <p:dialog header="Edit" style="margin-top: -200px; margin-left: -250px;" position="center" widgetVar="dlg2">                                        
                 <h:form id="ooo">
                     <p:panel id="okay">                                          
@@ -28,9 +29,10 @@
                 </h:form>
             </p:dialog> 
             <div class="ibox-content" style="height: 80px;">
+
                 <div class="form-group">
                     <div class="text-center">
-                        <p:growl id="wat"></p:growl>
+
                         <p:panel id="dude" style="border: none;">
 
                             <p:selectOneMenu id="sclass" class="form-control" value="#{subjectUpdate.studentClass}" required="true" requiredMessage="Class required">
