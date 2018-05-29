@@ -560,8 +560,7 @@ public class StudentReport {
 
         FileOutputStream fileOut = new FileOutputStream("C:/contact.xlsx");
         workbook.write(fileOut);
-        fileOut.close();
-        printReport();
+        fileOut.close();      
 
 //        Workbook wb = new XSSFWorkbook();
 //        Sheet sheet = wb.createSheet("new sheet");
