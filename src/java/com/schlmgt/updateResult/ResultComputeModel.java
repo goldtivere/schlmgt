@@ -18,6 +18,7 @@ public class ResultComputeModel implements Serializable{
     private String grade;
     private String term;
     private String year;
+    private double sumTotal;
 
     public String getStudentReg() {
         return studentReg;
@@ -57,6 +58,14 @@ public class ResultComputeModel implements Serializable{
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public double getSumTotal() {
+        return sumTotal;
+    }
+
+    public void setSumTotal(double sumTotal) {
+        this.sumTotal = sumTotal;
     }
     
 }

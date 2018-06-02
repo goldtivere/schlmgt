@@ -683,8 +683,10 @@ public class ResultUpdate implements Serializable {
             resultmodel = displayResult();
             updateResultCompute(totalScore(modelResult.getStudentId()), modelResult.getStudentId());
             System.out.println(modelResult.getStudentId());
-            populatePosition();
             updateComputeFinal(modelResult.getStudentId());
+            averagePosition(modelResult.getStudentId());
+            populatePosition();
+
             setMessangerOfTruth("Result Updated!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
@@ -780,7 +782,7 @@ public class ResultUpdate implements Serializable {
 
                 }
                 deleteRecordCompute();
-                DeleteComputeFinal();
+                updateDelete();
                 populatePosition();
                 resultmodel = displayResult();
 
@@ -1207,9 +1209,202 @@ public class ResultUpdate implements Serializable {
                     }
                 }
             }
+            averagePosition(studentId);
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public void updateDelete() throws Exception {
+        try {
+
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            con = dbConnections.mySqlDBconnection();
+            FacesContext context = FacesContext.getCurrentInstance();
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            List<ResultComputeModel> arrayDude = new ArrayList<>();
+            String query = "select * from schlmgt.tbresultcompute where studentreg=? and term=? and year=? and studentclass=? and isdeleted=?";
+            for (ResultModel m : resultmodel1) {
+
+                pstmt = con.prepareStatement(query);
+                pstmt.setString(1, m.getStudentId());
+                pstmt.setString(2, getTerm());
+                pstmt.setString(3, getYear());
+                pstmt.setString(4, getGrade());
+                pstmt.setBoolean(5, true);
+
+                rs = pstmt.executeQuery();
+
+                while (rs.next()) {
+                    ResultComputeModel mode = new ResultComputeModel();
+                    mode.setTerm(rs.getString("term"));
+                    mode.setStudentReg(rs.getString("Studentreg"));
+                    mode.setGrade(rs.getString("studentclass"));
+                    mode.setYear(rs.getString("year"));
+                    arrayDude.add(mode);
+                }
+
+            }
+
+            for (ResultComputeModel mm : arrayDude) {
+                if ("First Term".equalsIgnoreCase(mm.getTerm())) {
+                    String resultDetail = "update tbfinalcompute set firstterm=?, isdeleted=?,datedeleted=?,deletedby=? where studentclass=?"
+                            + "and year=? and studentreg=?";
+                    pstmt = con.prepareStatement(resultDetail);
+                    pstmt.setDouble(1, 0);
+                    pstmt.setBoolean(2, true);
+                    pstmt.setString(3, DateManipulation.dateAndTime());
+                    pstmt.setString(4, createdby);
+                    pstmt.setString(5, mm.getGrade());
+                    pstmt.setString(6, mm.getYear());
+                    pstmt.setString(7, mm.getStudentReg());
+
+                    pstmt.executeUpdate();
+                } else if ("Second Term".equalsIgnoreCase(mm.getTerm())) {
+                    String resultDetail = "update tbfinalcompute set secondterm=?, isdeleted=?,datedeleted=?,deletedby=? where studentclass=?"
+                            + "and year=? and studentreg=?";
+                    pstmt = con.prepareStatement(resultDetail);
+                    pstmt.setDouble(1, 0);
+                    pstmt.setBoolean(2, true);
+                    pstmt.setString(3, DateManipulation.dateAndTime());
+                    pstmt.setString(4, createdby);
+                    pstmt.setString(5, mm.getGrade());
+                    pstmt.setString(6, mm.getYear());
+                    pstmt.setString(7, mm.getStudentReg());
+
+                    pstmt.executeUpdate();
+                } else if ("Third Term".equalsIgnoreCase(getTerm())) {
+                    String resultDetail = "update tbfinalcompute set thirdterm=?, isdeleted=?,datedeleted=?,deletedby=? where studentclass=?"
+                            + "and year=? and studentreg=?";
+                    pstmt = con.prepareStatement(resultDetail);
+                    pstmt.setDouble(1, 0);
+                    pstmt.setBoolean(2, true);
+                    pstmt.setString(3, DateManipulation.dateAndTime());
+                    pstmt.setString(4, createdby);
+                    pstmt.setString(5, mm.getGrade());
+                    pstmt.setString(6, mm.getYear());
+                    pstmt.setString(7, mm.getStudentReg());
+
+                    pstmt.executeUpdate();
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void averagePosition(List<String> studentId) throws Exception {
+        try {
+
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            con = dbConnections.mySqlDBconnection();
+            FacesContext context = FacesContext.getCurrentInstance();
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            List<ResultComputeModel> arrayDude = new ArrayList<>();
+            String query = "select sum(totalscore) as sumtotal,studentreg,studentclass,year from schlmgt.tbresultcompute where studentreg=? and year=? and studentclass=? and isdeleted=? and datealone=?";
+            for (int i = 0; i < studentId.size(); i++) {
+
+                pstmt = con.prepareStatement(query);
+                pstmt.setString(1, studentId.get(i));
+                pstmt.setString(2, getYear());
+                pstmt.setString(3, getGrade());
+                pstmt.setBoolean(4, false);
+                pstmt.setString(5, DateManipulation.dateAlone());
+
+                rs = pstmt.executeQuery();
+
+                while (rs.next()) {
+                    ResultComputeModel mode = new ResultComputeModel();
+                    mode.setSumTotal(rs.getDouble("sumtotal"));
+                    mode.setStudentReg(rs.getString("Studentreg"));
+                    mode.setGrade(rs.getString("studentclass"));
+                    mode.setYear(rs.getString("year"));
+                    arrayDude.add(mode);
+                }
+
+                String resultDetail = "update tbfinalcompute set totalscore=?,average=?,updatedby=? where studentclass=?"
+                        + "and year=? and studentreg=? and isdeleted=?";
+
+                for (ResultComputeModel mm : arrayDude) {
+                    pstmt = con.prepareStatement(resultDetail);
+                    pstmt.setDouble(1, mm.getSumTotal());
+                    pstmt.setDouble(2, mm.getSumTotal() / 3);
+                    pstmt.setString(3, createdby);
+                    pstmt.setString(4, mm.getGrade());
+                    pstmt.setString(5, mm.getYear());
+                    pstmt.setString(6, mm.getStudentReg());
+                    pstmt.setBoolean(7, false);
+                    pstmt.executeUpdate();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void averagePosition(String studentId) throws Exception {
+        try {
+
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            con = dbConnections.mySqlDBconnection();
+            FacesContext context = FacesContext.getCurrentInstance();
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            List<ResultComputeModel> arrayDude = new ArrayList<>();
+            String query = "select sum(totalscore) as sumtotal,studentreg,studentclass,year from schlmgt.tbresultcompute where studentreg=? and year=? and studentclass=? and isdeleted=?";
+
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, studentId);
+            pstmt.setString(2, getYear());
+            pstmt.setString(3, getGrade());
+            pstmt.setBoolean(4, false);
+
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                ResultComputeModel mode = new ResultComputeModel();
+                mode.setSumTotal(rs.getDouble("sumtotal"));
+                mode.setStudentReg(rs.getString("Studentreg"));
+                mode.setGrade(rs.getString("studentclass"));
+                mode.setYear(rs.getString("year"));
+                arrayDude.add(mode);
+
+                String resultDetail = "update tbfinalcompute set totalscore=?,average=?,updatedby=? where studentclass=?"
+                        + "and year=? and studentreg=? and isdeleted=?";
+
+                for (ResultComputeModel mm : arrayDude) {
+                    pstmt = con.prepareStatement(resultDetail);
+                    pstmt.setDouble(1, mm.getSumTotal());
+                    pstmt.setDouble(2, mm.getSumTotal() / 3);
+                    pstmt.setString(3, createdby);
+                    pstmt.setString(4, mm.getGrade());
+                    pstmt.setString(5, mm.getYear());
+                    pstmt.setString(6, mm.getStudentReg());
+                    pstmt.setBoolean(7, false);
+                    pstmt.executeUpdate();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1249,8 +1444,8 @@ public class ResultUpdate implements Serializable {
                 arrayDude.add(mode);
             }
 
-            if ("first term".equalsIgnoreCase(getTerm())) {
-                String updatePosition = "update tbfinalcompute set firstterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and term=? and year=?";
+            if ("first term".equalsIgnoreCase(mode.getTerm())) {
+                String updatePosition = "update tbfinalcompute set firstterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and year=?";
 
                 pstmt = con.prepareStatement(updatePosition);
 
@@ -1259,12 +1454,11 @@ public class ResultUpdate implements Serializable {
                 pstmt.setString(3, createdby);
                 pstmt.setString(4, mode.getStudentReg());
                 pstmt.setString(5, mode.getGrade());
-                pstmt.setString(6, mode.getTerm());
-                pstmt.setString(7, mode.getYear());
+                pstmt.setString(6, mode.getYear());
                 pstmt.executeUpdate();
 
-            } else if ("second term".equalsIgnoreCase(getTerm())) {
-                String updatePosition = "update tbfinalcompute set secondterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and term=? and year=?";
+            } else if ("second term".equalsIgnoreCase(mode.getTerm())) {
+                String updatePosition = "update tbfinalcompute set secondterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and year=?";
 
                 pstmt = con.prepareStatement(updatePosition);
 
@@ -1273,12 +1467,11 @@ public class ResultUpdate implements Serializable {
                 pstmt.setString(3, createdby);
                 pstmt.setString(4, mode.getStudentReg());
                 pstmt.setString(5, mode.getGrade());
-                pstmt.setString(6, mode.getTerm());
-                pstmt.setString(7, mode.getYear());
+                pstmt.setString(6, mode.getYear());
                 pstmt.executeUpdate();
 
-            } else if ("third term".equalsIgnoreCase(getTerm())) {
-                String updatePosition = "update tbfinalcompute set thirdterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and term=? and year=?";
+            } else if ("third term".equalsIgnoreCase(mode.getTerm())) {
+                String updatePosition = "update tbfinalcompute set thirdterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and year=?";
 
                 pstmt = con.prepareStatement(updatePosition);
 
@@ -1287,12 +1480,10 @@ public class ResultUpdate implements Serializable {
                 pstmt.setString(3, createdby);
                 pstmt.setString(4, mode.getStudentReg());
                 pstmt.setString(5, mode.getGrade());
-                pstmt.setString(6, mode.getTerm());
-                pstmt.setString(7, mode.getYear());
+                pstmt.setString(6, mode.getYear());
                 pstmt.executeUpdate();
 
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1329,16 +1520,17 @@ public class ResultUpdate implements Serializable {
                 mode.setStudentReg(rs.getString("studentreg"));
                 mode.setGrade(rs.getString("Studentclass"));
                 mode.setTerm(rs.getString("term"));
+                mode.setYear(rs.getString("year"));
                 mode.setTermTotal(rs.getDouble("totalScore"));
 
                 arrayDude.add(mode);
             }
+            for (ResultComputeModel mm : arrayDude) {
+                if ("first term".equalsIgnoreCase(mm.getTerm())) {
+                    String updatePosition = "update tbfinalcompute set isdeleted=?,datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
 
-            if ("first term".equalsIgnoreCase(getTerm())) {
-                String updatePosition = "update tbfinalcompute set isdeleted=?,datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
+                    pstmt = con.prepareStatement(updatePosition);
 
-                pstmt = con.prepareStatement(updatePosition);
-                for (ResultComputeModel mm : arrayDude) {
                     pstmt.setBoolean(1, true);
                     pstmt.setString(2, DateManipulation.dateAndTime());
                     pstmt.setString(3, createdby);
@@ -1347,12 +1539,12 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(5, mm.getTerm());
                     pstmt.setString(6, mm.getYear());
                     pstmt.executeUpdate();
-                }
-            } else if ("second term".equalsIgnoreCase(getTerm())) {
-                String updatePosition = "update tbfinalcompute set secondterm=?, datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
 
-                pstmt = con.prepareStatement(updatePosition);
-                for (ResultComputeModel mm : arrayDude) {
+                } else if ("second term".equalsIgnoreCase(mm.getTerm())) {
+                    String updatePosition = "update tbfinalcompute set secondterm=?, datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
+
+                    pstmt = con.prepareStatement(updatePosition);
+
                     pstmt.setBoolean(1, true);
                     pstmt.setString(2, DateManipulation.dateAndTime());
                     pstmt.setString(3, createdby);
@@ -1361,12 +1553,10 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(5, mm.getTerm());
                     pstmt.setString(6, mm.getYear());
                     pstmt.executeUpdate();
-                }
-            } else if ("third term".equalsIgnoreCase(getTerm())) {
-                String updatePosition = "update tbfinalcompute set thirdterm=?, datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
 
-                pstmt = con.prepareStatement(updatePosition);
-                for (ResultComputeModel mm : arrayDude) {
+                } else if ("third term".equalsIgnoreCase(mm.getTerm())) {
+                    String updatePosition = "update tbfinalcompute set thirdterm=?, datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
+
                     pstmt.setBoolean(1, true);
                     pstmt.setString(2, DateManipulation.dateAndTime());
                     pstmt.setString(3, createdby);
@@ -1375,9 +1565,9 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(5, mm.getTerm());
                     pstmt.setString(6, mm.getYear());
                     pstmt.executeUpdate();
+
                 }
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1403,7 +1593,7 @@ public class ResultUpdate implements Serializable {
             for (ResultModel moe : resultmodel1) {
 
                 if ("first term".equalsIgnoreCase(moe.getTerm())) {
-                    String updatePosition = "update tbfinalcompute set isdeleted=?,datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
+                    String updatePosition = "update tbfinalcompute set isdeleted=?,datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and year=?";
 
                     pstmt = con.prepareStatement(updatePosition);
 
@@ -1413,12 +1603,11 @@ public class ResultUpdate implements Serializable {
                     System.out.println(moe.getStudentId() + " B: " + moe.getGrade() + " C: " + moe.getTerm() + " D: " + moe.getYear());
                     pstmt.setString(4, moe.getStudentId());
                     pstmt.setString(5, moe.getGrade());
-                    pstmt.setString(6, moe.getTerm());
-                    pstmt.setString(7, moe.getYear());
+                    pstmt.setString(6, moe.getYear());
                     pstmt.executeUpdate();
 
                 } else if ("second term".equalsIgnoreCase(moe.getTerm())) {
-                    String updatePosition = "update tbfinalcompute set isdeleted=?,datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
+                    String updatePosition = "update tbfinalcompute set isdeleted=?,datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and year=?";
 
                     pstmt = con.prepareStatement(updatePosition);
 
