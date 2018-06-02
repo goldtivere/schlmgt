@@ -1037,8 +1037,8 @@ public class ResultUpdate implements Serializable {
                 }
             }
 
-            String resultDetail = "insert into tbresultcompute (studentreg,studentclass,term,year,totalscore,numberofsubject,average,createdby,datecreated,isdeleted) values("
-                    + "?,?,?,?,?,?,?,?,?,?)";
+            String resultDetail = "insert into tbresultcompute (studentreg,studentclass,term,year,totalscore,numberofsubject,average,createdby,datecreated,datealone,isdeleted) values("
+                    + "?,?,?,?,?,?,?,?,?,?,?)";
             pstmt = con.prepareStatement(resultDetail);
 
             for (ResultModel mm : arrayDude) {
@@ -1051,7 +1051,8 @@ public class ResultUpdate implements Serializable {
                 pstmt.setDouble(7, mm.getAvg());
                 pstmt.setString(8, createdby);
                 pstmt.setString(9, DateManipulation.dateAndTime());
-                pstmt.setBoolean(10, false);
+                pstmt.setString(10, DateManipulation.dateAlone());
+                pstmt.setBoolean(11, false);
                 pstmt.executeUpdate();
             }
 
@@ -1076,14 +1077,17 @@ public class ResultUpdate implements Serializable {
             String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
             int createdId = userObj.getId();
             List<ResultComputeModel> arrayDude = new ArrayList<>();
+            List<String> regStud = new ArrayList<>();
+            String query = "SELECT * FROM tbresultcompute where studentclass=? and term=? and year=? and studentreg=? and isdeleted=? and datealone=?";
             for (int i = 0; i < studentId.size(); i++) {
-                String query = "SELECT * FROM tbresultcompute where studentclass=? and term=? and year=? and studentreg=? and isdeleted=?";
+
                 pstmt = con.prepareStatement(query);
                 pstmt.setString(1, getGrade());
                 pstmt.setString(2, getTerm());
                 pstmt.setString(3, getYear());
                 pstmt.setString(4, studentId.get(i));
                 pstmt.setBoolean(5, false);
+                pstmt.setString(6, DateManipulation.dateAlone());
                 rs = pstmt.executeQuery();
 
                 while (rs.next()) {
@@ -1093,58 +1097,114 @@ public class ResultUpdate implements Serializable {
                     mode.setTerm(rs.getString("term"));
                     mode.setYear(rs.getString("year"));
                     mode.setTermTotal(rs.getDouble("totalScore"));
-
+                    regStud.add(rs.getString("Studentreg"));
                     arrayDude.add(mode);
                 }
             }
+            int uuu = 0;
+            String querys = "SELECT * FROM tbfinalcompute where studentclass=? and year=? and studentreg=? and isdeleted=?";
+            for (ResultComputeModel mm : arrayDude) {
 
-            if ("first term".equalsIgnoreCase(getTerm())) {
-                String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,firstterm,datecreated,createdby,isdeleted) values("
-                        + "?,?,?,?,?,?,?,?)";
-                pstmt = con.prepareStatement(resultDetail);
+                pstmt = con.prepareStatement(querys);
+                pstmt.setString(1, getGrade());
+                pstmt.setString(2, getYear());
+                pstmt.setString(3, mm.getStudentReg());
+                pstmt.setBoolean(4, false);
+                rs = pstmt.executeQuery();
 
-                for (ResultComputeModel mm : arrayDude) {
-                    pstmt.setString(1, mm.getStudentReg());
-                    pstmt.setString(2, mm.getGrade());
-                    pstmt.setString(3, mm.getTerm());
-                    pstmt.setString(4, mm.getYear());
-                    pstmt.setDouble(5, mm.getTermTotal());
-                    pstmt.setString(6, DateManipulation.dateAndTime());
-                    pstmt.setString(7, createdby);
-                    pstmt.setBoolean(8, false);
-                    pstmt.executeUpdate();
-                }
-            } else if ("second term".equalsIgnoreCase(getTerm())) {
-                String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,secondterm,datecreated,createdby,isdeleted) values("
-                        + "?,?,?,?,?,?,?,?)";
-                pstmt = con.prepareStatement(resultDetail);
+                if (rs.next()) {
+                    if ("first term".equalsIgnoreCase(getTerm())) {
+                        String resultDetail = "update tbfinalcompute set firstterm=?,dateupdated=?,updatedby=? where studentclass=?"
+                                + "and year=? and studentreg=? and isdeleted=?";
+                        pstmt = con.prepareStatement(resultDetail);
 
-                for (ResultComputeModel mm : arrayDude) {
-                    pstmt.setString(1, mm.getStudentReg());
-                    pstmt.setString(2, mm.getGrade());
-                    pstmt.setString(3, mm.getTerm());
-                    pstmt.setString(4, mm.getYear());
-                    pstmt.setDouble(5, mm.getTermTotal());
-                    pstmt.setString(6, DateManipulation.dateAndTime());
-                    pstmt.setString(7, createdby);
-                    pstmt.setBoolean(8, false);
-                    pstmt.executeUpdate();
-                }
-            } else if ("third term".equalsIgnoreCase(getTerm())) {
-                String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,thirdterm,datecreated,createdby,isdeleted) values("
-                        + "?,?,?,?,?,?,?,?)";
-                pstmt = con.prepareStatement(resultDetail);
+                        pstmt.setDouble(1, mm.getTermTotal());
+                        pstmt.setString(2, DateManipulation.dateAndTime());
+                        pstmt.setString(3, createdby);
+                        pstmt.setString(4, mm.getGrade());
+                        pstmt.setString(5, mm.getYear());
+                        pstmt.setString(6, mm.getStudentReg());
+                        pstmt.setBoolean(7, false);
+                        pstmt.executeUpdate();
 
-                for (ResultComputeModel mm : arrayDude) {
-                    pstmt.setString(1, mm.getStudentReg());
-                    pstmt.setString(2, mm.getGrade());
-                    pstmt.setString(3, mm.getTerm());
-                    pstmt.setString(4, mm.getYear());
-                    pstmt.setDouble(5, mm.getTermTotal());
-                    pstmt.setString(6, DateManipulation.dateAndTime());
-                    pstmt.setString(7, createdby);
-                    pstmt.setBoolean(8, false);
-                    pstmt.executeUpdate();
+                    } else if ("second term".equalsIgnoreCase(getTerm())) {
+                        String resultDetail = "update tbfinalcompute set secondterm=?,dateupdated=?,updatedby=? where studentclass=?"
+                                + " and year=? and studentreg=? and isdeleted=?";
+                        pstmt = con.prepareStatement(resultDetail);
+
+                        pstmt.setDouble(1, mm.getTermTotal());
+                        pstmt.setString(2, DateManipulation.dateAndTime());
+                        pstmt.setString(3, createdby);
+                        pstmt.setString(4, mm.getGrade());
+                        pstmt.setString(5, mm.getYear());
+                        pstmt.setString(6, mm.getStudentReg());
+                        pstmt.setBoolean(7, false);
+                        pstmt.executeUpdate();
+
+                    } else if ("third term".equalsIgnoreCase(getTerm())) {
+                        String resultDetail = "update tbfinalcompute set thirdterm=?,dateupdated=?,updatedby=? where studentclass=?"
+                                + "and year=? and studentreg=? and isdeleted=?";
+                        pstmt = con.prepareStatement(resultDetail);
+
+                        pstmt.setDouble(1, mm.getTermTotal());
+                        pstmt.setString(2, DateManipulation.dateAndTime());
+                        pstmt.setString(3, createdby);
+                        pstmt.setString(4, mm.getGrade());
+                        pstmt.setString(5, mm.getYear());
+                        pstmt.setString(6, mm.getStudentReg());
+                        pstmt.setBoolean(7, false);
+                        pstmt.executeUpdate();
+
+                    }
+                } else if (!rs.next()) {
+
+                    if ("first term".equalsIgnoreCase(getTerm())) {
+                        String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,firstterm,datecreated,createdby,isdeleted) values("
+                                + "?,?,?,?,?,?,?,?)";
+                        pstmt = con.prepareStatement(resultDetail);
+
+                        pstmt.setString(1, mm.getStudentReg());
+
+                        pstmt.setString(2, mm.getGrade());
+                        pstmt.setString(3, mm.getTerm());
+                        pstmt.setString(4, mm.getYear());
+                        pstmt.setDouble(5, mm.getTermTotal());
+                        pstmt.setString(6, DateManipulation.dateAndTime());
+                        pstmt.setString(7, createdby);
+                        pstmt.setBoolean(8, false);
+                        pstmt.executeUpdate();
+
+                    } else if ("second term".equalsIgnoreCase(getTerm())) {
+                        String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,secondterm,datecreated,createdby,isdeleted) values("
+                                + "?,?,?,?,?,?,?,?)";
+                        pstmt = con.prepareStatement(resultDetail);
+
+                        pstmt.setString(1, mm.getStudentReg());
+                        pstmt.setString(2, mm.getGrade());
+                        pstmt.setString(3, mm.getTerm());
+                        pstmt.setString(4, mm.getYear());
+                        pstmt.setDouble(5, mm.getTermTotal());
+                        pstmt.setString(6, DateManipulation.dateAndTime());
+                        pstmt.setString(7, createdby);
+                        pstmt.setBoolean(8, false);
+                        pstmt.executeUpdate();
+
+                    } else if ("third term".equalsIgnoreCase(getTerm())) {
+                        String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,thirdterm,datecreated,createdby,isdeleted) values("
+                                + "?,?,?,?,?,?,?,?)";
+                        pstmt = con.prepareStatement(resultDetail);
+
+                        pstmt.setString(1, mm.getStudentReg());
+                        pstmt.setString(2, mm.getGrade());
+                        pstmt.setString(3, mm.getTerm());
+                        pstmt.setString(4, mm.getYear());
+                        pstmt.setDouble(5, mm.getTermTotal());
+                        pstmt.setString(6, DateManipulation.dateAndTime());
+                        pstmt.setString(7, createdby);
+                        pstmt.setBoolean(8, false);
+                        pstmt.executeUpdate();
+
+                    }
                 }
             }
 
