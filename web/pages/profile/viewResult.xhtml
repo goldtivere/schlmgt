@@ -6,7 +6,6 @@
                 template="/WEB-INF/template1.xhtml">
 
 
-
     <ui:define name="title">
         Student Result
     </ui:define>
@@ -17,8 +16,9 @@
 
 
     <ui:define name="content2">
-        <div class="row">  
-            <p:growl id="wat"></p:growl>
+        <p:growl id="wat"></p:growl>      
+        <div class="row"> 
+
             <div class="ibox-content">
                 <p:selectOneMenu id="sclass" class="form-control" value="#{resultView.sclass}" required="true" requiredMessage="Class required">
 
@@ -111,7 +111,13 @@
 
                     </p:column>                                    
                 </p:dataTable> 
+                <p:commandButton value="" icon="ui-icon-print" process="@this"
+                                 onclick="window.open('#{resultView.selectReco()}');"/>                
+                <p:button value="Print" 
+                          onclick="window.open('#{resultView.selectReco()}');return false;" />
+
             </div>
+
         </div>
 
     </ui:define>

@@ -29,6 +29,16 @@ public class ResultModel implements Serializable {
     private String grade;
     private double avg;
     private int numofsub;
+    private String mark;
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
+    }
+    
 
     public int getPosition() {
         return position;

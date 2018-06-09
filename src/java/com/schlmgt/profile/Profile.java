@@ -71,7 +71,7 @@ public class Profile implements Serializable {
             ctx.getExternalContext().getApplicationMap().remove("SecData");
             ctx.getExternalContext().getApplicationMap().put("SecData", secRecord);
             String url = "editprofile.xhtml?faces-redirect=true";
-            nav.handleNavigation(ctx, null, url);
+            nav.handleNavigation(ctx, null, url);            
             ctx.renderResponse();
 
         } catch (Exception ex) {
