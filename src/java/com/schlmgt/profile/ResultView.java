@@ -25,7 +25,7 @@ import javax.faces.bean.SessionScoped;
  * @author Gold
  */
 @ManagedBean(name = "resultView")
-@SessionScoped
+@ViewScoped
 public class ResultView implements Serializable {
 
     private EditStudent edits = new EditStudent();
@@ -41,8 +41,7 @@ public class ResultView implements Serializable {
     private int position;
     private String fullname;
 
-
-    public void displayResultDetails(List<ResultModel> mode) throws Exception {
+    public SessionModel displayResultDetails(List<ResultModel> mode) throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
         DbConnectionX dbConnections = new DbConnectionX();
@@ -54,6 +53,7 @@ public class ResultView implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
+            SessionModel mm = new SessionModel();
             if (mode != null) {
                 for (ResultModel m : mode) {
 
@@ -65,8 +65,9 @@ public class ResultView implements Serializable {
                     pstmt.setBoolean(4, false);
                     pstmt.setString(5, m.getStudentId());
                     rs = pstmt.executeQuery();
+
                     if (rs.next()) {
-                        setFullname(rs.getString("full_name"));
+                        mm.setFullname(rs.getString("full_name"));
                     }
 
                     String query = "SELECT * FROM tbresultcompute where studentclass=? and term=? and year=? and isdeleted=? and studentreg=?";
@@ -76,16 +77,15 @@ public class ResultView implements Serializable {
                     pstmt.setString(3, m.getYear());
                     pstmt.setBoolean(4, false);
                     pstmt.setString(5, m.getStudentId());
-                    rs = pstmt.executeQuery();
-                    System.out.println("mnbvc " + m.getYear());
+                    rs = pstmt.executeQuery();                    
                     List<SessionModel> lst = new ArrayList<>();
-                    if (rs.next()) {                        
-                        setGrade(rs.getString("studentclass"));
-                        setYear(rs.getString("year"));
-                        setTerm(rs.getString("term"));
-                        setPosition(rs.getInt("postion"));
-                        setStuAverage(Double.parseDouble(String.format("%.2f", rs.getDouble("average"))));
-                        setStuTotal(rs.getDouble("totalscore"));
+                    if (rs.next()) {
+                        mm.setStudentClass(rs.getString("studentclass"));
+                        mm.setStudentSession(rs.getString("year"));
+                        mm.setStudentTerm(rs.getString("term"));
+                        mm.setPosition(rs.getInt("postion"));
+                        mm.setStudentAverage(Double.parseDouble(String.format("%.2f", rs.getDouble("average"))));
+                        mm.setTermTotal(rs.getDouble("totalscore"));
 
                         //                   
                     }
@@ -96,9 +96,10 @@ public class ResultView implements Serializable {
             } else {
                 System.out.println("damn");
             }
+            return mm;
         } catch (Exception e) {
             e.printStackTrace();
-
+            return null;
         } finally {
 
             if (!(con == null)) {
@@ -177,11 +178,16 @@ public class ResultView implements Serializable {
 
         return "reportCard.xhtml?faces-redirect=true";
 
-    }    
+    }
 
     public void viewResult() throws Exception {
         resultmodel = displayResult();
         displayResultDetails(displayResult());
+        FacesContext ctx = FacesContext.getCurrentInstance();
+        NavigationHandler nav = ctx.getApplication().getNavigationHandler();
+        ctx.getExternalContext().getApplicationMap().put("examRecord", displayResult());
+        ctx.getExternalContext().getApplicationMap().put("studentprofile", displayResultDetails(displayResult()));
+        ctx.renderResponse();
 
     }
 
@@ -216,7 +222,7 @@ public class ResultView implements Serializable {
     public void setPosition(int position) {
         this.position = position;
     }
-   
+
     public List<ResultModel> getResultmodel1() {
         return resultmodel1;
     }

@@ -19,6 +19,16 @@ public class SessionModel implements Serializable{
     private double studentAverage;
     private String studentClass;
     private String studentReg;
+    private String fullname;
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+    
 
     public double getTermTotal() {
         return termTotal;

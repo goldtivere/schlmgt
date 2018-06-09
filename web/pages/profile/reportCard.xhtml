@@ -30,7 +30,7 @@
                 </div>
                 <div class="row">
                     <div class="text-center">
-                        <h4 class="heading">Terminal Report Card For: #{resultView.fullname} </h4>                            
+                        <h4 class="heading">Terminal Report Card For: #{report.sec.fullname} </h4>                            
                     </div>
 
                 </div>
@@ -40,7 +40,7 @@
                         <div class="form-group">                           
                             <div class="col-xs-5">
                                 <label for="">Session :</label>                                
-                                <input id="" name="name" type="text" value="#{resultView.year}" disabled="true"></input>
+                                <input id="" name="name" type="text" value="#{report.sec.studentSession}" disabled="true"></input>
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                         <div class="form-group">                           
                             <div class="col-xs-5">
                                 <label for="">Term :</label>
-                                <input id="" name="name" type="text" value="#{resultView.term}" placeholder="Course"></input>
+                                <input id="" name="name" type="text" value="#{report.sec.studentTerm}" placeholder="Course"></input>
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                         <div class="form-group">                           
                             <div class="col-xs-5">
                                 <label for="">Class Average :</label>
-                                <input id="" name="name" type="text" value="#{resultView.stuAverage}" placeholder="Course"></input>
+                                <input id="" name="name" type="text" value="#{report.sec.studentAverage}" placeholder="Course"></input>
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <div class="form-group">                           
                             <div class="col-xs-5">
                                 <label for="">Position :</label>
-                                <input id="" name="name" type="text" value="#{resultView.position}" placeholder="Course"></input>
+                                <input id="" name="name" type="text" value="#{report.sec.position}" placeholder="Course"></input>
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                         <div class="form-group">                           
                             <div class="col-xs-5">
                                 <label for="">Total Score :</label>
-                                <input id="" name="name" type="text" value="#{resultView.stuTotal}" placeholder="Course"></input>
+                                <input id="" name="name" type="text" value="#{report.sec.termTotal}" placeholder="Course"></input>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                 <div class="row">
                     <div >
                         <p:dataTable var="papprv_rpt" 
-                                     value="#{resultView.resultmodel}">
+                                     value="#{report.mode}">
                             <p:column headerText="Subject">
                                 <h:outputText value="#{papprv_rpt.subject}" />
                             </p:column>

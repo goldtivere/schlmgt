@@ -7,6 +7,7 @@ package com.schlmgt.profile;
 
 import com.schlmgt.updateResult.ResultModel;
 import java.io.Serializable;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -20,9 +21,8 @@ import javax.faces.context.FacesContext;
 @ViewScoped
 public class ReportCard implements Serializable {
 
-    private ResultModel mode = new ResultModel();
-    private SessionModel sec = new SessionModel();
-    private SecondaryModel secModel = new SecondaryModel();
+    private List<ResultModel> mode;
+    private SessionModel sec;    
     private String name;
 
     @PostConstruct
@@ -32,15 +32,27 @@ public class ReportCard implements Serializable {
 
     public void resultDetails() {
         FacesContext ctx = FacesContext.getCurrentInstance();
-        ResultModel secResult = (ResultModel) ctx.getExternalContext().getApplicationMap().get("resultDetails");
+        List<ResultModel> secResult = (List<ResultModel>) ctx.getExternalContext().getApplicationMap().get("examRecord");
+        SessionModel sesModel = (SessionModel) ctx.getExternalContext().getApplicationMap().get("studentprofile");
         //test for null...
         mode = secResult;
+        sec = sesModel;
 
-        if (secModel != null) {
-            setName(secModel.getStudentid());
-            System.out.println("This is it: "+ secModel.getArm());
+        if (mode != null) {
+            for (ResultModel m : mode) {
+                setName(m.getStudentId());
+                System.out.println("This is it: " + m.getSubject() + " again: " + sesModel.getStudentClass());
+            }
         }
     }
+
+    public List<ResultModel> getMode() {
+        return mode;
+    }
+
+    public void setMode(List<ResultModel> mode) {
+        this.mode = mode;
+    }    
 
     public String getName() {
         return name;
@@ -48,14 +60,6 @@ public class ReportCard implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public ResultModel getMode() {
-        return mode;
-    }
-
-    public void setMode(ResultModel mode) {
-        this.mode = mode;
     }
 
     public SessionModel getSec() {
