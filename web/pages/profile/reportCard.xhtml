@@ -50,7 +50,7 @@
                         <div class="form-group">                           
                             <div class="col-xs-5">
                                 <label for="">Term :</label>
-                                <input id="" name="name" type="text" value="#{report.sec.studentTerm}" placeholder="Course"></input>
+                                <input id="" name="name" type="text" value="#{report.sec.studentTerm}" disabled="true" placeholder="Course"></input>
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                         <div class="form-group">                           
                             <div class="col-xs-5">
                                 <label for="">Class Average :</label>
-                                <input id="" name="name" type="text" value="#{report.sec.studentAverage}" placeholder="Course"></input>
+                                <input id="" name="name" type="text" value="#{report.sec.studentAverage}" disabled="true" placeholder="Course"></input>
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <div class="form-group">                           
                             <div class="col-xs-5">
                                 <label for="">Position :</label>
-                                <input id="" name="name" type="text" value="#{report.sec.position}" placeholder="Course"></input>
+                                <input id="" name="name" type="text" value="#{report.sec.position}" disabled="true" placeholder="Course"></input>
                             </div>
                         </div>
                     </div>
@@ -80,14 +80,14 @@
                         <div class="form-group">                           
                             <div class="col-xs-5">
                                 <label for="">Total Score :</label>
-                                <input id="" name="name" type="text" value="#{report.sec.termTotal}" placeholder="Course"></input>
+                                <input id="" name="name" type="text" value="#{report.sec.termTotal}" disabled="true" placeholder="Course"></input>
                             </div>
                         </div>
                     </div>
                 </div>
                 <br/>
                 <div class="row">
-                    <div >
+                    <div class="col-xs-9" style="margin-left: 150px;">
                         <p:dataTable var="papprv_rpt" 
                                      value="#{report.mode}">
                             <p:column headerText="Subject">
@@ -118,11 +118,11 @@
                     </div>
                 </div>
                 <div class="row" style="margin-top:80px;">
-                    <div class="col-md-9">
+                    <div class="col-xs-9">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-xs-3">
                         <div class="form-group">
-                            <label class="control" for="name"><u>Authorised Signatury</u></label>
+                            <label class="control" for="name"><u>Authorised Signatory</u></label>
                         </div>
                     </div>
 

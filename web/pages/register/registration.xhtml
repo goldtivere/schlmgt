@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+
+
+    <ui:define name="title">
+        Registration
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="row"> 
+            <p:messages id="wow" closable="true" />
+            <div class="ibox-content" style="height: 80px;">
+                <div class="form-group">
+                    <div class="text-center">
+                        <p:growl id="wat"></p:growl>
+                        <p:panel id="dude" style="border: none;">
+                            <p:selectOneMenu id="sclass" class="form-control" value="#{registration.registration}" required="true" requiredMessage="Registration required">
+                                <p:ajax listener="#{registration.regDetails()}" update="grad" />
+                                <f:selectItem itemLabel="--Select Registration--" itemValue="" noSelectionOption="true"/>                                
+                                <f:selectItem itemLabel="Student" itemValue="1" />                                
+                                <f:selectItem itemLabel="Staff" itemValue="1" />   
+                            </p:selectOneMenu>   
+
+
+
+                            <p:selectOneMenu id="grad" class="form-control" value="#{registration.regType}" required="true" requiredMessage="Type required">                                
+                                <p:ajax listener="#{classmode.ongradeChanges}" /> 
+                                <f:selectItem itemLabel="--Registration Type--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{registration.typeValue}"
+                                               var="singlevalue"  
+                                               itemLabel="#{singlevalue}"
+                                               itemValue="#{singlevalue}"/>
+                            </p:selectOneMenu>                                                                                                   
+
+                        </p:panel>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            
+
+        </div>
+    </ui:define>
+
+</ui:composition>
