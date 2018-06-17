@@ -16,26 +16,27 @@
             <p:messages id="wow" closable="true" />
             <div class="ibox-content" style="height: 80px;">
                 <div class="form-group">
-                    <div class="text-center">
-                        <p:growl id="wat"></p:growl>
+                    <div class="text-center">                        
                         <p:panel id="dude" style="border: none;">
                             <p:selectOneMenu id="sclass" class="form-control" value="#{registration.registration}" required="true" requiredMessage="Registration required">
                                 <p:ajax listener="#{registration.regDetails()}" update="grad" />
                                 <f:selectItem itemLabel="--Select Registration--" itemValue="" noSelectionOption="true"/>                                
                                 <f:selectItem itemLabel="Student" itemValue="1" />                                
-                                <f:selectItem itemLabel="Staff" itemValue="1" />   
+                                <f:selectItem itemLabel="Staff" itemValue="2" />   
                             </p:selectOneMenu>   
 
 
 
                             <p:selectOneMenu id="grad" class="form-control" value="#{registration.regType}" required="true" requiredMessage="Type required">                                
-                                <p:ajax listener="#{classmode.ongradeChanges}" /> 
+                                <p:ajax listener="#{registration.regTypeChanges()}" update="staff,stu,sta" />
                                 <f:selectItem itemLabel="--Registration Type--" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{registration.typeValue}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue}"
                                                itemValue="#{singlevalue}"/>
-                            </p:selectOneMenu>                                                                                                   
+                            </p:selectOneMenu>  
+                            <p:panel id="stu" visible="#{registration.but}">  <span > <p:commandLink style="padding-top: 10px;"  value="Register Student" action="#{registration.regTypeChanges()}"/></span></p:panel>
+                            <p:panel id="sta" visible="#{registration.put}">  <span > <p:commandLink style="padding-top: 10px;"  value="Register Staff" action="#{registration.regTypeChanges()}"/></span></p:panel>
 
                         </p:panel>
                     </div>
@@ -43,7 +44,15 @@
             </div>
         </div> 
         <div class="row">
-            
+            <p:panel id="staff" visible="#{registration.staffStatus}">
+                <p:fileUpload required="true" id="upload_staff_data" value="#{result.csv}" auto="true"
+                              fileUploadListener="#{registration.handleFileUpload}" 
+                              allowTypes="/(\.|\/)(xls|xlsx)$/"
+                              invalidFileMessage="Excel is only Required"
+                              mode="advanced"  dragDropSupport="false"
+                              sizeLimit="2097152" fileLimit="1" update="staff,upload_staff_data,wow"  /> 
+                <p:outputLabel value="Hi"/> <p:commandLink value="Fill Form"/>
+            </p:panel>           
 
         </div>
     </ui:define>
