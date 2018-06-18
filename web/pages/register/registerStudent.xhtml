@@ -75,12 +75,8 @@
                             <div class="form-group">
                                 <p:outputLabel for="email" value="Email Address: "/>
                                 <p:inputText id="email" value="#{freg.email}" class="form-control" label="email" size="40"
-                                             requiredMessage="Please enter your email address."
-                                             validatorMessage="Invalid email format"
-                                             >
-
-                                    <f:validateRegex
-                                        pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                             requiredMessage="Please enter your email address." placeholder="student@mail.com"                                             
+                                             >                                   
 
                                 </p:inputText>
                                 <p:message for="email"/>

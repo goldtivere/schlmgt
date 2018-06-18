@@ -650,7 +650,7 @@ public class FreshReg implements Serializable {
         ref_number = generateRefNo();
     }
 
-    public boolean studentNameCheck() throws SQLException {
+    public boolean studentNameCheck(String fname,String lname) throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -658,8 +658,8 @@ public class FreshReg implements Serializable {
         con = dbConnections.mySqlDBconnection();
         String testflname = "Select * from student_details where first_name=? and last_name=? and is_deleted=?";
         pstmt = con.prepareStatement(testflname);
-        pstmt.setString(1, getFname());
-        pstmt.setString(2, getLname());
+        pstmt.setString(1, fname);
+        pstmt.setString(2, lname);
         pstmt.setBoolean(3, false);
         rs = pstmt.executeQuery();
 
@@ -685,7 +685,7 @@ public class FreshReg implements Serializable {
         return 0;
     }
 
-    public boolean studentEmailCheck() throws SQLException {
+    public boolean studentEmailCheck(String email,String gmail) throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -693,8 +693,8 @@ public class FreshReg implements Serializable {
         con = dbConnections.mySqlDBconnection();
         String testemail = "Select * from student_details where student_email=? or guardian_email=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
-        pstmt.setString(1, getEmail());
-        pstmt.setString(2, getGemail());
+        pstmt.setString(1, email);
+        pstmt.setString(2, gmail);
         pstmt.setBoolean(3, false);
         rs = pstmt.executeQuery();
 
@@ -705,7 +705,7 @@ public class FreshReg implements Serializable {
         return false;
     }
 
-    public boolean studentPhoneCheck() throws SQLException {
+    public boolean studentPhoneCheck(String pnum,String gpnum) throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -713,8 +713,8 @@ public class FreshReg implements Serializable {
         con = dbConnections.mySqlDBconnection();
         String testemail = "Select * from student_details where student_phone=? or Guardian_phone=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
-        pstmt.setString(1, getPnum());
-        pstmt.setString(2, getGpnum());
+        pstmt.setString(1, pnum);
+        pstmt.setString(2, gpnum);
         pstmt.setBoolean(3, false);
         rs = pstmt.executeQuery();
 
@@ -725,7 +725,7 @@ public class FreshReg implements Serializable {
         return false;
     }
 
-    public boolean guardianEmailCheck() throws SQLException {
+    public boolean guardianEmailCheck(String gmail, String email) throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -745,7 +745,7 @@ public class FreshReg implements Serializable {
         return false;
     }
 
-    public boolean guardianphoneCheck() throws SQLException {
+    public boolean guardianphoneCheck(String gpnum, String pnum) throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -826,6 +826,25 @@ public class FreshReg implements Serializable {
             con = dbConnections.mySqlDBconnection();
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
             String dob = format.format(getDob());
+            
+            
+            //check if phone number and email of both parent an student is empty
+            if(getPnum().isEmpty() || getPnum().equals(""))
+            {
+                setPnum(null);
+            }
+             if(getEmail().isEmpty() || getEmail().equals(""))
+            {
+                setEmail(null);
+            }
+              if(getGpnum().isEmpty() || getGpnum().equals(""))
+            {
+                setGpnum(null);
+            }
+             if(getGemail().isEmpty() || getGemail().equals(""))
+            {
+                setGemail(null);
+            }
 
             //generate unique identifier
             UUID idOne = UUID.randomUUID();
@@ -1012,24 +1031,24 @@ public class FreshReg implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
 
         FacesMessage msg;
-        if (studentNameCheck()) {
-            System.out.println(studentNameCheck());
+        if (studentNameCheck(getFname(),getLname())) {
+            System.out.println(studentNameCheck(getFname(),getLname()));
             setMessangerOfTruth("Firstname and Lastname exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
-        } else if (studentEmailCheck()) {
+        } else if (studentEmailCheck(getEmail(),getGemail())) {
             setMessangerOfTruth("Email Aleady exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
-        } else if (studentPhoneCheck()) {
+        } else if (studentPhoneCheck(getPnum(),getGpnum())) {
             setMessangerOfTruth("Phone Aleady exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
-        } else if (guardianEmailCheck()) {
+        } else if (guardianEmailCheck(getGemail(),getEmail())) {
             setMessangerOfTruth("Email exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
-        } else if (guardianphoneCheck()) {
+        } else if (guardianphoneCheck(getGpnum(),getPnum())) {
             setMessangerOfTruth("Phone Aleady exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
