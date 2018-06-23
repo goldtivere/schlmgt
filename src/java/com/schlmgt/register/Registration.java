@@ -195,7 +195,7 @@ public class Registration implements Serializable {
                         mode.setSex(ro.getCell(6).getStringCellValue());
                         mode.setPfname(ro.getCell(7).getStringCellValue());
                         if (ro.getCell(8) != null) {
-                            mode.setPmname(ro.getCell(8).getStringCellValue());
+                            mode.setPmname(ro.getCell(8).getStringCellValue());b
                            
                         } else {
                             mode.setPmname(""); 
