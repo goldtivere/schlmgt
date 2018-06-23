@@ -145,8 +145,7 @@ public class Registration implements Serializable {
             row = (Row) ws.getRow(0);
             int rowNum = ws.getLastRowNum() + 1;
             int val = 0;
-            int studentId;
-            System.out.println(studentDetails.size() + " This is it " + row.getLastCellNum() + " damn " + row.getPhysicalNumberOfCells());
+            int studentId;           
             if (studentDetails.size() == row.getPhysicalNumberOfCells()) {
                 for (int i = 0; i < studentDetails.size(); i++) {
                     if (row.getCell(i).toString().equalsIgnoreCase(studentDetails.get(i))) {
@@ -304,7 +303,7 @@ public class Registration implements Serializable {
                         }
 
                         if (reg.studentNameCheck(mode.getFname(), mode.getLname())) {
-                            System.out.println(reg.studentNameCheck(mode.getFname(), mode.getLname()));
+                           
                             setMessangerOfTruth("Firstname: " + mode.getFname() + " and Lastname: " + mode.getLname() + " exists in row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
@@ -330,7 +329,7 @@ public class Registration implements Serializable {
                             context.addMessage(null, msg);
                             break;
                         } else if (!"Male".equalsIgnoreCase(mode.getSex()) && !"Female".equalsIgnoreCase(mode.getSex())) {
-                            System.out.println("Sex is: " + mode.getSex());
+                           
                             setMessangerOfTruth("Sex is either Male or Female: Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
@@ -437,11 +436,9 @@ public class Registration implements Serializable {
             int createdId = userObj.getId();
 
             if ("1".equalsIgnoreCase(getRegistration())) {
-                studentUpload(event);
-                System.out.println(getRegistration() + "    " + getRegType() + "  Student");
+                studentUpload(event);               
                 setCsv(null);
-            } else if ("2".equalsIgnoreCase(getRegistration())) {
-                System.out.println(getRegistration() + "    " + getRegType() + "  Staff");
+            } else if ("2".equalsIgnoreCase(getRegistration())) {               
                 setCsv(null);
             }
         } catch (Exception ex) {
