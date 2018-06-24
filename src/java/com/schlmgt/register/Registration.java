@@ -7,6 +7,7 @@ package com.schlmgt.register;
 
 import com.schlmgt.dbconn.DbConnectionX;
 import com.schlmgt.imgupload.UploadImagesX;
+import com.schlmgt.logic.DateManipulation;
 import com.schlmgt.login.UserDetails;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -14,8 +15,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -145,8 +148,18 @@ public class Registration implements Serializable {
             row = (Row) ws.getRow(0);
             int rowNum = ws.getLastRowNum() + 1;
             int val = 0;
-            int studentId;           
-            if (studentDetails.size() == row.getPhysicalNumberOfCells()) {
+            int studentId;
+            //generate unique identifier
+            UUID idOne = UUID.randomUUID();
+            String fullname = null;
+            String gfullname = null;
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+            String dob = null;
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            if (studentDetails.size() == row.getPhysicalNumberOfCells()) {             
                 for (int i = 0; i < studentDetails.size(); i++) {
                     if (row.getCell(i).toString().equalsIgnoreCase(studentDetails.get(i))) {
                         val++;
@@ -196,11 +209,13 @@ public class Registration implements Serializable {
 
                         if (ro.getCell(3) != null) {
                             mode.setDob(ro.getCell(3).getDateCellValue());
+                            dob = format.format(mode.getDob());
                         } else {
                             mode.setDob(null);
                         }
 
                         if (ro.getCell(4) != null) {
+                            System.out.println(ro.getCell(4).getCellType() + " Ojay boss " + ro.getCell(4).getNumericCellValue());
                             mode.setPnum(ro.getCell(4).toString());
                         } else {
                             mode.setPnum(null);
@@ -302,8 +317,10 @@ public class Registration implements Serializable {
                             mode.setYear(null);
                         }
 
+                        fullname = mode.getLname() + " " + mode.getMname() + " " + mode.getFname();
+                        gfullname = mode.getPlname() + " " + mode.getPmname() + " " + mode.getPfname();
                         if (reg.studentNameCheck(mode.getFname(), mode.getLname())) {
-                           
+
                             setMessangerOfTruth("Firstname: " + mode.getFname() + " and Lastname: " + mode.getLname() + " exists in row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
@@ -329,7 +346,7 @@ public class Registration implements Serializable {
                             context.addMessage(null, msg);
                             break;
                         } else if (!"Male".equalsIgnoreCase(mode.getSex()) && !"Female".equalsIgnoreCase(mode.getSex())) {
-                           
+
                             setMessangerOfTruth("Sex is either Male or Female: Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
@@ -394,9 +411,71 @@ public class Registration implements Serializable {
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
+                        } else {
+                            String insertStudentDetails = "insert into Student_details"
+                                    + "(first_name,middle_name,last_name,fullname,DOB,student_phone,student_email,sex,Guardian_firstname,"
+                                    + "Guardian_middlename,Guardian_lastname,Guardian_fullname,Guardian_phone,"
+                                    + "Guardian_email,guardian_address,previous_school,"
+                                    + "previous_class,previous_grade,current_class,current_grade,Arm,created_by,"
+                                    + "date_created,datetime_created,is_deleted,studentId)"
+                                    + "values"
+                                    + "(?,?,?,?,?,"
+                                    + "?,?,?,?,?,"
+                                    + "?,?,?,?,?,?,"
+                                    + "?,?,?,?,?,"
+                                    + "?,?,?,?,?)";
+                            pstmt = con.prepareStatement(insertStudentDetails);
+                            pstmt.setString(1, mode.getFname());
+                            pstmt.setString(2, mode.getMname());
+                            pstmt.setString(3, mode.getLname());
+                            pstmt.setString(4, fullname);
+                            pstmt.setString(5, dob);
+                            pstmt.setString(6, mode.getPnum());
+                            pstmt.setString(7, mode.getEmail());
+                            pstmt.setString(8, mode.getSex());
+                            pstmt.setString(9, mode.getPfname());
+                            pstmt.setString(10, mode.getPmname());
+                            pstmt.setString(11, mode.getPlname());
+                            pstmt.setString(12, gfullname);
+                            pstmt.setString(13, mode.getPpnum());
+                            pstmt.setString(14, mode.getPemail());
+                            pstmt.setString(15, mode.getAddress());
+                            pstmt.setString(16, mode.getPreviousEdu());
+                            pstmt.setString(17, mode.getPreviousClass());
+                            pstmt.setString(18, mode.getPreviousGrade());
+                            pstmt.setString(19, mode.getCurrentClass());
+                            pstmt.setString(20, mode.getCurrentGrade());
+                            pstmt.setString(21, mode.getArm());
+                            pstmt.setString(22, createdby);
+                            pstmt.setString(23, DateManipulation.dateAlone());
+                            pstmt.setString(24, DateManipulation.dateAndTime());
+                            pstmt.setBoolean(25, false);
+                            pstmt.setInt(26, studentId);
+
+                            pstmt.executeUpdate();
+
+                            String slink = "http://localhost:8080/SchlMgt/faces/pages/create/index.xhtml?id=";
+                            String insertEmail = "insert into studentstatus (guid,full_name,status,datelogged,studentemail,date_time,studentId,link)"
+                                    + "values(?,?,?,?,?,?,?,?)";
+
+                            pstmt = con.prepareStatement(insertEmail);
+                            pstmt.setString(1, idOne.toString());
+                            pstmt.setString(2, fullname);
+                            pstmt.setBoolean(3, false);
+                            pstmt.setString(4, DateManipulation.dateAlone());
+                            pstmt.setString(5, mode.getPemail());
+                            pstmt.setString(6, DateManipulation.dateAndTime());
+                            pstmt.setInt(7, studentId);
+                            pstmt.setString(8, slink + idOne.toString());
+
+                            pstmt.executeUpdate();
+                            classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), mode.getCurrentClass(), mode.getArm(), mode.getTerm(), mode.getYear(), createdby, fullname, mode.getCurrentGrade());
                         }
 
                     }
+                    setMessangerOfTruth("Student Data Upload Successful");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                    context.addMessage(null, message);                    
 
                 } else {
                     setMessangerOfTruth("Excel is in wrong format. It should be in this format: " + studentDetails.toString());
@@ -408,6 +487,10 @@ public class Registration implements Serializable {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, message);
             }
+        } catch (IllegalStateException e) {
+            setMessangerOfTruth("Please format Phone number field to take text and not number");
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, message);
         } catch (Exception exx) {
             exx.printStackTrace();
         } finally {
@@ -424,21 +507,54 @@ public class Registration implements Serializable {
         }
     }
 
+    public void classUpload(int studentId, String fname, String mname, String lname, String grade, String arm, String term, String year, String createdby, String fullname, String currentclass) {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = dbConnections.mySqlDBconnection();
+
+            String nurseryInsert = "insert into tbstudentclass (studentid,first_name,middle_name,last_name,full_name,class,"
+                    + "classtype,isdeleted,datecreated,datetime_created,createdby,Arm,currentclass,term,year) values "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+            pstmt = con.prepareStatement(nurseryInsert);
+
+            pstmt.setInt(1, studentId);
+            pstmt.setString(2, fname);
+            pstmt.setString(3, mname);
+            pstmt.setString(4, lname);
+            pstmt.setString(5, fullname);
+            pstmt.setString(6, currentclass);
+            pstmt.setString(7, grade);
+            pstmt.setBoolean(8, false);
+            pstmt.setString(9, DateManipulation.dateAlone());
+            pstmt.setString(10, DateManipulation.dateAndTime());
+            pstmt.setString(11, createdby);
+            pstmt.setString(12, arm);
+            pstmt.setBoolean(13, true);
+            pstmt.setString(14, term);
+            pstmt.setString(15, year);
+            pstmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void handleFileUpload(FileUploadEvent event) throws SQLException {
 
         FacesMessage message;
         FacesContext context = FacesContext.getCurrentInstance();
 
         try {
-            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
-            String on = String.valueOf(userObj);
-            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
-            int createdId = userObj.getId();
 
             if ("1".equalsIgnoreCase(getRegistration())) {
-                studentUpload(event);               
+                studentUpload(event);
                 setCsv(null);
-            } else if ("2".equalsIgnoreCase(getRegistration())) {               
+            } else if ("2".equalsIgnoreCase(getRegistration())) {
                 setCsv(null);
             }
         } catch (Exception ex) {
