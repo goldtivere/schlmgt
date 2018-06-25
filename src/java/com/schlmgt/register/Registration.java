@@ -24,6 +24,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -159,7 +160,8 @@ public class Registration implements Serializable {
             String on = String.valueOf(userObj);
             String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
             int createdId = userObj.getId();
-            if (studentDetails.size() == row.getPhysicalNumberOfCells()) {             
+            DataFormatter df = new DataFormatter();
+            if (studentDetails.size() == row.getPhysicalNumberOfCells()) {
                 for (int i = 0; i < studentDetails.size(); i++) {
                     if (row.getCell(i).toString().equalsIgnoreCase(studentDetails.get(i))) {
                         val++;
@@ -191,7 +193,7 @@ public class Registration implements Serializable {
 //                    if (getGemail().isEmpty() || getGemail().equals("")) {
 //                        setGemail(null);
 //                    }
-                    Row ro = null;
+                    Row ro = null;                    
                     for (int i = 1; i < rowNum; i++) {
                         ro = (Row) ws.getRow(i);
                         mode.setFname(ro.getCell(0).getStringCellValue());
@@ -215,8 +217,7 @@ public class Registration implements Serializable {
                         }
 
                         if (ro.getCell(4) != null) {
-                            System.out.println(ro.getCell(4).getCellType() + " Ojay boss " + ro.getCell(4).getNumericCellValue());
-                            mode.setPnum(ro.getCell(4).toString());
+                            mode.setPnum(df.formatCellValue(ro.getCell(4)));
                         } else {
                             mode.setPnum(null);
                         }
@@ -252,7 +253,7 @@ public class Registration implements Serializable {
                         }
 
                         if (ro.getCell(10) != null) {
-                            mode.setPpnum(ro.getCell(10).toString());
+                            mode.setPpnum(df.formatCellValue(ro.getCell(10)));
                         } else {
                             mode.setPpnum(null);
                         }
@@ -470,12 +471,13 @@ public class Registration implements Serializable {
 
                             pstmt.executeUpdate();
                             classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), mode.getCurrentClass(), mode.getArm(), mode.getTerm(), mode.getYear(), createdby, fullname, mode.getCurrentGrade());
+                            if (i + 1 == rowNum) {                                
+                                setMessangerOfTruth("Student Data Upload Successful");
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                            }
                         }
-
                     }
-                    setMessangerOfTruth("Student Data Upload Successful");
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                    context.addMessage(null, message);                    
 
                 } else {
                     setMessangerOfTruth("Excel is in wrong format. It should be in this format: " + studentDetails.toString());
