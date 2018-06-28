@@ -1080,8 +1080,13 @@ public class EditStudent implements Serializable {
                 setPassport_url("");
                 updateImg();
                 setMessangerOfTruth("Image Updated!!");
-                File file = new File(getImageLocation());
-                file.delete();
+
+                if (getImageLocation() == null || getImageLocation().isEmpty() || getImageLocation().equalsIgnoreCase(null)) {
+
+                } else {
+                    File file = new File(getImageLocation());
+                    file.delete();
+                }
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);
                 StudentNumber();

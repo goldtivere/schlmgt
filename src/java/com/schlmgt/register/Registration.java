@@ -161,6 +161,8 @@ public class Registration implements Serializable {
             String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
             int createdId = userObj.getId();
             DataFormatter df = new DataFormatter();
+            int success = 0;
+            int fail = 0;
             if (studentDetails.size() == row.getPhysicalNumberOfCells()) {
                 for (int i = 0; i < studentDetails.size(); i++) {
                     if (row.getCell(i).toString().equalsIgnoreCase(studentDetails.get(i))) {
@@ -193,7 +195,7 @@ public class Registration implements Serializable {
 //                    if (getGemail().isEmpty() || getGemail().equals("")) {
 //                        setGemail(null);
 //                    }
-                    Row ro = null;                    
+                    Row ro = null;
                     for (int i = 1; i < rowNum; i++) {
                         ro = (Row) ws.getRow(i);
                         mode.setFname(ro.getCell(0).getStringCellValue());
@@ -471,14 +473,15 @@ public class Registration implements Serializable {
 
                             pstmt.executeUpdate();
                             classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), mode.getCurrentClass(), mode.getArm(), mode.getTerm(), mode.getYear(), createdby, fullname, mode.getCurrentGrade());
-                            if (i + 1 == rowNum) {                                
-                                setMessangerOfTruth("Student Data Upload Successful");
-                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                                context.addMessage(null, message);
-                            }
-                        }
-                    }
 
+                            success++;
+
+                        }
+
+                    }
+                    setMessangerOfTruth(success + " Student Data Upload Successful");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                    context.addMessage(null, message);
                 } else {
                     setMessangerOfTruth("Excel is in wrong format. It should be in this format: " + studentDetails.toString());
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
