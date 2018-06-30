@@ -57,6 +57,12 @@ public class Registration implements Serializable {
 
     }
 
+    public String regStudent() throws Exception {
+
+        return "registerStudent.xhtml?faces-redirect=true";
+
+    }
+
     public void regTypeChanges() {
         if ("1".equalsIgnoreCase(getRegistration()) && "Data upload".equalsIgnoreCase(getRegType())) {
             setStaffStatus(true);
