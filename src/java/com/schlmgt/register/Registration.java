@@ -63,6 +63,12 @@ public class Registration implements Serializable {
 
     }
 
+    public String regStaff() throws Exception {
+
+        return "register.xhtml?faces-redirect=true";
+
+    }
+
     public void regTypeChanges() {
         if ("1".equalsIgnoreCase(getRegistration()) && "Data upload".equalsIgnoreCase(getRegType())) {
             setStaffStatus(true);
@@ -156,8 +162,7 @@ public class Registration implements Serializable {
             int rowNum = ws.getLastRowNum() + 1;
             int val = 0;
             int studentId;
-            //generate unique identifier
-            UUID idOne = UUID.randomUUID();
+
             String fullname = null;
             String gfullname = null;
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
@@ -421,6 +426,8 @@ public class Registration implements Serializable {
                             context.addMessage(null, msg);
                             break;
                         } else {
+                            //generate unique identifier
+                            UUID idOne = UUID.randomUUID();
                             String insertStudentDetails = "insert into Student_details"
                                     + "(first_name,middle_name,last_name,fullname,DOB,student_phone,student_email,sex,Guardian_firstname,"
                                     + "Guardian_middlename,Guardian_lastname,Guardian_fullname,Guardian_phone,"

@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
@@ -57,6 +58,42 @@ public class Register implements Serializable {
     private String repassword;
     private String passport_url;
     private String ref_number;
+    private String staffClass;
+    private String staffGrade;
+    private String highQua;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getHighQua() {
+        return highQua;
+    }
+
+    public void setHighQua(String highQua) {
+        this.highQua = highQua;
+    }
+
+    public String getStaffClass() {
+        return staffClass;
+    }
+
+    public void setStaffClass(String staffClass) {
+        this.staffClass = staffClass;
+    }
+
+    public String getStaffGrade() {
+        return staffGrade;
+    }
+
+    public void setStaffGrade(String staffGrade) {
+        this.staffGrade = staffGrade;
+    }
 
     public String getRef_number() {
         return ref_number;
@@ -122,8 +159,8 @@ public class Register implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {                
-        return password;       
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
@@ -265,6 +302,7 @@ public class Register implements Serializable {
                 = String.valueOf(userObj.getRole_id());
 
         con = dbConnections.mySqlDBconnection();
+        UUID idOne = UUID.randomUUID();
 
         try {
 
@@ -287,7 +325,7 @@ public class Register implements Serializable {
                 pstmt.setBoolean(2, false);
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
-                    setMessangerOfTruth("Username Aleady exists!!");
+                    setMessangerOfTruth("Phone Number Aleady exists!!");
                     msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                     context.addMessage(null, msg);
 
@@ -308,74 +346,65 @@ public class Register implements Serializable {
                         con.setAutoCommit(false);
                         //InputStream fin2 = file.getInputstream();
 
-                        String insert = "insert into user_details (first_name,last_name,username,password,image_name,email_address,role_id,"
-                                + "date_created,date_time_created,created_by,is_deleted) "
-                                + "values(?,?,?,?,?,?,?,?,?,?,?)";
+                        String insert = "insert into user_details (first_name,last_name,username,image_name,email_address,role_id,"
+                                + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,highestqua,address) "
+                                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
                         pstmt = con.prepareStatement(insert);
 
                         pstmt.setString(1, getFname());
                         pstmt.setString(2, getLname());
                         pstmt.setString(3, getUsername());
-                        pstmt.setString(4, AESencrp.encrypt(getPassword()));
-                        pstmt.setString(5, getPassport_url());
-                        pstmt.setString(6, getEmailadd());
-                        pstmt.setString(7, createdId);
-                        pstmt.setString(8, DateManipulation.dateAlone());
-                        pstmt.setString(9, DateManipulation.dateAndTime());
-                        pstmt.setString(10, createdby);
-                        pstmt.setBoolean(11, false);
+                        pstmt.setString(4, getPassport_url());
+                        pstmt.setString(5, getEmailadd());
+                        pstmt.setString(6, createdId);
+                        pstmt.setString(7, DateManipulation.dateAlone());
+                        pstmt.setString(8, DateManipulation.dateAndTime());
+                        pstmt.setString(9, createdby);
+                        pstmt.setBoolean(10, false);
+                        pstmt.setString(11, getStaffClass());
+                        pstmt.setString(12, getStaffGrade());
+                        pstmt.setString(13, getHighQua());
+                        pstmt.setString(14, getAddress());
 
                         pstmt.executeUpdate();
 
-                        String selectactivemail = "Select * from senderdetails where activate=? and isdeleted=?";
-                        pstmt = con.prepareStatement(selectactivemail);
-                        pstmt.setBoolean(1, true);
-                        pstmt.setBoolean(2, false);
-                        rs = pstmt.executeQuery();
-                        if (rs.next()) {
+                        String fullname = getLname() + " " + getFname();
+                        String slink = "http://localhost:8080/SchlMgt/faces/pages/createStaff/index.xhtml?id=";
+                        String insertemail = "insert into staffstatus (guid,fullname,status,datelogged,staffemail,datetime,staffphone,link)"
+                                + "values(?,?,?,?,?,?,?,?)";
 
-                          
-                            String fullname= getLname()+ " "+ getFname();
+                        pstmt = con.prepareStatement(insertemail);
+                        pstmt.setString(1, idOne.toString());
+                        pstmt.setString(2, fullname);
+                        pstmt.setBoolean(3, false);
+                        pstmt.setString(4, DateManipulation.dateAlone());
+                        pstmt.setString(5, getEmailadd());
+                        pstmt.setString(6, DateManipulation.dateAndTime());
+                        pstmt.setString(7, getUsername());
+                        pstmt.setString(8, slink + idOne.toString());
 
-                            String insertemail = "insert into emailstatus (user_id,email,fullname,password,date_logged,status)"
-                                    + "values(?,?,?,?,?,?)";
+                        pstmt.executeUpdate();
 
-                            pstmt = con.prepareStatement(insertemail);
-                            pstmt.setString(1, getUsername());
-                            pstmt.setString(2, getEmailadd());
-                            pstmt.setString(3, fullname);
-                            pstmt.setString(4, AESencrp.encrypt(getPassword()));                            
-                            pstmt.setString(5, DateManipulation.dateAndTime());
-                            pstmt.setBoolean(6, false);                            
+                        /**
+                         * MailSender send = new MailSender();
+                         * send.sendMail(user, pass, getEmailadd(), sub,
+                         * content);*
+                         */
+                        setMessangerOfTruth("User Created!!");
+                        msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                        context.addMessage(null, msg);
 
-                            pstmt.executeUpdate();
+                        refresh();
 
-                          /**  MailSender send = new MailSender();
-                            send.sendMail(user, pass, getEmailadd(), sub, content);**/
-
-                            setMessangerOfTruth("User Created!!");
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-
-                            refresh();
-                        } else {
-
-                            setMessangerOfTruth("Error!!");
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            refresh();
-
-                        }
                         con.commit();
                     }
                 }
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (Exception e) {
             e.printStackTrace();
+            
         }
 
     }

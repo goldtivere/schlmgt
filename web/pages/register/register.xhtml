@@ -18,7 +18,7 @@
         <p:messages id="message" closable="true"/>
         <div class="ibox-content">
             <div class="row">
-                <p:panel class="panel-default" id="reg" header="Register">
+                <p:panel class="panel-default" id="reg" style="border: none;" header="Register">
                     <div class="col-md-6">
                         <div class="form-group">
                             <p:outputLabel for="fname" value="First Name: "/>
@@ -37,10 +37,40 @@
                             <p:inputText id="uname" class="form-control" value="#{reg.username}" maxlength="11" required="true"/>                                
                             <p:message for="uname"/>
                         </div>
+                        <div class="form-group">
+                            <p:outputLabel value="Highest Qualification: "/>
+                            <p:inputTextarea id="qual" required="true" autoResize="true" value="#{reg.highQua}" class="form-control"/>
+                            <p:message for="qual"/>
+                        </div>
+                        <div class="form-group">
+                            <p:outputLabel value="Address: "/>
+                            <p:inputTextarea id="add" required="true" autoResize="true" value="#{reg.address}" class="form-control"/>
+                            <p:message for="add"/>
+                        </div>
+                        <div class="form-group">
+                            <p:outputLabel value="Class Assigned: "/>
+                            <p:selectOneMenu id="sclass" class="form-control" value="#{reg.staffClass}" required="true" requiredMessage="Class required">
+
+
+                                <p:ajax listener="#{classmode.onClassChanges(reg.staffClass)}" update="grad" />
+                                <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{classmode.classmodel}"
+                                               var="singlevalue"  
+                                               itemLabel="#{singlevalue.tbclass}"
+                                               itemValue="#{singlevalue.tbclass}"/>
+                            </p:selectOneMenu>   
+                        </div>
+                        
 
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
+                            <p:outputLabel for="mname" value="Middle Name: "/>
+                            <p:inputText id="mname" class="form-control" /> 
+                            <p:message for="mname"/>
+                        </div>
+                        <div class="form-group">
+
                             <p:outputLabel for="email" value="Email Address: "/>
                             <p:inputText id="email" required="true" value="#{reg.emailadd}" class="form-control" label="email" size="40"
                                          requiredMessage="Please enter your email address."
@@ -52,41 +82,40 @@
 
                             </p:inputText>
                             <p:message for="email"/>
-                        </div>
-
+                        </div>                       
                         <div class="form-group">
-                            <p:outputLabel value="Password: " for="pWord"/>
-                            <p:password id="pWord" required="true" value="#{reg.password}" match="RWord" class="form-control" label="Password" />
-                            <p:message for="pWord"/>
+
+                            <p:outputLabel value="Select Image: *" />
+                            <p:fileUpload id="upload_pix_data" value="#{reg.passport_file}" auto="true"
+                                          fileUploadListener="#{reg.handleFileUpload}" 
+                                          mode="advanced" dragDropSupport="false"
+                                          update="pst_img" sizeLimit="2097152" fileLimit="1" 
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
+
+                            <p:outputLabel value="Passport:"/>
+                            <p:graphicImage id="pst_img" value="#{reg.passport_url}" style="width: 100px; height: 100px;" />
+
+                            <p:commandButton value="clear" immediate="true" ajax="false"
+                                             actionListener="#{reg.clearPix}" 
+                                             update="upload_pix_data,pst_img"/>                                 
+
                         </div>
-
                         <div class="form-group">
-                            <p:outputLabel value="Re-type Password: " for="RWord"/>
-                            <p:password id="RWord" required="true" value="#{reg.repassword}" class="form-control" label="Re-type Password"/>
-                            <p:message for="RWord"/>
-                        </div>
-                        <div class="form-group">
-                           
-                                <p:outputLabel value="Select Image: *" />
-                                <p:fileUpload id="upload_pix_data" value="#{reg.passport_file}" auto="true"
-                                              fileUploadListener="#{reg.handleFileUpload}" 
-                                              mode="advanced" dragDropSupport="false"
-                                              update="pst_img" sizeLimit="2097152" fileLimit="1" 
-                                              allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
-
-                                <p:outputLabel value="Passport:"/>
-                                <p:graphicImage id="pst_img" value="#{reg.passport_url}" style="width: 100px; height: 100px;" />
-
-                                <p:commandButton value="clear" immediate="true" ajax="false"
-                                                 actionListener="#{reg.clearPix}" 
-                                                 update="upload_pix_data,pst_img"/>                                 
-                      
+                            <p:outputLabel value="Class: "></p:outputLabel>
+                            <p:selectOneMenu id="grad" class="form-control" value="#{reg.staffGrade}" required="true" requiredMessage="Grade required">                                
+                                <p:ajax listener="#{classmode.ongradeChanges}" /> 
+                                <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{classmode.grademodels}"
+                                               var="singlevalue"  
+                                               itemLabel="#{singlevalue.grade}"
+                                               itemValue="#{singlevalue.grade}"/>
+                            </p:selectOneMenu>
                         </div>
 
 
                     </div>
-                    <p:commandButton class="btn btn-sm btn-primary m-t-n-xs" ajax="false" update="message"
-                                     actionListener="#{reg.register}" process="@this fname,lname,uname,email,pWord,RWord,upload" value="Register"/>
+                    <p:commandButton class="btn btn-sm btn-primary m-t-n-xs" update="message"
+                                     actionListener="#{reg.register}" process="@this fname,lname,uname,email,mname,qual,add,grad,sclass,reg" value="Register"/>
 
 
                 </p:panel>

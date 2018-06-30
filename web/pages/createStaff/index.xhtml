@@ -24,27 +24,27 @@
             <div>
 
                 <h:form>  
-                    <p:panel visible="#{createAcct.status}" style=" border: none;">
-                        <p:outputLabel value="#{createAcct.errorLabel}" style="color: red;"/>
+                    <p:panel visible="#{createStaffAcct.status}" style=" border: none;">
+                        <p:outputLabel value="#{createStaffAcct.errorLabel}" style="color: red;"/>
                     </p:panel>
-                    <p:panel visible="#{createAcct.rstatus}" style=" border: none;">                       
+                    <p:panel visible="#{createStaffAcct.rstatus}" style=" border: none;">                       
                         <f:metadata>
-                            <f:viewParam name="id" value="#{createAcct.id}" />
+                            <f:viewParam name="id" value="#{createStaffAcct.id}" />
                         </f:metadata>
                         <h3>Create Account</h3>
 
 
                         <p:messages id="login_panel" closable="true"/>
                         <div class="form-group">
-                            <p:inputText class="form-control" id="regnum" value="#{createAcct.matno}" disabled="true" placeholder="Registration Number" required="true"/>
+                            <p:inputText class="form-control" id="regnum" value="#{createStaffAcct.matno}" disabled="true" placeholder="Registration Number" required="true"/>
                         </div>
                         <div class="form-group">
                             <p:password class="form-control" id="password" match="Rpassword" validatorMessage="Password do not match" value="#{createAcct.password}" placeholder="Password" required="true"/>
                         </div>
                         <div class="form-group">
-                            <p:password class="form-control" id="Rpassword" value="#{createAcct.password}" placeholder="Re-Type Password" required="true"/>
+                            <p:password class="form-control" id="Rpassword" value="#{createStaffAcct.password}" placeholder="Re-Type Password" required="true"/>
                         </div>
-                        <p:commandButton value="Register" actionListener="#{createAcct.register}" update="login_panel" process="@this regnum,password,Rpassword " class="btn btn-primary block full-width m-b"/>
+                        <p:commandButton value="Register" actionListener="#{createStaffAcct.register}" update="login_panel" process="@this regnum,password,Rpassword " class="btn btn-primary block full-width m-b"/>
                     </p:panel>
                 </h:form>
 

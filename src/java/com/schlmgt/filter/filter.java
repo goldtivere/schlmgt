@@ -38,7 +38,9 @@ public class filter implements Filter {
             HttpSession ses = reqt.getSession(false);
 
             String reqURI = reqt.getRequestURI();
-            if (reqURI.contains("/faces/index.xhtml") || (ses != null && ses.getAttribute("sessn_nums") != null)|| reqURI.contains("javax.faces.resource")) {
+            if (reqURI.contains("/faces/index.xhtml") || (ses != null && ses.getAttribute("sessn_nums") != null) || reqURI.contains("javax.faces.resource")) {
+                chain.doFilter(request, response);
+            } else if (reqURI.contains("faces/pages/createStaff/index.xhtml") || reqURI.contains("faces/pages/create/index.xhtml")) {
                 chain.doFilter(request, response);
             } else {
                 resp.sendRedirect(reqt.getContextPath() + "/faces/index.xhtml");
