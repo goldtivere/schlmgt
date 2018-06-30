@@ -129,15 +129,14 @@ public class StaffAccount implements Serializable {
                     con = dbConnections.mySqlDBconnection();
 
                     String regStudent = "update user_details set Password=?, dateupdated=?,datetimeupdated=?,"
-                            + "updatedby=? where username=? and fullname=?";
+                            + "updatedby=? where username=?";
 
                     pstmt = con.prepareStatement(regStudent);
                     pstmt.setString(1, AESencrp.encrypt(getPassword()));
                     pstmt.setString(2, DateManipulation.dateAlone());
                     pstmt.setString(3, DateManipulation.dateAndTime());
                     pstmt.setString(4, fullname);
-                    pstmt.setString(5, getMatno());
-                    pstmt.setString(6, fullname);
+                    pstmt.setString(5, getMatno());                    
                     System.out.println(StudentNumber()+ " Hi");
 
                     pstmt.executeUpdate();
