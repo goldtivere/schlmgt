@@ -7,9 +7,12 @@ package com.schlmgt.report;
 
 import com.schlmgt.dbconn.DbConnectionX;
 import com.schlmgt.updateResult.ResultModel;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -52,6 +55,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -71,6 +76,7 @@ public class StudentReport {
     private String year;
     private boolean vis;
     private boolean bis;
+    private StreamedContent exportFile;
 
     @PostConstruct
     public void init() {
@@ -80,6 +86,14 @@ public class StudentReport {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public StreamedContent getExportFile() {
+        return exportFile;
+    }
+
+    public void setExportFile(StreamedContent exportFile) {
+        this.exportFile = exportFile;
     }
 
     public boolean isBis() {
@@ -558,9 +572,13 @@ public class StudentReport {
             sheet.autoSizeColumn(i, true);
         }
 
-        FileOutputStream fileOut = new FileOutputStream("C:/contact.xlsx");
+        String filename="contact.xlsx";
+        FileOutputStream fileOut = new FileOutputStream(filename);
         workbook.write(fileOut);
-        fileOut.close();      
+        fileOut.close();
+
+        InputStream stream = new BufferedInputStream(new FileInputStream(filename));
+        exportFile = new DefaultStreamedContent(stream, "application/xlsx", filename);
 
 //        Workbook wb = new XSSFWorkbook();
 //        Sheet sheet = wb.createSheet("new sheet");

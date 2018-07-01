@@ -92,8 +92,7 @@ public class StaffAccount implements Serializable {
             Connection con = null;
             PreparedStatement pstmt = null;
             ResultSet rs = null;
-            con = dbConnections.mySqlDBconnection();
-            System.out.println(someParam);
+            con = dbConnections.mySqlDBconnection();            
             String testflname = "Select * from Staffstatus where staffphone=? and guid=?";
             pstmt = con.prepareStatement(testflname);
             pstmt.setString(1, getMatno());
@@ -136,14 +135,14 @@ public class StaffAccount implements Serializable {
                     pstmt.setString(2, DateManipulation.dateAlone());
                     pstmt.setString(3, DateManipulation.dateAndTime());
                     pstmt.setString(4, fullname);
-                    pstmt.setString(5, getMatno());                    
-                    System.out.println(StudentNumber()+ " Hi");
+                    pstmt.setString(5, getMatno());                                        
 
                     pstmt.executeUpdate();
 
                     String deleteParam = "delete from staffstatus where guid=?";
                     pstmt = con.prepareStatement(deleteParam);
                     pstmt.setString(1, someParam);
+                    System.out.println("Hi Param: "+ someParam);
                     pstmt.executeUpdate();
 
                     NavigationHandler nav = context.getApplication().getNavigationHandler();
