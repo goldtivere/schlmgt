@@ -60,13 +60,24 @@
                                                itemValue="#{singlevalue.tbclass}"/>
                             </p:selectOneMenu>   
                         </div>
-                        
+                        <div class="form-group">
+                            <p:outputLabel value="Class: "></p:outputLabel>
+                            <p:selectOneMenu id="grad" class="form-control" value="#{reg.staffGrade}" required="true" requiredMessage="Grade required">                                
+                                <p:ajax listener="#{classmode.ongradeChanges}" /> 
+                                <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{classmode.grademodels}"
+                                               var="singlevalue"  
+                                               itemLabel="#{singlevalue.grade}"
+                                               itemValue="#{singlevalue.grade}"/>
+                            </p:selectOneMenu>
+                        </div>
+
 
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <p:outputLabel for="mname" value="Middle Name: "/>
-                            <p:inputText id="mname" class="form-control" /> 
+                            <p:inputText id="mname" class="form-control" value="#{reg.mname}" /> 
                             <p:message for="mname"/>
                         </div>
                         <div class="form-group">
@@ -101,16 +112,11 @@
 
                         </div>
                         <div class="form-group">
-                            <p:outputLabel value="Class: "></p:outputLabel>
-                            <p:selectOneMenu id="grad" class="form-control" value="#{reg.staffGrade}" required="true" requiredMessage="Grade required">                                
-                                <p:ajax listener="#{classmode.ongradeChanges}" /> 
-                                <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
-                                <f:selectItems value="#{classmode.grademodels}"
-                                               var="singlevalue"  
-                                               itemLabel="#{singlevalue.grade}"
-                                               itemValue="#{singlevalue.grade}"/>
-                            </p:selectOneMenu>
+                            <p:outputLabel  for="dob" value="Date Employed: "/>
+                            <p:calendar id="dob" class="form-control" yearRange="1980:2017" pattern="dd/MM/yyyy" value="#{reg.doe}"  navigator="true" required="true" />
+                            <p:message for="dob"/>
                         </div>
+
 
 
                     </div>

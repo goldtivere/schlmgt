@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,6 +50,7 @@ public class Register implements Serializable {
 
     private String fname;
     private String lname;
+    private String mname;
     private String username;
     private String password;
     private String emailadd;
@@ -62,6 +64,24 @@ public class Register implements Serializable {
     private String staffGrade;
     private String highQua;
     private String address;
+    private Date doe;
+
+    public String getMname() {
+        return mname;
+    }
+
+    public void setMname(String mname) {
+        this.mname = mname;
+    }
+
+    
+    public Date getDoe() {
+        return doe;
+    }
+
+    public void setDoe(Date doe) {
+        this.doe = doe;
+    }
 
     public String getAddress() {
         return address;
@@ -345,27 +365,30 @@ public class Register implements Serializable {
 
                         con.setAutoCommit(false);
                         //InputStream fin2 = file.getInputstream();
-
-                        String insert = "insert into user_details (first_name,last_name,username,image_name,email_address,role_id,"
-                                + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,highestqua,address) "
-                                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+                        String does = format.format(getDoe());
+                        String insert = "insert into user_details (first_name,middlename,last_name,username,image_name,email_address,role_id,"
+                                + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,highestqua,address,dateemployed) "
+                                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
                         pstmt = con.prepareStatement(insert);
 
                         pstmt.setString(1, getFname());
-                        pstmt.setString(2, getLname());
-                        pstmt.setString(3, getUsername());
-                        pstmt.setString(4, getPassport_url());
-                        pstmt.setString(5, getEmailadd());
-                        pstmt.setString(6, createdId);
-                        pstmt.setString(7, DateManipulation.dateAlone());
-                        pstmt.setString(8, DateManipulation.dateAndTime());
-                        pstmt.setString(9, createdby);
-                        pstmt.setBoolean(10, false);
-                        pstmt.setString(11, getStaffClass());
-                        pstmt.setString(12, getStaffGrade());
-                        pstmt.setString(13, getHighQua());
-                        pstmt.setString(14, getAddress());
+                        pstmt.setString(2, getMname());
+                        pstmt.setString(3, getLname());
+                        pstmt.setString(4, getUsername());
+                        pstmt.setString(5, getPassport_url());
+                        pstmt.setString(6, getEmailadd());
+                        pstmt.setString(7, createdId);
+                        pstmt.setString(8, DateManipulation.dateAlone());
+                        pstmt.setString(9, DateManipulation.dateAndTime());
+                        pstmt.setString(10, createdby);
+                        pstmt.setBoolean(11, false);
+                        pstmt.setString(12, getStaffClass());
+                        pstmt.setString(13, getStaffGrade());
+                        pstmt.setString(14, getHighQua());
+                        pstmt.setString(15, getAddress());
+                        pstmt.setString(16, does);
 
                         pstmt.executeUpdate();
 
@@ -404,7 +427,7 @@ public class Register implements Serializable {
 
         } catch (Exception e) {
             e.printStackTrace();
-            
+
         }
 
     }

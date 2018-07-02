@@ -90,6 +90,9 @@ public class Registration implements Serializable {
     }
 
     public void staffUpload(FileUploadEvent event) throws SQLException {
+        FacesMessage msg;
+        FacesMessage message;
+        FacesContext context = FacesContext.getCurrentInstance();
         UploadImagesX uploadImagesX = new UploadImagesX();
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
@@ -97,13 +100,274 @@ public class Registration implements Serializable {
         ResultSet rs = null;
         con = dbConnections.mySqlDBconnection();
         try {
+            FreshReg reg = new FreshReg();
+            StaffModel mode = new StaffModel();
+            List<String> studentDetails = new ArrayList<>();
+            studentDetails.add("FirstName");
+            studentDetails.add("MiddleName");
+            studentDetails.add("LastName");
+            studentDetails.add("EmailAddress");
+            studentDetails.add("PhoneNumber");
+            studentDetails.add("HighestQualification");
+            studentDetails.add("Address");
+            studentDetails.add("StaffClass");
+            studentDetails.add("StaffGrade");
+            studentDetails.add("DateEmployed");
 
             InputStream mn = event.getFile().getInputstream();
             XSSFWorkbook wb = new XSSFWorkbook(mn);
             XSSFSheet ws = wb.getSheetAt(0);
             Row row;
-        } catch (Exception exx) {
+            row = (Row) ws.getRow(0);
+            int rowNum = ws.getLastRowNum() + 1;
+            int val = 0;
+            int studentId;
 
+            String fullname = null;
+            String gfullname = null;
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+            String does = null;
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            String createdId
+                    = String.valueOf(userObj.getId());
+            DataFormatter df = new DataFormatter();
+            int success = 0;
+            int fail = 0;
+            if (studentDetails.size() == row.getPhysicalNumberOfCells()) {
+                for (int i = 0; i < studentDetails.size(); i++) {
+                    if (row.getCell(i).toString().equalsIgnoreCase(studentDetails.get(i))) {
+                        val++;
+                    } else {
+                        setMessangerOfTruth("Excel is in wrong format. It should be in this format: " + studentDetails.toString());
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                        context.addMessage(null, message);
+                        break;
+                    }
+                }
+
+                if (val == row.getPhysicalNumberOfCells()) {
+
+//                    if (getPnum().isEmpty() || getPnum().equals("")) {
+//                        setPnum(null);
+//                    }
+//                    if (getEmail().isEmpty() || getEmail().equals("")) {
+//                        setEmail(null);
+//                    }
+//                    if (getGpnum().isEmpty() || getGpnum().equals("")) {
+//                        setGpnum(null);
+//                    }
+//                    if (getGemail().isEmpty() || getGemail().equals("")) {
+//                        setGemail(null);
+//                    }
+                    Row ro = null;
+                    for (int i = 1; i < rowNum; i++) {
+                        ro = (Row) ws.getRow(i);
+                        if (ro.getCell(0) != null) {
+                            mode.setFname(ro.getCell(0).getStringCellValue());
+                        } else {
+                            setMessangerOfTruth("First Name is required: Row " + (i + 1));
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        }
+
+                        if (ro.getCell(1) != null) {
+                            mode.setMname(ro.getCell(1).getStringCellValue());
+                        } else {
+                            mode.setMname(null);
+                        }
+
+                        if (ro.getCell(2) != null) {
+                            mode.setLname(ro.getCell(2).getStringCellValue());
+                        } else {
+                            setMessangerOfTruth("Last Name is required: Row " + i);
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        }
+                        if (ro.getCell(3) != null) {
+                            mode.setEmail(ro.getCell(3).getStringCellValue());
+                        } else {
+                            setMessangerOfTruth("Email Address is required: Row " + i);
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        }
+                        if (ro.getCell(4) != null) {
+                            mode.setPnum(df.formatCellValue(ro.getCell(4)));
+                        } else {
+                            setMessangerOfTruth("Phone Number is required: Row " + i);
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        }
+                        if (ro.getCell(5) != null) {
+                            mode.setHighQua(ro.getCell(5).getStringCellValue());
+                        } else {
+                            mode.setHighQua(null);
+                        }
+                        if (ro.getCell(6) != null) {
+                            mode.setAddress(ro.getCell(6).getStringCellValue());
+                        } else {
+                            mode.setAddress(null);
+                        }
+                        if (ro.getCell(7) != null) {
+                            mode.setStaffClass(ro.getCell(7).getStringCellValue());
+                        } else {
+                            setMessangerOfTruth("Staff Class is required: Row " + i);
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        }
+                        if (ro.getCell(8) != null) {
+                            mode.setStaffGrade(ro.getCell(8).getStringCellValue());
+                        } else {
+                            setMessangerOfTruth("Staff Grade is required: Row " + i);
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        }
+                        if (ro.getCell(9) != null) {
+                            mode.setDoe(ro.getCell(9).getDateCellValue());
+                            does = format.format(mode.getDoe());
+                        } else {
+                            setMessangerOfTruth("Date employed is required: Row " + i);
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        }
+                        if (!"Nursery".equalsIgnoreCase(mode.getStaffClass()) && !"Primary".equalsIgnoreCase(mode.getStaffClass()) && !"Secondary".equalsIgnoreCase(mode.getStaffClass())) {
+                            setMessangerOfTruth("Staff Class field should be either ; Nursery, Primary or Secondary: Row " + (i + 1));
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        } else if ("Nursery".equalsIgnoreCase(mode.getStaffClass()) && (!"Nursery 1".equalsIgnoreCase(mode.getStaffGrade()) && !"Nursery 2".equalsIgnoreCase(mode.getStaffGrade()) && !"Nursery 3".equalsIgnoreCase(mode.getStaffGrade()))) {
+                            setMessangerOfTruth("Staff Class Nursery must have current grade Nursery 1,Nursery 2 or Nursery 3: Row " + (i + 1));
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        } else if ("Primary".equalsIgnoreCase(mode.getStaffClass()) && (!"Primary 1".equalsIgnoreCase(mode.getStaffGrade()) && !"Primary 2".equalsIgnoreCase(mode.getStaffGrade()) && !"Primary 3".equalsIgnoreCase(mode.getStaffGrade()) && !"Primary 4".equalsIgnoreCase(mode.getStaffGrade()) && !"Primary 5".equalsIgnoreCase(mode.getStaffGrade()))) {
+                            setMessangerOfTruth("Current Class Primary must have current grade Primary 1,Primary 2, Primary 3, Primary 4 or Primary 5: Row " + (i + 1));
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        } else if ("Secondary".equalsIgnoreCase(mode.getStaffClass()) && (!"Jss 1".equalsIgnoreCase(mode.getStaffGrade()) && !"Jss 2".equalsIgnoreCase(mode.getStaffGrade()) && !"Jss 3".equalsIgnoreCase(mode.getStaffGrade()) && !"SS 1".equalsIgnoreCase(mode.getStaffGrade()) && !"SS 2".equalsIgnoreCase(mode.getStaffGrade()) && !"SS 3".equalsIgnoreCase(mode.getStaffGrade()))) {
+                            setMessangerOfTruth("Previous Class Secondary must have current grade Nursery 1,Nursery 2 or Nursery 3: Row " + (i + 1));
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        }
+                        String testflname = "Select * from user_details where first_name=? and last_name=? and is_deleted=?";
+                        pstmt = con.prepareStatement(testflname);
+                        pstmt.setString(1, mode.getFname());
+                        pstmt.setString(2, mode.getLname());
+                        pstmt.setBoolean(3, false);
+                        rs = pstmt.executeQuery();
+                        if (rs.next()) {
+                            setMessangerOfTruth("First Name and Last Name Aleady exists!!");
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        } else {
+
+                            String testusername = "Select * from user_details where username=? and is_deleted=?";
+                            pstmt = con.prepareStatement(testusername);
+                            pstmt.setString(1, mode.getPnum());
+                            pstmt.setBoolean(2, false);
+                            rs = pstmt.executeQuery();
+                            if (rs.next()) {
+                                setMessangerOfTruth("Phone Number Aleady exists!!");
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else {
+
+                                String testemail = "Select * from user_details where email_address=? and is_deleted=?";
+                                pstmt = con.prepareStatement(testemail);
+                                pstmt.setString(1, mode.getEmail());
+                                pstmt.setBoolean(2, false);
+                                rs = pstmt.executeQuery();
+                                if (rs.next()) {
+                                    setMessangerOfTruth("Email Aleady exists!!");
+                                    msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                    context.addMessage(null, msg);
+                                    break;
+
+                                } else {
+                                    UUID idOne = UUID.randomUUID();
+                                    //InputStream fin2 = file.getInputstream();                                    
+                                    String insert = "insert into user_details (first_name,middlename,last_name,username,email_address,role_id,"
+                                            + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,highestqua,address,dateemployed) "
+                                            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+                                    pstmt = con.prepareStatement(insert);
+
+                                    pstmt.setString(1, mode.getFname());
+                                    pstmt.setString(2, mode.getMname());
+                                    pstmt.setString(3, mode.getLname());
+                                    pstmt.setString(4, mode.getPnum());
+                                    pstmt.setString(5, mode.getEmail());
+                                    pstmt.setString(6, createdId);
+                                    pstmt.setString(7, DateManipulation.dateAlone());
+                                    pstmt.setString(8, DateManipulation.dateAndTime());
+                                    pstmt.setString(9, createdby);
+                                    pstmt.setBoolean(10, false);
+                                    pstmt.setString(11, mode.getStaffClass());
+                                    pstmt.setString(12, mode.getStaffGrade());
+                                    pstmt.setString(13, mode.getHighQua());
+                                    pstmt.setString(14, mode.getAddress());
+                                    pstmt.setString(15, does);
+
+                                    pstmt.executeUpdate();
+
+                                    String fullnames = mode.getLname() + " " + mode.getFname();
+                                    String slink = "http://localhost:8080/SchlMgt/faces/pages/createStaff/index.xhtml?id=";
+                                    String insertemail = "insert into staffstatus (guid,fullname,status,datelogged,staffemail,datetime,staffphone,link)"
+                                            + "values(?,?,?,?,?,?,?,?)";
+
+                                    pstmt = con.prepareStatement(insertemail);
+                                    pstmt.setString(1, idOne.toString());
+                                    pstmt.setString(2, fullname);
+                                    pstmt.setBoolean(3, false);
+                                    pstmt.setString(4, DateManipulation.dateAlone());
+                                    pstmt.setString(5, mode.getEmail());
+                                    pstmt.setString(6, DateManipulation.dateAndTime());
+                                    pstmt.setString(7, mode.getPnum());
+                                    pstmt.setString(8, slink + idOne.toString());
+
+                                    pstmt.executeUpdate();
+                                    success++;
+                                    /**
+                                     * MailSender send = new MailSender();
+                                     * send.sendMail(user, pass, getEmailadd(),
+                                     * sub, content);*
+                                     */
+                                }
+                            }
+                        }
+
+                    }
+                    setMessangerOfTruth(success + " Staff Data Upload Successful");
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                    context.addMessage(null, message);
+                } else {
+                    setMessangerOfTruth("Excel is in wrong format. It should be in this format: " + studentDetails.toString());
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                    context.addMessage(null, message);
+                }
+            } else {
+                setMessangerOfTruth("Excel is in wrong format. It should be in this format: " + studentDetails.toString());
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, message);
+            }
+        } catch (IllegalStateException e) {
+            setMessangerOfTruth("Please format Phone number field to take text and not number");
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+            context.addMessage(null, message);
+        } catch (Exception exx) {
+            exx.printStackTrace();
         } finally {
 
             if (!(con == null)) {
@@ -209,11 +473,16 @@ public class Registration implements Serializable {
                     Row ro = null;
                     for (int i = 1; i < rowNum; i++) {
                         ro = (Row) ws.getRow(i);
-                        mode.setFname(ro.getCell(0).getStringCellValue());
+                        if (ro.getCell(0) != null) {
+                            mode.setFname(ro.getCell(0).getStringCellValue());
+                        } else {
+                            mode.setFname(null);
+                        }
+
                         if (ro.getCell(1) != null) {
                             mode.setMname(ro.getCell(1).getStringCellValue());
                         } else {
-                            mode.setPmname(null);
+                            mode.setMname(null);
                         }
 
                         if (ro.getCell(2) != null) {
@@ -573,6 +842,7 @@ public class Registration implements Serializable {
                 studentUpload(event);
                 setCsv(null);
             } else if ("2".equalsIgnoreCase(getRegistration())) {
+                staffUpload(event);
                 setCsv(null);
             }
         } catch (Exception ex) {
