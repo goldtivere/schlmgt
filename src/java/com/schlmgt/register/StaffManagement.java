@@ -1,0 +1,101 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.schlmgt.register;
+
+import com.schlmgt.dbconn.DbConnectionX;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+/**
+ *
+ * @author Gold
+ */
+@ManagedBean(name = "staff")
+@ViewScoped
+public class StaffManagement implements Serializable {
+
+    private List<StaffModel> staff;
+
+    @PostConstruct
+    public void init() {
+        try {
+            staff = staffDetails();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<StaffModel> staffDetails() throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        try {
+            List<StaffModel> lst = new ArrayList<>();
+            con = dbConnections.mySqlDBconnection();
+
+            String query = "SELECT * FROM user_details where is_deleted=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setBoolean(1, false);
+            rs = pstmt.executeQuery();
+            //
+
+            while (rs.next()) {
+
+                StaffModel coun = new StaffModel();
+                coun.setId(rs.getInt("id"));
+                coun.setFname(rs.getString("first_name"));
+                coun.setMname(rs.getString("middlename"));
+                coun.setLname(rs.getString("last_name"));
+                coun.setPnum(rs.getString("username"));
+                coun.setEmail(rs.getString("email_address"));
+                coun.setStaffClass(rs.getString("staffclass"));
+                coun.setStaffGrade(rs.getString("staffgrade"));
+                coun.setHighQua(rs.getString("HighestQua"));
+                coun.setAddress(rs.getString("address"));
+                coun.setDateEmployed(rs.getString("dateemployed"));
+                coun.setDateStopped(rs.getString("datestopped"));
+
+                //
+                lst.add(coun);
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public List<StaffModel> getStaff() {
+        return staff;
+    }
+
+    public void setStaff(List<StaffModel> staff) {
+        this.staff = staff;
+    }
+
+}

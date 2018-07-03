@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+
+    <ui:define name="title">
+        Student Details
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="row">           
+            <div class="ibox-content" style="margin-top: 20px;">
+                <div class="form-group">                                                        
+                        <p:dataTable id="s" class="table table-responsive" var="papprv_rpt" 
+                                     value="#{staff.staff}"
+                                     rowKey="#{papprv_rpt.id}"
+                                     paginatorTemplate="{CurrentPageReport}  
+                                     {FirstPageLink} {PreviousPageLink} 
+                                     {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
+                                     paginator="true"
+                                     rowsPerPageTemplate="5,10,15"
+                                     draggableColumns="true" rows="15" style="margin-bottom:20px">
+
+                            <f:facet name="{Exporters}">
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
+                                    <p:dataExporter type="xls" target="s" fileName="report" pageOnly="true"/>
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="pdf" target="s" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true">
+                                    <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="csv" target="s" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+
+                                <h:commandLink immediate="true" >
+                                    <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
+                                    <p:dataExporter type="xml" target="s" fileName="report" pageOnly="true" />
+                                </h:commandLink>
+                            </f:facet>                           
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="First Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.fname}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Middle Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.mname}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Last Name"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.lname}"/>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Highest Qualification"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.highQua}"/>
+
+                            </p:column>
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Address"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.address}"/>
+
+                            </p:column> 
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Class Assigned"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.staffGrade}"/>
+
+                            </p:column> 
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Date Employed"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.dateEmployed}"/>
+
+                            </p:column> 
+                            <p:column style="width:60px" exportable="false">
+                                <f:facet name="header">Action</f:facet>
+                                <p:commandButton value="" icon="ui-icon-search" process="@this"
+                                                 actionListener="#{prof.selectReco(papprv_rpt)}"/>                               
+                            </p:column>
+                        </p:dataTable> 
+                   
+                </div>
+            </div>
+
+        </div>
+    </ui:define>
+
+
+</ui:composition>

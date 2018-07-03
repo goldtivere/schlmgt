@@ -13,6 +13,7 @@ import java.util.Date;
  * @author Gold
  */
 public class StaffModel implements Serializable{
+    private int id;
     private String fname;
     private String mname;
     private String lname;
@@ -23,7 +24,43 @@ public class StaffModel implements Serializable{
     private String staffClass;
     private String staffGrade;
     private Date doe;
+    private String dateEmployed;
+    private String dateStopped;
+    private Date das;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDateEmployed() {
+        return dateEmployed;
+    }
+
+    public void setDateEmployed(String dateEmployed) {
+        this.dateEmployed = dateEmployed;
+    }
+
+    public String getDateStopped() {
+        return dateStopped;
+    }
+
+    public void setDateStopped(String dateStopped) {
+        this.dateStopped = dateStopped;
+    }
+
+    public Date getDas() {
+        return das;
+    }
+
+    public void setDas(Date das) {
+        this.das = das;
+    }
+
+    
     public String getFname() {
         return fname;
     }
