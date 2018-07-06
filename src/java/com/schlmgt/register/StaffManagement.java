@@ -14,8 +14,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.NavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -26,6 +28,8 @@ import javax.faces.bean.ViewScoped;
 public class StaffManagement implements Serializable {
 
     private List<StaffModel> staff;
+    private List<StaffModel> staff1;
+    private List<StaffModel> staff2;
 
     @PostConstruct
     public void init() {
@@ -88,6 +92,39 @@ public class StaffManagement implements Serializable {
             }
 
         }
+    }
+
+    public void selectReco(StaffModel secRecord) {
+
+        try {
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            NavigationHandler nav = ctx.getApplication().getNavigationHandler();
+            ctx.getExternalContext().getApplicationMap().remove("staffRecord");
+            ctx.getExternalContext().getApplicationMap().put("staffRecord", secRecord);
+            String url = "staffProfile.xhtml?faces-redirect=true";
+            nav.handleNavigation(ctx, null, url);
+            ctx.renderResponse();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public List<StaffModel> getStaff1() {
+        return staff1;
+    }
+
+    public void setStaff1(List<StaffModel> staff1) {
+        this.staff1 = staff1;
+    }
+
+    public List<StaffModel> getStaff2() {
+        return staff2;
+    }
+
+    public void setStaff2(List<StaffModel> staff2) {
+        this.staff2 = staff2;
     }
 
     public List<StaffModel> getStaff() {
