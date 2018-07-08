@@ -17,7 +17,127 @@
 
 
     <ui:define name="content2">
-        
+        <div class="row">
+            <div class="ibox-content">
+                <p:panel id="pan">
+                    <p:accordionPanel id="ss">
+                        <p:tab title="Staff Details" id="sss">                               
+                            <h:panelGrid columns="2" cellpadding="10">
+                                <h:outputText value="First Name: "/> <h:outputText value="#{staffProfile.fname}"/> 
+                                <h:outputText value="Middle Name: "/> <h:outputText value="#{staffProfile.mname}"/> 
+                                <h:outputText value="Last Name: "/> <h:outputText value="#{staffProfile.lname}"/>                     
+                                <h:outputText value="Phone Number: "/> <h:outputText value="#{staffProfile.pnum}"/> 
+                                <h:outputText value="Email: "/> <h:outputText value="#{staffProfile.email}"/> 
+                                <h:outputText value="Date Employed: "/> <h:outputText value="#{staffProfile.dateEmployed}"/>
+                                <h:outputText value="Class Assigned: "/> <h:outputText value="#{staffProfile.staffGrade}"/>
+                                <h:outputText value="Staff Qualification: "/> <h:outputText value="#{staffProfile.highQua}"/>
+                                <h:outputText value="Staff Address "/> <h:outputText value="#{staffProfile.address}"/>
+
+                                <p:commandButton value="Update" class="pull-left" type="button" onclick="PF('dlg2').show();" />                               
+                            </h:panelGrid>                                                                                                       
+                        </p:tab>
+
+                        <p:tab title="Image">
+                            <p:panel id="imgPan">
+                                <h:panelGrid columns="9" cellpadding="10">
+                                    <div class="profile-userpic" style="height: 100px; width: 100px;" >
+                                        <img src="#{edit.imagelink}" class="img-responsive img-thumbnail" alt="#{edit.fullname}"/>
+                                    </div>  
+                                    <p:outputLabel value=""></p:outputLabel>
+                                    <p:outputLabel value=""></p:outputLabel>   
+                                    <p:fileUpload required="true" id="upload_pix_data" value="#{edit.passport}" auto="true"
+                                                  fileUploadListener="#{edit.handleFileUpload}" 
+                                                  mode="advanced" dragDropSupport="false"
+                                                  update="pst_img" sizeLimit="2097152" fileLimit="1" />                               
+                                    <p:commandButton value="clear" immediate="true" ajax="false"
+                                                     actionListener="#{edit.clearPix}" 
+                                                     update="upload_pix_data,pst_img"/>    
+                                    <p:outputLabel value="Passport:"/>
+                                    <p:graphicImage id="pst_img" class="img-responsive img-thumbnail" value="#{edit.passport_url}" style="width: 100px; height: 100px;" />
+                                    <p:outputLabel value=""></p:outputLabel>
+                                    <p:outputLabel value=""></p:outputLabel>                                
+                                    <p:commandButton value="Update" process="@this upload_pix_data" actionListener="#{edit.uploadPix}" update=":templateForm:growl,:templateForm:pan,:templateForm:okay2" class="pull-left" />    
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                    </p:accordionPanel> 
+
+                    <p:dialog header="Edit Profile" widgetVar="dlg2"                              
+                              position="center"
+                              minimizable="true"
+                              maximizable="true">                                        
+
+                        <h:form id="formProces">
+                            <p:panel id="damn">                                          
+                                <h:panelGrid columns="3" cellpadding="10">
+                                    <p:outputLabel for="fnames" value="First Name: "></p:outputLabel> 
+                                    <p:inputText id="fnames" required="true" value="#{staffProfile.fname}" requiredMessage="First name is required" />
+                                    <p:message for="fnames"/>
+                                    <p:outputLabel for="mnames" value="Middle Name: "></p:outputLabel> 
+                                    <p:inputText id="mnames" value="#{staffProfile.mname}" requiredMessage="Middle name is required" />
+                                    <p:message for="mnames"/>
+                                    <p:outputLabel for="lnames" value="Last Name: "></p:outputLabel> 
+                                    <p:inputText id="lnames" required="true" value="#{staffProfile.lname}" requiredMessage="Last name is required" />
+                                    <p:message for="lnames"/>
+                                    <p:outputLabel for="pnums" value="Phone Number: "></p:outputLabel>
+                                    <p:inputText id="pnums" required="true" value="#{staffProfile.pnum}" requiredMessage="Phone is required" maxlength="11" />
+                                    <p:message for="pnums"/>
+                                    <p:outputLabel for="emails" value="Email: "></p:outputLabel> 
+                                    <p:inputText id="emails" value="#{staffProfile.email}" label="email"
+                                                 requiredMessage="Please enter your email address."
+                                                 validatorMessage="Invalid email format"
+                                                 >
+
+                                        <f:validateRegex
+                                            pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                                    </p:inputText>
+                                    <p:message for="emails"/>
+                                    <p:outputLabel for="dobs" value="Date Employed: "/> 
+                                    <p:calendar id="dobs" yearRange="1980:2017" value="#{staffProfile.dateEmployed}" pattern="dd/MM/yyyy"  navigator="true" requiredMessage="Date Employed is required" required="true">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </p:calendar>
+                                    <p:message for="dobs"/>  
+                                    <p:outputLabel for="sclass" value="Staff Class: "/> 
+                                    <p:selectOneMenu id="sclass" class="form-control" value="#{staffProfile.staffClass}" required="true" requiredMessage="Class required">
+                                        <p:ajax listener="#{staffProfile.onClassChange}" update="grad" />
+                                        <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
+                                        <f:selectItems value="#{staffProfile.classmodel}"
+                                                       var="singlevalue"  
+                                                       itemLabel="#{singlevalue.tbclass}"
+                                                       itemValue="#{singlevalue.tbclass}"/>
+                                    </p:selectOneMenu>                                    
+                                    <p:message for="sclass"/>
+
+                                    <p:outputLabel for="grad" value="Staff Grade: "/> 
+                                    <p:selectOneMenu id="grad" class="form-control" value="#{staffProfile.staffGrade}" required="true" requiredMessage="Grade required">                                        
+                                        <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
+                                        <f:selectItems value="#{staffProfile.grademodels}"
+                                                       var="singlevalue"  
+                                                       itemLabel="#{singlevalue.grade}"
+                                                       itemValue="#{singlevalue.grade}"/>
+                                    </p:selectOneMenu>                                    
+                                    <p:message for="grad"/>  
+                                    <f:facet name="footer">
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs" update=":templateForm:growl,:templateForm:pan,:templateForm:okayy" actionListener="#{edit.updateStudentDetails}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                    </f:facet>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+                    </p:dialog>
+                </p:panel>
+            </div>
+            <script type="text/javascript">
+                function handleLoginRequests(xhr, status, args) {
+                    if (args.validationFailed || !args.loggedIn) {
+                        PF('dlg2').jq.effect("shake", {times: 5}, 100);
+                    } else {
+                        PF('dlg2').hide();
+                        $('#loginLink').fadeOut();
+                    }
+                }
+            </script>
+        </div>
 
     </ui:define>
 
