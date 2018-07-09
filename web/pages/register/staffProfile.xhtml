@@ -18,6 +18,7 @@
 
     <ui:define name="content2">
         <div class="row">
+            <p:growl id="growl"></p:growl>
             <div class="ibox-content">
                 <p:panel id="pan">
                     <p:accordionPanel id="ss">
@@ -94,7 +95,7 @@
                                     </p:inputText>
                                     <p:message for="emails"/>
                                     <p:outputLabel for="dobs" value="Date Employed: "/> 
-                                    <p:calendar id="dobs" yearRange="1980:2017" value="#{staffProfile.dateEmployed}" pattern="dd/MM/yyyy"  navigator="true" requiredMessage="Date Employed is required" required="true">
+                                    <p:calendar id="dobs" yearRange="1980:2017" value="#{staffProfile.doe}" pattern="dd/MM/yyyy"  navigator="true" requiredMessage="Date Employed is required" required="true">
                                         <f:convertDateTime pattern="dd/MM/yyyy" />
                                     </p:calendar>
                                     <p:message for="dobs"/>  
@@ -119,7 +120,7 @@
                                     </p:selectOneMenu>                                    
                                     <p:message for="grad"/>  
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs" update=":templateForm:growl,:templateForm:pan,:templateForm:okayy" actionListener="#{edit.updateStudentDetails}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs,sclass,grad" update=":templateForm:growl,:templateForm:pan" actionListener="#{staffProfile.staffUpload}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
