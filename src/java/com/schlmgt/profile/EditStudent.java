@@ -805,6 +805,43 @@ public class EditStudent implements Serializable {
 
     }
 
+    public int studentNameCheck(String fname, String lname) throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        con = dbConnections.mySqlDBconnection();
+        String testflname = "Select count(*) studentCount from student_details where first_name=? and last_name=? and is_deleted=?";
+        pstmt = con.prepareStatement(testflname);
+        pstmt.setString(1, fname);
+        pstmt.setString(2, lname);
+        pstmt.setBoolean(3, false);
+        rs = pstmt.executeQuery();
+
+        rs.next();
+        return rs.getInt("studentCount");
+
+    }
+
+    public String studentCheck(String fname, String lname) throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        con = dbConnections.mySqlDBconnection();
+        String testflname = "Select studentid from student_details where first_name=? and last_name=? and is_deleted=?";
+        pstmt = con.prepareStatement(testflname);
+        pstmt.setString(1, fname);
+        pstmt.setString(2, lname);
+        pstmt.setBoolean(3, false);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return rs.getString("studentid");
+        }
+        return "";
+    }
+
     public void updateClass() {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
@@ -867,32 +904,39 @@ public class EditStudent implements Serializable {
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
             String dobs = format.format(getDateOfBirth());
             con = dbConnections.mySqlDBconnection();
+            System.out.println(studentNameCheck(getFname(), getLname()) + " who you be " + studentCheck(getFname(), getLname()));
+            if (studentNameCheck(getFname(), getLname()) <= 1 && studentCheck(getFname(), getLname()).equalsIgnoreCase(getStudentid())) {
+                String personalDetails = "update student_details set first_name=? ,middle_name=?, last_name=?, fullname=?, dob=?,"
+                        + "student_phone=? , student_email=?, sex=? ,updated_by=?,updated_id=?,date_updated=? where studentid=?";
 
-            String personalDetails = "update student_details set first_name=? ,middle_name=?, last_name=?, fullname=?, dob=?,"
-                    + "student_phone=? , student_email=?, sex=? ,updated_by=?,updated_id=?,date_updated=? where studentid=?";
+                pstmt = con.prepareStatement(personalDetails);
 
-            pstmt = con.prepareStatement(personalDetails);
-
-            pstmt.setString(1, getFname());
-            pstmt.setString(2, getMname());
-            pstmt.setString(3, getLname());
-            pstmt.setString(4, fullname);
-            pstmt.setString(5, dobs);
-            pstmt.setString(6, getSphone());
-            pstmt.setString(7, getSemail());
-            pstmt.setString(8, getSex());
-            pstmt.setString(9, createdby);
-            pstmt.setInt(10, createdId);
-            pstmt.setString(11, DateManipulation.dateAndTime());
-            pstmt.setString(12, getStudentid());
-            System.out.println(getStudentid());
-            pstmt.executeUpdate();
-            updateClass();
-            setMessangerOfTruth("Personal Details Updated!!");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-            context.addMessage(null, msg);
-            StudentNumber();
-            cont.addCallbackParam("loggedIn", loggedIn);
+                pstmt.setString(1, getFname());
+                pstmt.setString(2, getMname());
+                pstmt.setString(3, getLname());
+                pstmt.setString(4, fullname);
+                pstmt.setString(5, dobs);
+                pstmt.setString(6, getSphone());
+                pstmt.setString(7, getSemail());
+                pstmt.setString(8, getSex());
+                pstmt.setString(9, createdby);
+                pstmt.setInt(10, createdId);
+                pstmt.setString(11, DateManipulation.dateAndTime());
+                pstmt.setString(12, getStudentid());
+                System.out.println(getStudentid());
+                pstmt.executeUpdate();
+                updateClass();
+                setMessangerOfTruth("Personal Details Updated!!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+                StudentNumber();
+                cont.addCallbackParam("loggedIn", loggedIn);
+            } else {
+                setMessangerOfTruth("First Name and Lastname Already Exists !!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+                cont.addCallbackParam("loggedIn", loggedIn);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -595,7 +595,7 @@ public class Registration implements Serializable {
                         }
 
                         if (ro.getCell(20) != null) {
-                            mode.setYear(ro.getCell(20).toString());
+                            mode.setYear(df.formatCellValue(ro.getCell(20)));
                         } else {
                             mode.setYear(null);
                         }
@@ -605,26 +605,6 @@ public class Registration implements Serializable {
                         if (reg.studentNameCheck(mode.getFname(), mode.getLname())) {
 
                             setMessangerOfTruth("Firstname: " + mode.getFname() + " and Lastname: " + mode.getLname() + " exists in row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (reg.studentEmailCheck(mode.getEmail(), mode.getPemail())) {
-                            setMessangerOfTruth("Email Aleady exists. Row: " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (reg.studentPhoneCheck(mode.getPnum(), mode.getPpnum())) {
-                            setMessangerOfTruth("Phone Aleady exists. Row: " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (reg.guardianEmailCheck(mode.getEmail(), mode.getPemail())) {
-                            setMessangerOfTruth("Email exists. Row: " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (reg.guardianphoneCheck(mode.getPnum(), mode.getPpnum())) {
-                            setMessangerOfTruth("Phone Aleady exists. Row" + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;

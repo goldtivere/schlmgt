@@ -650,7 +650,7 @@ public class FreshReg implements Serializable {
         ref_number = generateRefNo();
     }
 
-    public boolean studentNameCheck(String fname,String lname) throws SQLException {
+    public boolean studentNameCheck(String fname, String lname) throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -685,7 +685,7 @@ public class FreshReg implements Serializable {
         return 0;
     }
 
-    public boolean studentEmailCheck(String email,String gmail) throws SQLException {
+    public boolean studentEmailCheck(String email, String gmail) throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -705,7 +705,7 @@ public class FreshReg implements Serializable {
         return false;
     }
 
-    public boolean studentPhoneCheck(String pnum,String gpnum) throws SQLException {
+    public boolean studentPhoneCheck(String pnum, String gpnum) throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -826,23 +826,18 @@ public class FreshReg implements Serializable {
             con = dbConnections.mySqlDBconnection();
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
             String dob = format.format(getDob());
-            
-            
+
             //check if phone number and email of both parent an student is empty
-            if(getPnum().isEmpty() || getPnum().equals(""))
-            {
+            if (getPnum().isEmpty() || getPnum().equals("")) {
                 setPnum(null);
             }
-             if(getEmail().isEmpty() || getEmail().equals(""))
-            {
+            if (getEmail().isEmpty() || getEmail().equals("")) {
                 setEmail(null);
             }
-              if(getGpnum().isEmpty() || getGpnum().equals(""))
-            {
+            if (getGpnum().isEmpty() || getGpnum().equals("")) {
                 setGpnum(null);
             }
-             if(getGemail().isEmpty() || getGemail().equals(""))
-            {
+            if (getGemail().isEmpty() || getGemail().equals("")) {
                 setGemail(null);
             }
 
@@ -1031,25 +1026,9 @@ public class FreshReg implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
 
         FacesMessage msg;
-        if (studentNameCheck(getFname(),getLname())) {
-            System.out.println(studentNameCheck(getFname(),getLname()));
+        if (studentNameCheck(getFname(), getLname())) {
+            System.out.println(studentNameCheck(getFname(), getLname()));
             setMessangerOfTruth("Firstname and Lastname exists!!");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-            context.addMessage(null, msg);
-        } else if (studentEmailCheck(getEmail(),getGemail())) {
-            setMessangerOfTruth("Email Aleady exists!!");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-            context.addMessage(null, msg);
-        } else if (studentPhoneCheck(getPnum(),getGpnum())) {
-            setMessangerOfTruth("Phone Aleady exists!!");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-            context.addMessage(null, msg);
-        } else if (guardianEmailCheck(getGemail(),getEmail())) {
-            setMessangerOfTruth("Email exists!!");
-            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-            context.addMessage(null, msg);
-        } else if (guardianphoneCheck(getGpnum(),getPnum())) {
-            setMessangerOfTruth("Phone Aleady exists!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
         } else {
@@ -1124,7 +1103,6 @@ public class FreshReg implements Serializable {
         this.modeGrade = modeGrade;
     }
 
-    
     public String getImageLocation() {
         return imageLocation;
     }
