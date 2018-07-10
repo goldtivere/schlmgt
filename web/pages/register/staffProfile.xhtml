@@ -18,7 +18,7 @@
 
     <ui:define name="content2">
         <div class="row">
-            <p:growl id="growl"></p:growl>
+            <p:growl id="grow"></p:growl>
             <div class="ibox-content">
                 <p:panel id="pan">
                     <p:accordionPanel id="ss">
@@ -57,7 +57,7 @@
                                     <p:graphicImage id="pst_img" class="img-responsive img-thumbnail" value="#{edit.passport_url}" style="width: 100px; height: 100px;" />
                                     <p:outputLabel value=""></p:outputLabel>
                                     <p:outputLabel value=""></p:outputLabel>                                
-                                    <p:commandButton value="Update" process="@this upload_pix_data" actionListener="#{edit.uploadPix}" update=":templateForm:growl,:templateForm:pan,:templateForm:okay2" class="pull-left" />    
+                                    <p:commandButton value="Update" process="@this upload_pix_data" actionListener="#{edit.uploadPix}" update=":templateForm:grow,:templateForm:pan,:templateForm:okay2" class="pull-left" />    
                                 </h:panelGrid>
                             </p:panel>
                         </p:tab>
@@ -94,6 +94,14 @@
 
                                     </p:inputText>
                                     <p:message for="emails"/>
+                                    <p:outputLabel for="add" value="Address: "></p:outputLabel>
+                                    <p:inputText id="add" required="true" value="#{staffProfile.address}" requiredMessage="Address is required" />
+                                    <p:message for="add"/>
+                                    
+                                    <p:outputLabel for="qua" value="Highest Qualification: "></p:outputLabel>
+                                    <p:inputText id="qua" required="true" value="#{staffProfile.highQua}" requiredMessage="Highest Qualification is required" />
+                                    <p:message for="qua"/>
+                                    
                                     <p:outputLabel for="dobs" value="Date Employed: "/> 
                                     <p:calendar id="dobs" yearRange="1980:2017" value="#{staffProfile.doe}" pattern="dd/MM/yyyy"  navigator="true" requiredMessage="Date Employed is required" required="true">
                                         <f:convertDateTime pattern="dd/MM/yyyy" />
@@ -120,7 +128,7 @@
                                     </p:selectOneMenu>                                    
                                     <p:message for="grad"/>  
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs,sclass,grad" update=":templateForm:growl,:templateForm:pan" actionListener="#{staffProfile.staffUpload}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs,sclass,grad,add,qua" update=":templateForm:growl,:templateForm:pan" actionListener="#{staffProfile.staffUpload}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
