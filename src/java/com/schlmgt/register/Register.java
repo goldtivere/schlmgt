@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
@@ -64,7 +65,16 @@ public class Register implements Serializable {
     private String staffGrade;
     private String highQua;
     private String address;
+    private String year;
     private Date doe;
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     public String getMname() {
         return mname;
@@ -74,7 +84,6 @@ public class Register implements Serializable {
         this.mname = mname;
     }
 
-    
     public Date getDoe() {
         return doe;
     }
@@ -294,6 +303,51 @@ public class Register implements Serializable {
 
     }
 
+    public int staffIdCheck() throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        con = dbConnections.mySqlDBconnection();
+        String testflname = "Select * from user_details order by id DESC LIMIT 1";
+        pstmt = con.prepareStatement(testflname);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt("id");
+        }
+        return 0;
+    }
+
+    public void classUpload(int studentId, String staffclass, String staffgrade, String year, String createdby) {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = dbConnections.mySqlDBconnection();
+
+            String nurseryInsert = "insert into tbstaffclass (staffid,staffclass,staffgrade,year,datecreated,"
+                    + "datetimecreated,createdby) values "
+                    + "(?,?,?,?,?,?,?)";
+
+            pstmt = con.prepareStatement(nurseryInsert);
+
+            pstmt.setInt(1, studentId);
+            pstmt.setString(2, staffclass);
+            pstmt.setString(3, staffgrade);
+            pstmt.setString(4, year);
+            pstmt.setString(5, DateManipulation.dateAlone());
+            pstmt.setString(6, DateManipulation.dateAndTime());
+            pstmt.setString(7, createdby);
+            pstmt.executeUpdate();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void register() {
 
         FacesContext context = FacesContext.getCurrentInstance();
@@ -368,8 +422,8 @@ public class Register implements Serializable {
                         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
                         String does = format.format(getDoe());
                         String insert = "insert into user_details (first_name,middlename,last_name,username,image_name,email_address,role_id,"
-                                + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,highestqua,address,dateemployed) "
-                                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed) "
+                                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
                         pstmt = con.prepareStatement(insert);
 
@@ -386,9 +440,10 @@ public class Register implements Serializable {
                         pstmt.setBoolean(11, false);
                         pstmt.setString(12, getStaffClass());
                         pstmt.setString(13, getStaffGrade());
-                        pstmt.setString(14, getHighQua());
-                        pstmt.setString(15, getAddress());
-                        pstmt.setString(16, does);
+                        pstmt.setString(14, getYear());
+                        pstmt.setString(15, getHighQua());
+                        pstmt.setString(16, getAddress());
+                        pstmt.setString(17, does);
 
                         pstmt.executeUpdate();
 
@@ -408,6 +463,8 @@ public class Register implements Serializable {
                         pstmt.setString(8, slink + idOne.toString());
 
                         pstmt.executeUpdate();
+
+                        classUpload(staffIdCheck(), getStaffClass(), getStaffGrade(), getYear(), createdby);
 
                         /**
                          * MailSender send = new MailSender();

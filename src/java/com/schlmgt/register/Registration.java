@@ -102,6 +102,7 @@ public class Registration implements Serializable {
         try {
             FreshReg reg = new FreshReg();
             StaffModel mode = new StaffModel();
+            Register rg = new Register();
             List<String> studentDetails = new ArrayList<>();
             studentDetails.add("FirstName");
             studentDetails.add("MiddleName");
@@ -113,6 +114,7 @@ public class Registration implements Serializable {
             studentDetails.add("StaffClass");
             studentDetails.add("StaffGrade");
             studentDetails.add("DateEmployed");
+            studentDetails.add("StaffYear");
 
             InputStream mn = event.getFile().getInputstream();
             XSSFWorkbook wb = new XSSFWorkbook(mn);
@@ -238,6 +240,14 @@ public class Registration implements Serializable {
                             context.addMessage(null, msg);
                             break;
                         }
+                        if (ro.getCell(10) != null) {
+                            mode.setYear(df.formatCellValue(ro.getCell(10)));
+                        } else {
+                            setMessangerOfTruth("Staff Year is required. Row: " + i);
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        }
                         if (!"Nursery".equalsIgnoreCase(mode.getStaffClass()) && !"Primary".equalsIgnoreCase(mode.getStaffClass()) && !"Secondary".equalsIgnoreCase(mode.getStaffClass())) {
                             setMessangerOfTruth("Staff Class field should be either ; Nursery, Primary or Secondary: Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
@@ -299,8 +309,8 @@ public class Registration implements Serializable {
                                     UUID idOne = UUID.randomUUID();
                                     //InputStream fin2 = file.getInputstream();                                    
                                     String insert = "insert into user_details (first_name,middlename,last_name,username,email_address,role_id,"
-                                            + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,highestqua,address,dateemployed) "
-                                            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                            + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed) "
+                                            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
                                     pstmt = con.prepareStatement(insert);
 
@@ -316,9 +326,10 @@ public class Registration implements Serializable {
                                     pstmt.setBoolean(10, false);
                                     pstmt.setString(11, mode.getStaffClass());
                                     pstmt.setString(12, mode.getStaffGrade());
-                                    pstmt.setString(13, mode.getHighQua());
-                                    pstmt.setString(14, mode.getAddress());
-                                    pstmt.setString(15, does);
+                                    pstmt.setString(13, mode.getYear());
+                                    pstmt.setString(14, mode.getHighQua());
+                                    pstmt.setString(15, mode.getAddress());
+                                    pstmt.setString(16, does);
 
                                     pstmt.executeUpdate();
 
@@ -338,6 +349,7 @@ public class Registration implements Serializable {
                                     pstmt.setString(8, slink + idOne.toString());
 
                                     pstmt.executeUpdate();
+                                    rg.classUpload(rg.staffIdCheck(), mode.getStaffClass(), mode.getStaffGrade(), mode.getYear(), createdby);
                                     success++;
                                     /**
                                      * MailSender send = new MailSender();

@@ -27,6 +27,7 @@ public class StaffModel implements Serializable{
     private String dateEmployed;
     private String dateStopped;
     private Date das;
+    private String year;
 
     public int getId() {
         return id;
@@ -139,6 +140,14 @@ public class StaffModel implements Serializable{
 
     public void setDoe(Date doe) {
         this.doe = doe;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
     
 }

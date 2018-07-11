@@ -71,6 +71,12 @@
                                                itemValue="#{singlevalue.grade}"/>
                             </p:selectOneMenu>
                         </div>
+                        <div class="form-group">
+                            <p:selectOneMenu id="gr" class="form-control" value="#{reg.year}" required="true" requiredMessage="Year required">                                  
+                                <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{classmode.term}"/>
+                            </p:selectOneMenu>
+                        </div>
 
 
                     </div>
