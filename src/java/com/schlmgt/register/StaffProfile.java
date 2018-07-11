@@ -54,12 +54,19 @@ public class StaffProfile implements Serializable {
     private List<GradeModel> grademodels;
     private List<ClassModel> classmodel;
     private String messangerOfTruth;
+    private String year;
+    private List<String> term;
+    private List<ModelStaff> sesTab1;
+    private List<ModelStaff> sesTab;
+    private ModelStaff tab = new ModelStaff();
     // private String 
 
     @PostConstruct
     public void init() {
         try {
             staffDetails();
+            sesTab1 = displayStaff();
+            term = yearDropdown();
             grademodels = gradeDropdowns();
             classmodel = classDropdown();
             System.out.println(getStaffGrade() + " this is the grade");
@@ -154,7 +161,7 @@ public class StaffProfile implements Serializable {
             int createdId = userObj.getId();
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
             String dobs = format.format(getDoe());
-            con = dbConnections.mySqlDBconnection();            
+            con = dbConnections.mySqlDBconnection();
             if (!staffPhoneCheck(getPnum(), getId())) {
                 setMessangerOfTruth("Phone Number Already Exists !!");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
@@ -171,8 +178,8 @@ public class StaffProfile implements Serializable {
                 context.addMessage(null, msg);
                 cont.addCallbackParam("loggedIn", loggedIn);
             } else if (staffNameCheck(getFname(), getLname(), getId()) && staffCheck(getEmail(), getId()) && staffPhoneCheck(getPnum(), getId())) {
-                String personalDetails = "update user_details set first_name=? ,middlename=?,last_name=?, username=?, email_address=?, staffClass=?,"
-                        + "staffgrade=? , highestqua=?, address=? ,dateupdated=?,datetimeupdated=?,updatedby=? where username=? and id=?";
+                String personalDetails = "update user_details set first_name=? ,middlename=?,last_name=?, username=?, email_address=?,"
+                        + "highestqua=?, address=? ,dateupdated=?,datetimeupdated=?,updatedby=? where id=?";
 
                 pstmt = con.prepareStatement(personalDetails);
 
@@ -181,15 +188,12 @@ public class StaffProfile implements Serializable {
                 pstmt.setString(3, getLname());
                 pstmt.setString(4, getPnum());
                 pstmt.setString(5, getEmail());
-                pstmt.setString(6, getStaffClass());
-                pstmt.setString(7, getStaffGrade());
-                pstmt.setString(8, getHighQua());
-                pstmt.setString(9, getAddress());
-                pstmt.setString(10, DateManipulation.dateAlone());
-                pstmt.setString(11, DateManipulation.dateAndTime());
-                pstmt.setString(12, createdby);
-                pstmt.setString(13, getPnum());
-                pstmt.setInt(14, getId());
+                pstmt.setString(6, getHighQua());
+                pstmt.setString(7, getAddress());
+                pstmt.setString(8, DateManipulation.dateAlone());
+                pstmt.setString(9, DateManipulation.dateAndTime());
+                pstmt.setString(10, createdby);
+                pstmt.setInt(11, getId());
                 pstmt.executeUpdate();
                 setMessangerOfTruth("Personal Details Updated!!");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
@@ -232,7 +236,8 @@ public class StaffProfile implements Serializable {
                 setImage_name(rs.getString("image_name"));
                 setEmail(rs.getString("email_address"));
                 setStaffClass(rs.getString("staffClass"));
-                setStaffGrade("Nursery 1");
+                setStaffGrade(rs.getString("staffgrade"));
+                setYear(rs.getString("staffYear"));
                 setId(rs.getInt("id"));
                 setHighQua(rs.getString("highestqua"));
                 setAddress(rs.getString("address"));
@@ -248,6 +253,102 @@ public class StaffProfile implements Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public List<ModelStaff> displayStaff() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbstaffclass where staffid=? order by id desc";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, getId());
+            rs = pstmt.executeQuery();
+            //
+            List<ModelStaff> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                ModelStaff coun = new ModelStaff();
+                coun.setId(rs.getInt("id"));
+                coun.setStaffid(rs.getInt("staffid"));
+                coun.setStaffClass(rs.getString("staffclass"));
+                coun.setStaffGrade(rs.getString("staffgrade"));
+                coun.setYear(rs.getString("year"));
+
+                //
+                lst.add(coun);
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public List<String> yearDropdown() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT distinct year FROM yearterm";
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            //
+            List<String> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                lst.add(rs.getString("year"));
+
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public void ontermChanges() throws Exception {
+
+        term = yearDropdown();
+
     }
 
     public List<ClassModel> classDropdown() throws Exception {
@@ -295,12 +396,44 @@ public class StaffProfile implements Serializable {
         }
     }
 
+    public List<ModelStaff> getSesTab() {
+        return sesTab;
+    }
+
+    public void setSesTab(List<ModelStaff> sesTab) {
+        this.sesTab = sesTab;
+    }
+
+    public List<ModelStaff> getSesTab1() {
+        return sesTab1;
+    }
+
+    public void setSesTab1(List<ModelStaff> sesTab1) {
+        this.sesTab1 = sesTab1;
+    }
+
+    public List<String> getTerm() {
+        return term;
+    }
+
+    public void setTerm(List<String> term) {
+        this.term = term;
+    }
+
     public String getMessangerOfTruth() {
         return messangerOfTruth;
     }
 
     public void setMessangerOfTruth(String messangerOfTruth) {
         this.messangerOfTruth = messangerOfTruth;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public List<ClassModel> getClassmodel() {
