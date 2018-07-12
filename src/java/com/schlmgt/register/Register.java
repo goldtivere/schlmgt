@@ -330,7 +330,7 @@ public class Register implements Serializable {
             
             String nurseryInsert = "insert into tbstaffclass (staffid,staffclass,staffgrade,year,datecreated,"
                     + "datetimecreated,createdby,status) values "
-                    + "(?,?,?,?,?,?,?)";
+                    + "(?,?,?,?,?,?,?,?)";
             
             pstmt = con.prepareStatement(nurseryInsert);
             

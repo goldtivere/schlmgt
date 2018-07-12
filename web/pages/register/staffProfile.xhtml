@@ -39,59 +39,57 @@
                         <p:tab title="Asigned Class">
                             <p:panel id="classAssigned">
                                 <h:panelGrid columns="2" cellpadding="10">
-                                    <h:outputText value="Class Assigned: "/> <h:outputText value="#{staffProfile.staffGrade}"/> 
-                                    <h:outputText value="Year: "/> <h:outputText value="#{staffProfile.year}"/> 
-                                    <p:commandButton value="Update" class="pull-left" type="button" onclick="PF('dlg1').show();" />                               
-
-                                    <p:dataTable id="n" class="table table-responsive" scrollable="true" scrollHeight="150" var="papprv_rpt" 
-                                                 value="#{staffProfile.sesTab1}"
-                                                 selection="#{staffProfile.sesTab}"
-                                                 rowKey="#{papprv_rpt.id}"
-                                                 paginatorTemplate="{CurrentPageReport}  
-                                                 {FirstPageLink} {PreviousPageLink} 
-                                                 {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                                                 paginator="true"
-                                                 rowsPerPageTemplate="5,10,15"
-                                                 draggableColumns="true" rows="15" style="margin-bottom:20px">  
-                                        <f:facet name="{Exporters}">
-                                            <h:commandLink immediate="true">
-                                                <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
-                                                <p:dataExporter type="xls" target="n" fileName="report" pageOnly="true"/>
-                                            </h:commandLink>
-
-                                            <h:commandLink immediate="true">
-                                                <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
-                                                <p:dataExporter type="pdf" target="n" fileName="report" pageOnly="true" />
-                                            </h:commandLink>
-
-                                            <h:commandLink immediate="true">
-                                                <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
-                                                <p:dataExporter type="csv" target="n" fileName="report" pageOnly="true" />
-                                            </h:commandLink>
-
-                                            <h:commandLink immediate="true" >
-                                                <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
-                                                <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
-                                            </h:commandLink>
-                                        </f:facet>                            
-                                        <p:column selectionMode="multiple" style="width:30px;text-align:center"/>
-                                        <p:column headerText="Staff class">
-                                            <h:outputText value="#{papprv_rpt.staffGrade}"/>
-
-                                        </p:column>
-                                        <p:column headerText="Year">
-                                            <h:outputText value="#{papprv_rpt.year}"/>
-
-                                        </p:column>
-                                        <p:column headerText="Action" style="width:60px" exportable="false">                                
-                                            <p:commandButton value="" alt="search" id="please" icon="ui-icon-pencil" update=":templateForm:oo:oay" process="@this" 
-                                                             oncomplete="PF('dlg3').show()"> 
-                                                <f:setPropertyActionListener value="#{papprv_rpt}" target="#{staffProfile.tab}" />
-                                            </p:commandButton>                               
-                                        </p:column>                                        
-                                    </p:dataTable>                                     
+                                    <h:outputText value="Class Assigned: "/> <h:outputText value="#{staffProfile.staffGrade2}"/> 
+                                    <h:outputText value="Year: "/> <h:outputText value="#{staffProfile.year1}"/> 
+                                    <p:commandButton value="Insert" class="pull-left" type="button" onclick="PF('dlg1').show();" />                                                                   
                                 </h:panelGrid>
+                                <br/>
+                                <p:dataTable id="staffTab" class="table table-responsive" var="papprv_rpt" 
+                                             value="#{staffProfile.sesTab1}"
+                                             selection="#{staffProfile.sesTab}"
+                                             rowKey="#{papprv_rpt.id}"
+                                             paginatorTemplate="{CurrentPageReport}  
+                                             {FirstPageLink} {PreviousPageLink} 
+                                             {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                             paginator="true"
+                                             rowsPerPageTemplate="5,10,15"
+                                             draggableColumns="true" rows="15" style="margin-bottom:20px">  
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage value="/images/excel.png" style="width: 20px; height: 20px;" />
+                                            <p:dataExporter type="xls" target="n" fileName="report" pageOnly="true"/>
+                                        </h:commandLink>
 
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage value="/images/pdf.png" style="width: 20px; height: 20px;"/>
+                                            <p:dataExporter type="pdf" target="n" fileName="report" pageOnly="true" />
+                                        </h:commandLink>
+
+                                        <h:commandLink immediate="true">
+                                            <p:graphicImage value="/images/csv.png" style="width: 20px; height: 20px;"/>
+                                            <p:dataExporter type="csv" target="n" fileName="report" pageOnly="true" />
+                                        </h:commandLink>
+
+                                        <h:commandLink immediate="true" >
+                                            <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
+                                            <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
+                                        </h:commandLink>
+                                    </f:facet>                                                                
+                                    <p:column headerText="Staff class">
+                                        <h:outputText value="#{papprv_rpt.staffGrade}"/>
+
+                                    </p:column>
+                                    <p:column headerText="Year">
+                                        <h:outputText value="#{papprv_rpt.year}"/>
+
+                                    </p:column>
+                                    <p:column headerText="Action" style="width:60px" exportable="false">                                
+                                        <p:commandButton value="" alt="search" id="please" icon="ui-icon-pencil" update=":templateForm:oo:oay" process="@this" 
+                                                         oncomplete="PF('dlg3').show()"> 
+                                            <f:setPropertyActionListener value="#{papprv_rpt}" target="#{staffProfile.tab}" />
+                                        </p:commandButton>                               
+                                    </p:column>                                        
+                                </p:dataTable>                                     
                             </p:panel>
                         </p:tab>
 
@@ -173,12 +171,12 @@
                     </p:dialog>
 
 
-                    <p:dialog header="Edit Class Assigned" widgetVar="dlg1"                              
+                    <p:dialog header="Assign New Class" widgetVar="dlg1"                              
                               position="center"
                               minimizable="true"
                               maximizable="true">                                        
 
-                        <h:form>
+                        <h:form id="poiu">
                             <p:panel id="dan" style="border:none;">                                          
                                 <h:panelGrid columns="3" cellpadding="10">
                                     <p:outputLabel for="sclass" value="Class: "/>
@@ -209,7 +207,7 @@
                                     </p:selectOneMenu>   
                                     <p:message for="gr"/>
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" process="@this " update=":templateForm:growl,:templateForm:pan" actionListener="#{staffProfile.staffUpload}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this sclass,grad,gr" update=":templateForm:growl,:templateForm:pan,:templateForm:ss:staffTab" actionListener="#{staffProfile.staffInsert}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="Insert"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
