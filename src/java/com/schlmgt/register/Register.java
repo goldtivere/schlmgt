@@ -67,6 +67,15 @@ public class Register implements Serializable {
     private String address;
     private String year;
     private Date doe;
+    private String imageLocation;
+
+    public String getImageLocation() {
+        return imageLocation;
+    }
+
+    public void setImageLocation(String imageLocation) {
+        this.imageLocation = imageLocation;
+    }
     
     public String getYear() {
         return year;
@@ -271,6 +280,7 @@ public class Register implements Serializable {
         
         setPassport_file(event.getFile());
         setPassport_url("");
+        setImageLocation("");
 
         //byte fileNameByte[] = getFile().getContents();
         //System.out.println("fileNameByte:" + fileNameByte);
@@ -291,6 +301,7 @@ public class Register implements Serializable {
             
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             setPassport_url(uploadImagesX.getPst_url());
+            setImageLocation(uploadImagesX.getPst_loc());
             FacesContext.getCurrentInstance().addMessage(null, message);
             
         } catch (Exception ex) {
@@ -422,9 +433,9 @@ public class Register implements Serializable {
                         //InputStream fin2 = file.getInputstream();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
                         String does = format.format(getDoe());
-                        String insert = "insert into user_details (first_name,middlename,last_name,username,image_name,email_address,role_id,"
+                        String insert = "insert into user_details (first_name,middlename,last_name,username,image_name,img_location,email_address,role_id,"
                                 + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed) "
-                                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                         
                         pstmt = con.prepareStatement(insert);
                         
@@ -433,18 +444,19 @@ public class Register implements Serializable {
                         pstmt.setString(3, getLname());
                         pstmt.setString(4, getUsername());
                         pstmt.setString(5, getPassport_url());
-                        pstmt.setString(6, getEmailadd());
-                        pstmt.setString(7, createdId);
-                        pstmt.setString(8, DateManipulation.dateAlone());
-                        pstmt.setString(9, DateManipulation.dateAndTime());
-                        pstmt.setString(10, createdby);
-                        pstmt.setBoolean(11, false);
-                        pstmt.setString(12, getStaffClass());
-                        pstmt.setString(13, getStaffGrade());
-                        pstmt.setString(14, getYear());
-                        pstmt.setString(15, getHighQua());
-                        pstmt.setString(16, getAddress());
-                        pstmt.setString(17, does);
+                        pstmt.setString(6, getImageLocation());
+                        pstmt.setString(7, getEmailadd());
+                        pstmt.setString(8, createdId);
+                        pstmt.setString(9, DateManipulation.dateAlone());
+                        pstmt.setString(10, DateManipulation.dateAndTime());
+                        pstmt.setString(11, createdby);
+                        pstmt.setBoolean(12, false);
+                        pstmt.setString(13, getStaffClass());
+                        pstmt.setString(14, getStaffGrade());
+                        pstmt.setString(15, getYear());
+                        pstmt.setString(16, getHighQua());
+                        pstmt.setString(17, getAddress());
+                        pstmt.setString(18, does);
                         
                         pstmt.executeUpdate();
                         

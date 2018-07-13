@@ -97,22 +97,22 @@
                             <p:panel id="imgPan">
                                 <h:panelGrid columns="9" cellpadding="10">
                                     <div class="profile-userpic" style="height: 100px; width: 100px;" >
-                                        <img src="#{edit.imagelink}" class="img-responsive img-thumbnail" alt="#{edit.fullname}"/>
+                                        <img src="#{staffProfile.imagelink}" class="img-responsive img-thumbnail" alt="#{staffProfile.fullname}"/>
                                     </div>  
                                     <p:outputLabel value=""></p:outputLabel>
                                     <p:outputLabel value=""></p:outputLabel>   
-                                    <p:fileUpload required="true" id="upload_pix_data" value="#{edit.passport}" auto="true"
-                                                  fileUploadListener="#{edit.handleFileUpload}" 
+                                    <p:fileUpload required="true" id="upload_pix_data" value="#{staffProfile.passport}" auto="true"
+                                                  fileUploadListener="#{staffProfile.handleFileUpload}" 
                                                   mode="advanced" dragDropSupport="false"
                                                   update="pst_img" sizeLimit="2097152" fileLimit="1" />                               
                                     <p:commandButton value="clear" immediate="true" ajax="false"
-                                                     actionListener="#{edit.clearPix}" 
+                                                     actionListener="#{staffProfile.clearPix}" 
                                                      update="upload_pix_data,pst_img"/>    
                                     <p:outputLabel value="Passport:"/>
-                                    <p:graphicImage id="pst_img" class="img-responsive img-thumbnail" value="#{edit.passport_url}" style="width: 100px; height: 100px;" />
+                                    <p:graphicImage id="pst_img" class="img-responsive img-thumbnail" value="#{staffProfile.passport_url}" style="width: 100px; height: 100px;" />
                                     <p:outputLabel value=""></p:outputLabel>
                                     <p:outputLabel value=""></p:outputLabel>                                
-                                    <p:commandButton value="Update" process="@this upload_pix_data" actionListener="#{edit.uploadPix}" update=":templateForm:grow,:templateForm:pan,:templateForm:okay2" class="pull-left" />    
+                                    <p:commandButton value="Update" process="@this upload_pix_data" actionListener="#{staffProfile.uploadPix}" update=":templateForm:grow,:templateForm:pan,:templateForm:okay2" class="pull-left" />    
                                 </h:panelGrid>
                             </p:panel>
                         </p:tab>

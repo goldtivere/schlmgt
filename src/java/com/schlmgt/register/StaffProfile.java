@@ -6,9 +6,12 @@
 package com.schlmgt.register;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.imgupload.UploadImagesX;
 import com.schlmgt.logic.DateManipulation;
+import com.schlmgt.logic.LoadPPTfile;
 import com.schlmgt.login.UserDetails;
 import com.schlmgt.profile.SecondaryModel;
+import java.io.File;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,8 +19,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -26,6 +33,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -63,7 +72,36 @@ public class StaffProfile implements Serializable {
     private List<ModelStaff> sesTab1;
     private List<ModelStaff> sesTab;
     private ModelStaff tab = new ModelStaff();
+    private String imagelink;
+    private UploadedFile passport;
+    private String passport_url;
+    private String passportLocation;
+    private String ref_number;
+    private String imageLocation;
     // private String 
+
+    public StaffProfile() {
+        ref_number = generateRefNo();
+    }
+
+    public String generateRefNo() {
+
+        try {
+
+            String timeStamp = new SimpleDateFormat("yyMMddHHmmss").format(Calendar.getInstance().getTime());
+
+            int rnd = new Random().nextInt(99999753);
+            String temp_val = String.valueOf(rnd).concat(timeStamp);
+            return temp_val;
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+            return null;
+
+        }
+
+    }//end generateRefNo(...)s
 
     @PostConstruct
     public void init() {
@@ -409,6 +447,128 @@ public class StaffProfile implements Serializable {
         }
     }
 
+    public void clearPix() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        FacesMessage msg;
+        LoadPPTfile loadPPTfile = new LoadPPTfile();
+        Map<String, String> params = externalContext.getRequestParameterMap();
+        String sscl = params.get("from");
+        try {
+
+            String file_ = "pix".concat(String.valueOf(getRef_number())).concat(".jpg");
+
+            if (!(loadPPTfile.isLoadPPtFile())) {
+                setMessangerOfTruth("Cannot load configuration file...");
+                setMessangerOfTruth("Operation failed");
+                return;
+            }
+            //
+            Properties ppt = loadPPTfile.getPptFile();
+            String url = ppt.getProperty("pst_location");
+
+            File file = new File(url + "".concat(file_));
+            file.delete();
+            //
+            setPassport(null);
+            passport = null;
+            setPassport_url("");
+            System.out.println(sscl);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void uploadPix() {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        String fullname = getLname() + " " + getMname() + " " + getFname();
+        boolean loggedIn = true;
+
+        try {
+            if (!getPassport_url().isEmpty()) {
+                UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+                String on = String.valueOf(userObj);
+                String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+                int createdId = userObj.getId();
+                con = dbConnections.mySqlDBconnection();
+
+                String previous = "update user_details set image_name=?,img_location=?, dateupdated=?,datetimeupdated=?, updatedby=? where id=?";
+
+                pstmt = con.prepareStatement(previous);
+
+                pstmt.setString(1, getPassport_url()); 
+                pstmt.setString(2, getPassportLocation()); 
+                pstmt.setString(3, DateManipulation.dateAlone());
+                pstmt.setString(4, DateManipulation.dateAndTime());
+                pstmt.setString(5, createdby);                                
+                pstmt.setInt(6, getId());                
+                pstmt.executeUpdate();
+                setPassport_url("");                
+                setMessangerOfTruth("Image Updated!!");
+
+                if (getPassportLocation() == null || getPassportLocation().isEmpty() || getPassportLocation().equalsIgnoreCase(null)) {
+
+                } else {
+                    File file = new File(getPassportLocation());
+                    file.delete();
+                }
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);                
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+
+        setPassport(event.getFile());
+        setPassport_url("");
+        setPassportLocation("");
+        
+
+        //byte fileNameByte[] = getFile().getContents();
+        //System.out.println("fileNameByte:" + fileNameByte);
+        FacesMessage message;
+        UploadImagesX uploadImagesX = new UploadImagesX();
+
+        try {
+
+            if (!(uploadImagesX.uploadImg(getPassport(), "pix".concat(String.valueOf(getRef_number()))))) {
+
+                message = new FacesMessage(FacesMessage.SEVERITY_FATAL, uploadImagesX.getMessangerOfTruth(), uploadImagesX.getMessangerOfTruth());
+                FacesContext.getCurrentInstance().addMessage(null, message);
+
+                //value.setPst_url(null);
+                return;
+
+            }
+
+            message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+            setPassport_url(uploadImagesX.getPst_url());
+            setPassportLocation(uploadImagesX.getPst_loc());            
+            FacesContext.getCurrentInstance().addMessage(null, message);
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+            message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+
+        }
+
+    }
+
     public List<String> yearDropdown() throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -499,6 +659,54 @@ public class StaffProfile implements Serializable {
             }
 
         }
+    }
+
+    public String getImageLocation() {
+        return imageLocation;
+    }
+
+    public void setImageLocation(String imageLocation) {
+        this.imageLocation = imageLocation;
+    }
+
+    public String getRef_number() {
+        return ref_number;
+    }
+
+    public void setRef_number(String ref_number) {
+        this.ref_number = ref_number;
+    }
+
+    public UploadedFile getPassport() {
+        return passport;
+    }
+
+    public void setPassport(UploadedFile passport) {
+        this.passport = passport;
+    }
+
+    public String getPassport_url() {
+        return passport_url;
+    }
+
+    public void setPassport_url(String passport_url) {
+        this.passport_url = passport_url;
+    }
+
+    public String getPassportLocation() {
+        return passportLocation;
+    }
+
+    public void setPassportLocation(String passportLocation) {
+        this.passportLocation = passportLocation;
+    }
+
+    public String getImagelink() {
+        return imagelink;
+    }
+
+    public void setImagelink(String imagelink) {
+        this.imagelink = imagelink;
     }
 
     public String getYear1() {
