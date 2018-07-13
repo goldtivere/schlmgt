@@ -41,7 +41,7 @@
                                 <h:panelGrid columns="2" cellpadding="10">
                                     <h:outputText value="Class Assigned: "/> <h:outputText value="#{staffProfile.staffGrade2}"/> 
                                     <h:outputText value="Year: "/> <h:outputText value="#{staffProfile.year1}"/> 
-                                    <p:commandButton value="Insert" class="pull-left" type="button" onclick="PF('dlg1').show();" />                                                                   
+                                    <p:commandButton value="Insert" class="pull-left" type="button" update=":templateForm:poiu:dan" onclick="PF('dlg1').show();" />                                                                   
                                 </h:panelGrid>
                                 <br/>
                                 <p:dataTable id="staffTab" class="table table-responsive" var="papprv_rpt" 
@@ -180,7 +180,7 @@
                             <p:panel id="dan" style="border:none;">                                          
                                 <h:panelGrid columns="3" cellpadding="10">
                                     <p:outputLabel for="sclass" value="Class: "/>
-                                    <p:selectOneMenu id="sclass" class="form-control" value="#{staffProfile.staffClass}" required="true" requiredMessage="Class required">
+                                    <p:selectOneMenu id="sclass" class="form-control" value="#{staffProfile.staffClass1}" required="true" requiredMessage="Class required">
                                         <p:ajax listener="#{staffProfile.onClassChange}" update="grad" />
                                         <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
                                         <f:selectItems value="#{staffProfile.classmodel}"
@@ -191,7 +191,7 @@
                                     <p:message for="sclass"/>
 
                                     <p:outputLabel for="grad" value="Grade: "/> 
-                                    <p:selectOneMenu id="grad" class="form-control" value="#{staffProfile.staffGrade}" required="true" requiredMessage="Grade required">                                        
+                                    <p:selectOneMenu id="grad" class="form-control" value="#{staffProfile.staffGrade2}" required="true" requiredMessage="Grade required">                                        
                                         <p:ajax listener="#{staffProfile.ontermChanges()}" update="gr" />
                                         <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
                                         <f:selectItems value="#{staffProfile.grademodels}"
@@ -201,7 +201,7 @@
                                     </p:selectOneMenu>                                    
                                     <p:message for="grad"/>  
                                     <p:outputLabel for="gr" value="Year: "></p:outputLabel>
-                                    <p:selectOneMenu id="gr" class="form-control" value="#{staffProfile.year}" required="true" requiredMessage="Year required">                                  
+                                    <p:selectOneMenu id="gr" class="form-control" value="#{staffProfile.year1}" required="true" requiredMessage="Year required">                                  
                                         <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
                                         <f:selectItems value="#{staffProfile.term}"/>
                                     </p:selectOneMenu>   
@@ -223,7 +223,7 @@
                             <p:panel id="oay" style="border:none;">                                          
                                 <h:panelGrid columns="3" cellpadding="10">
                                     <p:outputLabel for="sclass" value="Class: "/>
-                                    <p:selectOneMenu id="sclass" class="form-control" value="#{staffProfile.staffClass}" required="true" requiredMessage="Class required">
+                                    <p:selectOneMenu id="sclass" class="form-control" value="#{staffProfile.tab.staffClass}" required="true" requiredMessage="Class required">
                                         <p:ajax listener="#{staffProfile.onClassChange}" update="grad" />
                                         <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
                                         <f:selectItems value="#{staffProfile.classmodel}"
@@ -234,7 +234,7 @@
                                     <p:message for="sclass"/>
 
                                     <p:outputLabel for="grad" value="Grade: "/> 
-                                    <p:selectOneMenu id="grad" class="form-control" value="#{staffProfile.staffGrade}" required="true" requiredMessage="Grade required">                                        
+                                    <p:selectOneMenu id="grad" class="form-control" value="#{staffProfile.tab.staffGrade}" required="true" requiredMessage="Grade required">                                        
                                         <p:ajax listener="#{staffProfile.ontermChanges()}" update="gr" />
                                         <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
                                         <f:selectItems value="#{staffProfile.grademodels}"
@@ -244,13 +244,13 @@
                                     </p:selectOneMenu>                                    
                                     <p:message for="grad"/>  
                                     <p:outputLabel for="gr" value="Year: "></p:outputLabel>
-                                    <p:selectOneMenu id="gr" class="form-control" value="#{staffProfile.year}" required="true" requiredMessage="Year required">                                  
+                                    <p:selectOneMenu id="gr" class="form-control" value="#{staffProfile.tab.year}" required="true" requiredMessage="Year required">                                  
                                         <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
                                         <f:selectItems value="#{staffProfile.term}"/>
                                     </p:selectOneMenu>   
                                     <p:message for="gr"/>
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" process="@this " update=":templateForm:growl,:templateForm:pan" actionListener="#{staffProfile.staffUpload}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this " update=":templateForm:growl,:templateForm:pan,:templateForm:ss:staffTab" actionListener="#{staffProfile.staffUpdate}" oncomplete="handleLogin(xhr, status, args)" style="margin-top: 20px;" value="update"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
