@@ -763,7 +763,7 @@ public class EditStudent implements Serializable {
                 setImageLocation(rs.getString("imgLocation"));
             }
 
-            //for studentclass
+            //for studentclassupload
             String testStud = "Select * from tbstudentclass where studentid=? and currentclass=?";
             pstmt = con.prepareStatement(testStud);
             pstmt.setString(1, getStudentid());
@@ -1114,7 +1114,7 @@ public class EditStudent implements Serializable {
                 pstmt = con.prepareStatement(previous);
 
                 pstmt.setString(1, getPassport_url());
-                pstmt.setString(2, getPassport_url());
+                pstmt.setString(2, getPassportLocation());
                 pstmt.setString(3, createdby);
                 pstmt.setInt(4, createdId);
                 pstmt.setString(5, DateManipulation.dateAndTime());
@@ -1173,8 +1173,7 @@ public class EditStudent implements Serializable {
             pstmt.setString(6, secModel.getSclass());
             pstmt.setBoolean(7, true);
 
-            pstmt.executeUpdate();
-            System.out.println("o" + secModel.getSclass());
+            pstmt.executeUpdate();            
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -111,7 +111,7 @@ public class StaffProfile implements Serializable {
             term = yearDropdown();
             grademodels = gradeDropdowns();
             classmodel = classDropdown();
-            System.out.println(getStaffGrade() + " this is the grade");
+            System.out.println(getImagelink() + " this is the grade " + getImageLocation() + "  ok  " + getPassportLocation());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -371,7 +371,8 @@ public class StaffProfile implements Serializable {
                 setMname(rs.getString("middlename"));
                 setLname(rs.getString("last_name"));
                 setFullname(rs.getString("last_name") + " " + rs.getString("middlename") + " " + rs.getString("first_name"));
-                setImage_name(rs.getString("image_name"));
+                setImagelink(rs.getString("image_name"));
+                setPassportLocation(rs.getString("img_location"));
                 setEmail(rs.getString("email_address"));
                 setStaffClass(rs.getString("staffClass"));
                 setStaffGrade(rs.getString("staffgrade"));
@@ -505,14 +506,14 @@ public class StaffProfile implements Serializable {
 
                 pstmt = con.prepareStatement(previous);
 
-                pstmt.setString(1, getPassport_url()); 
-                pstmt.setString(2, getPassportLocation()); 
+                pstmt.setString(1, getPassport_url());
+                pstmt.setString(2, getImageLocation());
                 pstmt.setString(3, DateManipulation.dateAlone());
                 pstmt.setString(4, DateManipulation.dateAndTime());
-                pstmt.setString(5, createdby);                                
-                pstmt.setInt(6, getId());                
+                pstmt.setString(5, createdby);
+                pstmt.setInt(6, getId());
                 pstmt.executeUpdate();
-                setPassport_url("");                
+                setPassport_url("");
                 setMessangerOfTruth("Image Updated!!");
 
                 if (getPassportLocation() == null || getPassportLocation().isEmpty() || getPassportLocation().equalsIgnoreCase(null)) {
@@ -522,7 +523,8 @@ public class StaffProfile implements Serializable {
                     file.delete();
                 }
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                context.addMessage(null, msg);                
+                context.addMessage(null, msg);
+                staffDetails();
             }
 
         } catch (Exception ex) {
@@ -534,8 +536,6 @@ public class StaffProfile implements Serializable {
 
         setPassport(event.getFile());
         setPassport_url("");
-        setPassportLocation("");
-        
 
         //byte fileNameByte[] = getFile().getContents();
         //System.out.println("fileNameByte:" + fileNameByte);
@@ -556,7 +556,8 @@ public class StaffProfile implements Serializable {
 
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             setPassport_url(uploadImagesX.getPst_url());
-            setPassportLocation(uploadImagesX.getPst_loc());            
+            setImageLocation(uploadImagesX.getPst_loc());
+            System.out.println(getImageLocation() + " this " + getPassportLocation());
             FacesContext.getCurrentInstance().addMessage(null, message);
 
         } catch (Exception ex) {
