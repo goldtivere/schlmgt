@@ -116,6 +116,14 @@
                                 </h:panelGrid>
                             </p:panel>
                         </p:tab>
+                        <p:tab title="Start and Stop Date">
+                            <p:panel id="startDate">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <h:outputText value="Date Employed: "/> <h:outputText value="#{staffProfile.doe}"/> 
+                                    <h:outputText value="Date Suspended: "/> <h:outputText value="#{staffProfile.dos}"/> 
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab>
                     </p:accordionPanel> 
 
                     <p:dialog header="Edit Profile" widgetVar="dlg2"                              

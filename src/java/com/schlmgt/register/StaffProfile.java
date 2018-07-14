@@ -60,6 +60,7 @@ public class StaffProfile implements Serializable {
     private String staffGrade2;
     private String year1;
     private Date doe;
+    private Date dos;
     private String dateEmployed;
     private String dateStopped;
     private String highQua;
@@ -110,8 +111,7 @@ public class StaffProfile implements Serializable {
             sesTab1 = displayStaff();
             term = yearDropdown();
             grademodels = gradeDropdowns();
-            classmodel = classDropdown();
-            System.out.println(getImagelink() + " this is the grade " + getImageLocation() + "  ok  " + getPassportLocation());
+            classmodel = classDropdown();            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -382,10 +382,10 @@ public class StaffProfile implements Serializable {
                 setAddress(rs.getString("address"));
                 setDateEmployed(rs.getString("dateemployed"));
                 setDoe(rs.getDate("dateemployed"));
+                setDos(rs.getDate("datestopped"));
                 setDateStopped(rs.getString("datestopped"));
             }
-
-            System.out.println(getImage_name() + " l");
+            
         } catch (NullPointerException e) {
             e.printStackTrace();
 
@@ -427,8 +427,7 @@ public class StaffProfile implements Serializable {
 
                 //
                 lst.add(coun);
-            }
-            System.out.println("this is it " + getStaffGrade2());
+            }          
             return lst;
         } catch (Exception e) {
             e.printStackTrace();
@@ -473,8 +472,7 @@ public class StaffProfile implements Serializable {
             //
             setPassport(null);
             passport = null;
-            setPassport_url("");
-            System.out.println(sscl);
+            setPassport_url("");            
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -556,8 +554,7 @@ public class StaffProfile implements Serializable {
 
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             setPassport_url(uploadImagesX.getPst_url());
-            setImageLocation(uploadImagesX.getPst_loc());
-            System.out.println(getImageLocation() + " this " + getPassportLocation());
+            setImageLocation(uploadImagesX.getPst_loc());            
             FacesContext.getCurrentInstance().addMessage(null, message);
 
         } catch (Exception ex) {
@@ -660,6 +657,14 @@ public class StaffProfile implements Serializable {
             }
 
         }
+    }
+
+    public Date getDos() {
+        return dos;
+    }
+
+    public void setDos(Date dos) {
+        this.dos = dos;
     }
 
     public String getImageLocation() {
