@@ -309,8 +309,8 @@ public class Registration implements Serializable {
                                     UUID idOne = UUID.randomUUID();
                                     //InputStream fin2 = file.getInputstream();                                    
                                     String insert = "insert into user_details (first_name,middlename,last_name,username,email_address,role_id,"
-                                            + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed) "
-                                            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                            + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed,suspendedstatus) "
+                                            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
                                     pstmt = con.prepareStatement(insert);
 
@@ -330,6 +330,7 @@ public class Registration implements Serializable {
                                     pstmt.setString(14, mode.getHighQua());
                                     pstmt.setString(15, mode.getAddress());
                                     pstmt.setString(16, does);
+                                    pstmt.setBoolean(17, false);
 
                                     pstmt.executeUpdate();
 

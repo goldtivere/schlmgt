@@ -434,8 +434,8 @@ public class Register implements Serializable {
                         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
                         String does = format.format(getDoe());
                         String insert = "insert into user_details (first_name,middlename,last_name,username,image_name,img_location,email_address,role_id,"
-                                + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed) "
-                                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed,suspendedstatus) "
+                                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                         
                         pstmt = con.prepareStatement(insert);
                         
@@ -457,6 +457,7 @@ public class Register implements Serializable {
                         pstmt.setString(16, getHighQua());
                         pstmt.setString(17, getAddress());
                         pstmt.setString(18, does);
+                        pstmt.setBoolean(19, false);
                         
                         pstmt.executeUpdate();
                         

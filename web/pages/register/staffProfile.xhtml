@@ -116,11 +116,12 @@
                                 </h:panelGrid>
                             </p:panel>
                         </p:tab>
-                        <p:tab title="Start and Stop Date">
-                            <p:panel id="startDate">
+                        <p:tab title="Start and Stop Date" id="staffDate">
+                            <p:panel id="startDates">
                                 <h:panelGrid columns="2" cellpadding="10">
                                     <h:outputText value="Date Employed: "/> <h:outputText value="#{staffProfile.doe}"/> 
                                     <h:outputText value="Date Suspended: "/> <h:outputText value="#{staffProfile.dos}"/> 
+                                    <p:commandButton value="Update" class="pull-left" type="button" update=":templateForm:op:oa" onclick="PF('dlg4').show();" />                                                                   
                                 </h:panelGrid>
                             </p:panel>
                         </p:tab>
@@ -258,7 +259,27 @@
                                     </p:selectOneMenu>   
                                     <p:message for="gr"/>
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" process="@this " update=":templateForm:growl,:templateForm:pan,:templateForm:ss:staffTab" actionListener="#{staffProfile.staffUpdate}" oncomplete="handleLogin(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this gr,grad,sclass" update=":templateForm:growl,:templateForm:pan,:templateForm:ss:staffTab" actionListener="#{staffProfile.staffUpdate}" oncomplete="handleLogin(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                    </f:facet>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog header="Employment Status" widgetVar="dlg4"                              
+                              position="center"
+                              minimizable="true"
+                              maximizable="true">                                        
+
+                        <h:form id="op">
+                            <p:panel id="oa" style="border:none;">                                          
+                                <h:panelGrid columns="3" cellpadding="10">                                   
+                                    <p:outputLabel for="dos" value="Date Suspended: "/>
+                                    <p:calendar id="dos" class="form-control" yearRange="1980:2030" pattern="dd/MM/yyyy" value="#{staffProfile.dos}"  navigator="true" />                         
+                                    <p:message for="dos"/>            
+
+                                    <f:facet name="footer">
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this dos" update=":templateForm:growl,:templateForm:pan" actionListener="#{staffProfile.UpdateStaffSuspend}" oncomplete="handle(xhr, status, args)" style="margin-top: 20px;" value="update"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
@@ -286,6 +307,14 @@
                 function handleLogin(xhr, status, args) {
                     if (args.validationFailed || !args.loggedIn) {
                         PF('dlg3').jq.effect("shake", {times: 5}, 100);
+                    } else {
+                        PF('dlg3').hide();
+                        $('#loginLink').fadeOut();
+                    }
+                }
+                function handle(xhr, status, args) {
+                    if (args.validationFailed || !args.loggedIn) {
+                        PF('dlg4').jq.effect("shake", {times: 5}, 100);
                     } else {
                         PF('dlg4').hide();
                         $('#loginLink').fadeOut();

@@ -111,7 +111,7 @@ public class StaffProfile implements Serializable {
             sesTab1 = displayStaff();
             term = yearDropdown();
             grademodels = gradeDropdowns();
-            classmodel = classDropdown();            
+            classmodel = classDropdown();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -288,6 +288,55 @@ public class StaffProfile implements Serializable {
         }
     }
 
+    public void UpdateStaffSuspend(ActionEvent event) {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        FacesMessage msg;
+        FacesContext context = FacesContext.getCurrentInstance();
+        RequestContext cont = RequestContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        String fullname = getLname() + " " + getMname() + " " + getFname();
+        boolean loggedIn = true;
+
+        try {
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            int createdId = userObj.getId();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+            String dStopped = format.format(getDos());
+            con = dbConnections.mySqlDBconnection();
+
+            if (getDos().before(getDoe()) ) {
+                setMessangerOfTruth("Date Suspended Cannot be before date employed!!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+            } else {
+
+                String personalDetails = "update user_details set datestopped=?,suspendedstatus=?,dateupdated=?,datetimeupdated=?,updatedby=?  where id=?";
+
+                pstmt = con.prepareStatement(personalDetails);
+                pstmt.setString(1, dStopped);
+                pstmt.setBoolean(2, true);
+                pstmt.setString(3, DateManipulation.dateAlone());
+                pstmt.setString(4, DateManipulation.dateAndTime());
+                pstmt.setString(5, createdby);
+                pstmt.setInt(6, getId());
+                pstmt.executeUpdate();
+
+                sesTab1 = displayStaff();
+                setMessangerOfTruth("Staff Suspended!!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+                cont.addCallbackParam("loggedIn", loggedIn);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void staffInsert(ActionEvent event) {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
@@ -385,7 +434,7 @@ public class StaffProfile implements Serializable {
                 setDos(rs.getDate("datestopped"));
                 setDateStopped(rs.getString("datestopped"));
             }
-            
+
         } catch (NullPointerException e) {
             e.printStackTrace();
 
@@ -427,7 +476,7 @@ public class StaffProfile implements Serializable {
 
                 //
                 lst.add(coun);
-            }          
+            }
             return lst;
         } catch (Exception e) {
             e.printStackTrace();
@@ -472,7 +521,7 @@ public class StaffProfile implements Serializable {
             //
             setPassport(null);
             passport = null;
-            setPassport_url("");            
+            setPassport_url("");
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -554,7 +603,7 @@ public class StaffProfile implements Serializable {
 
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             setPassport_url(uploadImagesX.getPst_url());
-            setImageLocation(uploadImagesX.getPst_loc());            
+            setImageLocation(uploadImagesX.getPst_loc());
             FacesContext.getCurrentInstance().addMessage(null, message);
 
         } catch (Exception ex) {
