@@ -14,6 +14,7 @@ import java.util.Date;
  */
 public class StaffModel implements Serializable{
     private int id;
+    private String staffId;
     private String fname;
     private String mname;
     private String lname;
@@ -35,6 +36,14 @@ public class StaffModel implements Serializable{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
     }
 
     public String getDateEmployed() {

@@ -130,10 +130,56 @@ public class ClassGrade implements Serializable {
         }
     }
 
+    public List<String> yearDropdown() throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT distinct year FROM yearterm";
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            //
+            List<String> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                lst.add(rs.getString("year"));
+
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public void ontermChanges() throws Exception {
+
+        term = yearDropdown();
+
+    }
+
     public void ontermChanges(String tbclass) throws Exception {
-        
+
         term = yearDropdown(tbclass);
-        
 
     }
 
@@ -156,7 +202,7 @@ public class ClassGrade implements Serializable {
             con = dbConnections.mySqlDBconnection();
             String query = "SELECT * FROM tbgrade where class=?";
             pstmt = con.prepareStatement(query);
-            
+
             pstmt.setString(1, tbclass);
             rs = pstmt.executeQuery();
             //
