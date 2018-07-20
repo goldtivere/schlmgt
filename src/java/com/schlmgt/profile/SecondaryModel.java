@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author Gold
  */
-public class SecondaryModel implements Serializable{
+public class SecondaryModel implements Serializable {
 
     private int id;
     private String studentid;
@@ -28,6 +28,7 @@ public class SecondaryModel implements Serializable{
     private String term;
     private String year;
     private String noOfTimesRepeated;
+    private String pnum;
 
     public String getClasstype() {
         return classtype;
@@ -35,7 +36,8 @@ public class SecondaryModel implements Serializable{
 
     public void setClasstype(String classtype) {
         this.classtype = classtype;
-    }    
+    }
+
     public String getArm() {
         return arm;
     }
@@ -146,6 +148,14 @@ public class SecondaryModel implements Serializable{
 
     public void setNoOfTimesRepeated(String noOfTimesRepeated) {
         this.noOfTimesRepeated = noOfTimesRepeated;
+    }
+
+    public String getPnum() {
+        return pnum;
+    }
+
+    public void setPnum(String pnum) {
+        this.pnum = pnum;
     }
 
 }

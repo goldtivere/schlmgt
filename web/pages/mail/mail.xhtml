@@ -12,16 +12,16 @@
 
     <ui:define name="content">
         <div class="row">
-            <p:messages id="wat" closable="true"></p:messages>
+            <p:messages id="wata" closable="true"></p:messages>
             <p:growl id="watta" ></p:growl>
             <p:dialog header="Enter Message Body" style="margin-top: -200px; margin-left: -250px;" position="center" widgetVar="dlg2">                                        
                 <h:form id="ooo">
                     <p:panel id="okay">                                          
                         <p:outputPanel id="upda">
                             <h:panelGrid columns="2">
-                                <p:inputTextarea id="txt" required="true" value="#{subjectUpdate.tab.subject}"/>
+                                <p:inputTextarea id="txt" required="true" value="#{sms.search_item}"/>
 
-                                <p:commandButton class="btn btn-primary pull-right" update="" process="@this txt" actionListener="#{subjectUpdate.updateSubject}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="Send Message"/>
+                                <p:commandButton class="btn btn-primary pull-right" update="okay,:templateForm:wata,:templateForm:watta" process="@this txt" actionListener="#{sms.sendStudent}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="Send Message"/>
                             </h:panelGrid>
                         </p:outputPanel>
 
@@ -33,9 +33,9 @@
                     <p:panel id="staffWe">                                          
                         <p:outputPanel id="upas">
                             <h:panelGrid columns="2">
-                                <p:inputTextarea id="txts" required="true" value="#{subjectUpdate.tab.subject}"/>
+                                <p:inputTextarea id="txts" required="true" value="#{sms.gohome}"/>
 
-                                <p:commandButton class="btn btn-primary pull-right" update="" process="@this txts" actionListener="#{subjectUpdate.updateSubject}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="Send Message"/>
+                                <p:commandButton class="btn btn-primary pull-right" update="staffWe,:templateForm:wata,:templateForm:watta" process="@this txts" actionListener="#{sms.sendStaff}" oncomplete="handleLogin(xhr, status, args)" style="margin-top: 20px;" value="Send Message"/>
                             </h:panelGrid>
                         </p:outputPanel>
 
@@ -89,7 +89,7 @@
                     <div class="ibox-content">
                         <p:outputLabel value="#{sms.student_grade}"></p:outputLabel>
                         <br/>
-                        <p:dataTable id="n" class="table table-responsive" scrollable="true" var="papprv_rpt" 
+                        <p:dataTable id="ne" class="table table-responsive" scrollable="true" var="papprv_rpt" 
                                      value="#{sms.secModel}"
                                      selection="#{sms.secModel1}"
                                      rowKey="#{papprv_rpt.id}"
@@ -146,8 +146,8 @@
                             </p:column>                            
                             <f:facet name="footer">
                                 <p:column headerText="Action" style="width:60px" exportable="false">                                
-                                    <p:commandButton value="Send Message" alt="search" id="please" icon="ui-icon-pencil" update=":templateForm:wat,:templateForm:watta" process="@this" 
-                                                     oncomplete="PF('dlg2').show()">                                        
+                                    <p:commandButton value="Send Message" id="please" icon="ui-icon-pencil" update=":templateForm:watta" process="@this ne" 
+                                                     oncomplete="PF('dlg2').show()">                                         
                                     </p:commandButton>                               
                                 </p:column>
                             </f:facet>
@@ -216,7 +216,7 @@
                             </p:column>                            
                             <f:facet name="footer">
                                 <p:column headerText="Action" style="width:60px" exportable="false">                                
-                                    <p:commandButton value="Send Message" alt="search" id="please" icon="ui-icon-pencil" update=":templateForm:wat,:templateForm:watta" process="@this" 
+                                    <p:commandButton value="Send Message" id="please" icon="ui-icon-pencil" process="@this no" 
                                                      oncomplete="PF('dlg3').show()">                                        
                                     </p:commandButton>                               
                                 </p:column>
@@ -238,6 +238,15 @@
                         PF('dlg2').jq.effect("shake", {times: 5}, 100);
                     } else {
                         PF('dlg2').hide();
+                        $('#loginLink').fadeOut();
+                    }
+                }
+
+                function handleLogin(xhr, status, args) {
+                    if (args.validationFailed || !args.loggedIn) {
+                        PF('dlg3').jq.effect("shake", {times: 5}, 100);
+                    } else {
+                        PF('dlg3').hide();
                         $('#loginLink').fadeOut();
                     }
                 }
