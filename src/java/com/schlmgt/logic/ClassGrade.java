@@ -8,10 +8,12 @@ package com.schlmgt.logic;
 import com.schlmgt.dbconn.DbConnectionX;
 import com.schlmgt.register.ClassModel;
 import com.schlmgt.register.GradeModel;
+import com.schlmgt.register.TermModel;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -29,7 +31,7 @@ public class ClassGrade implements Serializable {
 
     private List<ClassModel> classmodel;
     private List<GradeModel> grademodels;
-    private List<String> termList;
+    private List<TermModel> termList;
     private List<String> term;
     private List<String> arm;
 
@@ -171,6 +173,415 @@ public class ClassGrade implements Serializable {
         }
     }
 
+    public String countryOrigin(String countryValue) throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbcountry where id=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(countryValue));
+            rs = pstmt.executeQuery();
+            //
+            String value = null;
+            if (rs.next()) {
+
+                value = rs.getString("country");
+
+            }
+
+            return value;
+        } catch (NumberFormatException e) {
+           return null;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public String stateOrigin(String stateValue) throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbstates where id=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(stateValue));
+            rs = pstmt.executeQuery();
+            //
+            String value = null;
+            if (rs.next()) {
+
+                value = rs.getString("states");
+
+            }
+
+            return value;
+        } catch (NumberFormatException e) {
+           return null;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public String lgaValue(String lgaValue) throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbstatelga where id=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(lgaValue));
+            rs = pstmt.executeQuery();
+            //
+            String value = null;
+            if (rs.next()) {
+
+                value = rs.getString("lga");
+
+            }
+
+            return value;
+        }catch (NumberFormatException e) {
+           return null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public String classGet(String classValue) throws Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbclass where id=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(classValue));
+            rs = pstmt.executeQuery();
+            //
+            String value = null;
+            if (rs.next()) {
+
+                value = rs.getString("class");
+
+            }
+
+            return value;
+        }catch (NumberFormatException e) {
+           return null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public String gradeGet(String gradeValue) throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbgrade where id=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(gradeValue));
+            rs = pstmt.executeQuery();
+            //
+            String value = null;
+            if (rs.next()) {
+
+                value = rs.getString("grade");
+
+            }
+
+            return value;
+        }
+        catch (NumberFormatException e) {
+           return null;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public String disabilityGet(String disabilityValue) throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbdisability where id=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(disabilityValue));
+            rs = pstmt.executeQuery();
+            //
+            String value = null;
+            if (rs.next()) {
+
+                value = rs.getString("disability");
+
+            }
+
+            return value;
+        }catch (NumberFormatException e) {
+           return null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public String bloodGet(String bloodValue) throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbbloodgroup where id=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(bloodValue));
+            rs = pstmt.executeQuery();
+            //
+            String value = null;
+            if (rs.next()) {
+
+                value = rs.getString("bloodgroup");
+
+            }
+
+            return value;
+        }
+        catch (NumberFormatException e) {
+           return null;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public String termGet(String termValue) throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbterm where id=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(termValue));
+            rs = pstmt.executeQuery();
+            //
+            String value = null;
+            if (rs.next()) {
+
+                value = rs.getString("term");
+
+            }
+
+            return value;
+        }
+        catch (NumberFormatException e) {
+           return null;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
+    public String relationshipGet(String relationshipValue) throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM relationship where id=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, Integer.parseInt(relationshipValue));
+            rs = pstmt.executeQuery();
+            //
+            String value = null;
+            if (rs.next()) {
+
+                value = rs.getString("relation");
+
+            }
+
+            return value;
+        }
+        catch (NumberFormatException e) {
+           return null;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
     public void ontermChanges() throws Exception {
 
         term = yearDropdown();
@@ -237,19 +648,48 @@ public class ClassGrade implements Serializable {
         }
     }
 
-    public List<String> termDropdown() throws Exception {
+    public List<TermModel> termDropdown() throws Exception {
 
-        //
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         try {
-            List<String> lst = new ArrayList<>();
-            lst.add("First Term");
-            lst.add("Second Term");
-            lst.add("Third Term");
-            return lst;
 
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbterm";
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            //
+            List<TermModel> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                TermModel coun = new TermModel();
+                coun.setId(rs.getInt("id"));
+                coun.setTerm(rs.getString("term"));
+
+                //
+                lst.add(coun);
+            }
+
+            return lst;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
 
         }
     }
@@ -304,11 +744,11 @@ public class ClassGrade implements Serializable {
         this.term = term;
     }
 
-    public List<String> getTermList() {
+    public List<TermModel> getTermList() {
         return termList;
     }
 
-    public void setTermList(List<String> termList) {
+    public void setTermList(List<TermModel> termList) {
         this.termList = termList;
     }
 
