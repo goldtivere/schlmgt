@@ -1114,7 +1114,7 @@ public class ResultUpdate implements Serializable {
                 rs = pstmt.executeQuery();
 
                 if (rs.next()) {
-                    if ("first term".equalsIgnoreCase(getTerm())) {
+                    if ("1".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "update tbfinalcompute set firstterm=?,dateupdated=?,updatedby=? where studentclass=?"
                                 + "and year=? and studentreg=?";
                         pstmt = con.prepareStatement(resultDetail);
@@ -1128,7 +1128,7 @@ public class ResultUpdate implements Serializable {
                         
                         pstmt.executeUpdate();
 
-                    } else if ("second term".equalsIgnoreCase(getTerm())) {
+                    } else if ("2".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "update tbfinalcompute set secondterm=?,dateupdated=?,updatedby=? where studentclass=?"
                                 + " and year=? and studentreg=?";
                         pstmt = con.prepareStatement(resultDetail);
@@ -1141,7 +1141,7 @@ public class ResultUpdate implements Serializable {
                         pstmt.setString(6, mm.getStudentReg());                        
                         pstmt.executeUpdate();
 
-                    } else if ("third term".equalsIgnoreCase(getTerm())) {
+                    } else if ("3".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "update tbfinalcompute set thirdterm=?,dateupdated=?,updatedby=? where studentclass=?"
                                 + "and year=? and studentreg=?";
                         pstmt = con.prepareStatement(resultDetail);
@@ -1157,7 +1157,7 @@ public class ResultUpdate implements Serializable {
                     }
                 } else if (!rs.next()) {
 
-                    if ("first term".equalsIgnoreCase(getTerm())) {
+                    if ("1".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,firstterm,datecreated,createdby,isdeleted) values("
                                 + "?,?,?,?,?,?,?,?)";
                         pstmt = con.prepareStatement(resultDetail);
@@ -1173,7 +1173,7 @@ public class ResultUpdate implements Serializable {
                         pstmt.setBoolean(8, false);
                         pstmt.executeUpdate();
 
-                    } else if ("second term".equalsIgnoreCase(getTerm())) {
+                    } else if ("2".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,secondterm,datecreated,createdby,isdeleted) values("
                                 + "?,?,?,?,?,?,?,?)";
                         pstmt = con.prepareStatement(resultDetail);
@@ -1188,7 +1188,7 @@ public class ResultUpdate implements Serializable {
                         pstmt.setBoolean(8, false);
                         pstmt.executeUpdate();
 
-                    } else if ("third term".equalsIgnoreCase(getTerm())) {
+                    } else if ("3".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,thirdterm,datecreated,createdby,isdeleted) values("
                                 + "?,?,?,?,?,?,?,?)";
                         pstmt = con.prepareStatement(resultDetail);
@@ -1268,7 +1268,7 @@ public class ResultUpdate implements Serializable {
 
                 }
 
-                if ("First Term".equalsIgnoreCase(mm.getTerm())) {
+                if ("1".equalsIgnoreCase(mm.getTerm())) {
                     String resultDetail = "update tbfinalcompute set firstterm=?,totalscore=?, isdeleted=?,datedeleted=?,deletedby=? where studentclass=?"
                             + "and year=? and studentreg=?";
                     pstmt = con.prepareStatement(resultDetail);
@@ -1282,7 +1282,7 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(8, mm.getStudentReg());
 
                     pstmt.executeUpdate();
-                } else if ("Second Term".equalsIgnoreCase(mm.getTerm())) {
+                } else if ("2".equalsIgnoreCase(mm.getTerm())) {
                     String resultDetail = "update tbfinalcompute set secondterm=?,totalscore=?, isdeleted=?,datedeleted=?,deletedby=? where studentclass=?"
                             + "and year=? and studentreg=?";
                     pstmt = con.prepareStatement(resultDetail);
@@ -1296,7 +1296,7 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(8, mm.getStudentReg());
 
                     pstmt.executeUpdate();
-                } else if ("Third Term".equalsIgnoreCase(getTerm())) {
+                } else if ("3".equalsIgnoreCase(getTerm())) {
                     String resultDetail = "update tbfinalcompute set thirdterm=?,totalscore=?, isdeleted=?,datedeleted=?,deletedby=? where studentclass=?"
                             + "and year=? and studentreg=?";
                     pstmt = con.prepareStatement(resultDetail);
@@ -1461,7 +1461,7 @@ public class ResultUpdate implements Serializable {
                 arrayDude.add(mode);
             }
 
-            if ("first term".equalsIgnoreCase(mode.getTerm())) {
+            if ("1".equalsIgnoreCase(mode.getTerm())) {
                 String updatePosition = "update tbfinalcompute set firstterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and year=?";
 
                 pstmt = con.prepareStatement(updatePosition);
@@ -1474,7 +1474,7 @@ public class ResultUpdate implements Serializable {
                 pstmt.setString(6, mode.getYear());
                 pstmt.executeUpdate();
 
-            } else if ("second term".equalsIgnoreCase(mode.getTerm())) {
+            } else if ("2".equalsIgnoreCase(mode.getTerm())) {
                 String updatePosition = "update tbfinalcompute set secondterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and year=?";
 
                 pstmt = con.prepareStatement(updatePosition);
@@ -1487,7 +1487,7 @@ public class ResultUpdate implements Serializable {
                 pstmt.setString(6, mode.getYear());
                 pstmt.executeUpdate();
 
-            } else if ("third term".equalsIgnoreCase(mode.getTerm())) {
+            } else if ("3".equalsIgnoreCase(mode.getTerm())) {
                 String updatePosition = "update tbfinalcompute set thirdterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and year=?";
 
                 pstmt = con.prepareStatement(updatePosition);
@@ -1543,7 +1543,7 @@ public class ResultUpdate implements Serializable {
                 arrayDude.add(mode);
             }
             for (ResultComputeModel mm : arrayDude) {
-                if ("first term".equalsIgnoreCase(mm.getTerm())) {
+                if ("1".equalsIgnoreCase(mm.getTerm())) {
                     String updatePosition = "update tbfinalcompute set isdeleted=?,datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
 
                     pstmt = con.prepareStatement(updatePosition);
@@ -1557,7 +1557,7 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(6, mm.getYear());
                     pstmt.executeUpdate();
 
-                } else if ("second term".equalsIgnoreCase(mm.getTerm())) {
+                } else if ("2".equalsIgnoreCase(mm.getTerm())) {
                     String updatePosition = "update tbfinalcompute set secondterm=?, datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
 
                     pstmt = con.prepareStatement(updatePosition);
@@ -1571,7 +1571,7 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(6, mm.getYear());
                     pstmt.executeUpdate();
 
-                } else if ("third term".equalsIgnoreCase(mm.getTerm())) {
+                } else if ("3".equalsIgnoreCase(mm.getTerm())) {
                     String updatePosition = "update tbfinalcompute set thirdterm=?, datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
 
                     pstmt.setBoolean(1, true);
@@ -1609,7 +1609,7 @@ public class ResultUpdate implements Serializable {
 
             for (ResultModel moe : resultmodel1) {
 
-                if ("first term".equalsIgnoreCase(moe.getTerm())) {
+                if ("1".equalsIgnoreCase(moe.getTerm())) {
                     String updatePosition = "update tbfinalcompute set isdeleted=?,datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and year=?";
 
                     pstmt = con.prepareStatement(updatePosition);
@@ -1623,7 +1623,7 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(6, moe.getYear());
                     pstmt.executeUpdate();
 
-                } else if ("second term".equalsIgnoreCase(moe.getTerm())) {
+                } else if ("2".equalsIgnoreCase(moe.getTerm())) {
                     String updatePosition = "update tbfinalcompute set isdeleted=?,datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and year=?";
 
                     pstmt = con.prepareStatement(updatePosition);
@@ -1637,7 +1637,7 @@ public class ResultUpdate implements Serializable {
                     pstmt.setString(7, moe.getYear());
                     pstmt.executeUpdate();
 
-                } else if ("third term".equalsIgnoreCase(moe.getTerm())) {
+                } else if ("3".equalsIgnoreCase(moe.getTerm())) {
                     String updatePosition = "update tbfinalcompute set thirdterm=?, datedeleted=?,deletedby=? where StudentReg=? and studentclass=? and term=? and year=?";
 
                     pstmt = con.prepareStatement(updatePosition);
