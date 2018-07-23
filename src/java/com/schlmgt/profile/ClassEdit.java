@@ -111,13 +111,13 @@ public class ClassEdit implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            
+
             String personalDetails = "update tbstudentclass set currentclass=?,"
                     + "updatedby=?,updaterid=?,dateupdated=? where studentid=? and id=?";
 
             pstmt = con.prepareStatement(personalDetails);
 
-            pstmt.setBoolean(1, false);           
+            pstmt.setBoolean(1, false);
             pstmt.setString(2, createdby);
             pstmt.setString(3, createdId);
             pstmt.setString(4, DateManipulation.dateAndTime());
@@ -158,6 +158,7 @@ public class ClassEdit implements Serializable {
             setSclass("");
             setGrade("");
             setArm("");
+            subModel = clasEdit();
 
         } catch (Exception ex) {
             ex.printStackTrace();
