@@ -24,7 +24,7 @@
                                 <f:selectItems value="#{prof.classmodel}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.tbclass}"
-                                               itemValue="#{singlevalue.tbclass}"/>
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu>   
 
                             <h:outputText value="&#160;" /><h:outputText value="&#160;" />                                           
@@ -105,7 +105,7 @@
                                     <h:outputText value="Class"/>
                                 </f:facet>
 
-                                <h:outputText value="#{papprv_rpt.sclass}"/>
+                                <h:outputText value="#{classmode.gradeGet(papprv_rpt.sclass)}"/>
 
                             </p:column>
                             <p:column>

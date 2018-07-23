@@ -21,9 +21,9 @@
             <div class="ibox-content">
                 <p:messages closable="true" id="dude"></p:messages>
                 <p:panel style="border: none" id="up">
-                    <p:outputLabel value="Current Class: "/> <p:outputLabel value="#{editClass.edits.currentClass}"/>
+                    <p:outputLabel value="Current Class: "/> <p:outputLabel value="#{classmode.gradeGet(editClass.edits.currentClass)}"/>
                     <br/>
-                    <p:outputLabel value="Term: "/> <p:outputLabel value="#{editClass.edits.term}"/>
+                    <p:outputLabel value="Term: "/> <p:outputLabel value="#{classmode.termGet(editClass.edits.term)}"/>
                     <br/>
                     <p:outputLabel value="Arm: "/> <p:outputLabel value="#{editClass.edits.tbarm}"/>
                     <br/>
@@ -39,7 +39,7 @@
                         <f:selectItems value="#{classmode.classmodel}"
                                        var="singlevalue"  
                                        itemLabel="#{singlevalue.tbclass}"
-                                       itemValue="#{singlevalue.tbclass}"/>
+                                       itemValue="#{singlevalue.id}"/>
                     </p:selectOneMenu>   
 
 
@@ -50,7 +50,7 @@
                         <f:selectItems value="#{classmode.grademodels}"
                                        var="singlevalue"  
                                        itemLabel="#{singlevalue.grade}"
-                                       itemValue="#{singlevalue.grade}"/>
+                                       itemValue="#{singlevalue.id}"/>
                     </p:selectOneMenu> 
                     <p:selectOneMenu id="arm" class="form-control" value="#{editClass.arm}" required="true" requiredMessage="Arm required">                                
                         <p:ajax listener="#{classmode.ongradeChanges}" update="gra" />                    
@@ -61,7 +61,9 @@
                     <p:selectOneMenu id="gra" class="form-control" value="#{editClass.term}" required="true" requiredMessage="Term required">                                
                         <p:ajax listener="#{classmode.ontermChanges(editClass.term)}" update="gr" />
                         <f:selectItem itemLabel="--Select Term--" itemValue="" noSelectionOption="true"/>
-                        <f:selectItems value="#{classmode.termList}"/>
+                        <f:selectItems value="#{classmode.termList}" var="singlevalue"  
+                                       itemLabel="#{singlevalue.term}"
+                                       itemValue="#{singlevalue.id}"/>
                     </p:selectOneMenu>                 
                     <p:selectOneMenu id="gr" class="form-control" value="#{editClass.year}" required="true" requiredMessage="Year required">                                                    
                         <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
@@ -107,7 +109,7 @@
                                 <h:outputText value="Previous Class"/>
                             </f:facet>
 
-                            <h:outputText value="#{papprv_rpt.currentClass}"/>
+                            <h:outputText value="#{classmode.gradeGet(papprv_rpt.currentClass)}"/>
 
                         </p:column>
 
@@ -117,7 +119,7 @@
                                 <h:outputText value="Term"/>
                             </f:facet>
 
-                            <h:outputText value="#{papprv_rpt.term}"/>
+                            <h:outputText value="#{classmode.termGet(papprv_rpt.term)}"/>
 
                         </p:column>
 

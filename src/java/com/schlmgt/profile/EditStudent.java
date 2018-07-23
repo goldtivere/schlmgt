@@ -122,6 +122,7 @@ public class EditStudent implements Serializable {
     private String term;
     private String year;
     private int sid;
+    private String sexs;
 
     @PostConstruct
     public void init() {
@@ -761,6 +762,13 @@ public class EditStudent implements Serializable {
                 setBgroup(rs.getString("bgroup"));
                 setImagelink(rs.getString("image"));
                 setImageLocation(rs.getString("imgLocation"));
+                if(getSex().equalsIgnoreCase("1"))
+                {
+                    setSexs("Male");
+                }else if(getSex().equalsIgnoreCase("2"))
+                {
+                     setSexs("Female");
+                }
             }
 
             //for studentclassupload
@@ -1178,6 +1186,14 @@ public class EditStudent implements Serializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public String getSexs() {
+        return sexs;
+    }
+
+    public void setSexs(String sexs) {
+        this.sexs = sexs;
     }
 
     public int getSid() {

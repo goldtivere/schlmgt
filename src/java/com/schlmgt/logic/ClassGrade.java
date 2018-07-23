@@ -580,7 +580,7 @@ public class ClassGrade implements Serializable {
             }
 
         }
-    }
+    }   
 
     public void ontermChanges() throws Exception {
 

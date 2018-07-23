@@ -30,7 +30,7 @@
                                 <h:outputText value="Phone Number: "/> <h:outputText value="#{edit.sphone}"/> 
                                 <h:outputText value="Email: "/> <h:outputText value="#{edit.semail}"/> 
                                 <h:outputText value="Date Of Birth: "/> <h:outputText value="#{edit.dob}"/>
-                                <h:outputText value="Sex: "/> <h:outputText value="#{edit.sex}"/>
+                                <h:outputText value="Sex: "/> <h:outputText value="#{edit.sexs}"/>
 
                                 <p:commandButton value="Update" class="pull-left" type="button" onclick="PF('dlg2').show();" />                               
                             </h:panelGrid>                                                                                                       
@@ -41,13 +41,13 @@
                                     <h:outputText value="First Name: "/> <h:outputText value="#{edit.gfname}"/> 
                                     <h:outputText value="Middle Name: "/> <h:outputText value="#{edit.gmname}"/> 
                                     <h:outputText value="Last Name: "/> <h:outputText value="#{edit.glname}"/>                        
-                                    <h:outputText value="Relationship: "/> <h:outputText value="#{edit.relationship}"/> 
+                                    <h:outputText value="Relationship: "/> <h:outputText value="#{classmode.relationshipGet(edit.relationship)}"/> 
                                     <h:outputText value="Other Realtionship: "/> <h:outputText value="#{edit.relationship_other}"/> 
                                     <h:outputText value="Phone Numner: "/> <h:outputText value="#{edit.gphone}"/>                                            
                                     <h:outputText value="Email:  "/> <h:outputText value="#{edit.gmemail}"/> 
-                                    <h:outputText value="Country: "/> <h:outputText value="#{edit.gcountry}"/> 
-                                    <h:outputText value="State: "/> <h:outputText value="#{edit.state}"/> 
-                                    <h:outputText value="L.G.A.: "/> <h:outputText value="#{edit.lga}"/> 
+                                    <h:outputText value="Country: "/> <h:outputText value="#{classmode.countryOrigin(edit.gcountry)}"/> 
+                                    <h:outputText value="State: "/> <h:outputText value="#{classmode.stateOrigin(edit.state)}"/> 
+                                    <h:outputText value="L.G.A.: "/> <h:outputText value="#{classmode.lgaValue(edit.lga)}"/> 
                                     <h:outputText value="Address: "/> <h:outputText value="#{edit.address}"/> 
                                     <p:commandButton value="Update" class="pull-left" type="button" onclick="PF('dlg').show();" />
                                 </h:panelGrid>
@@ -56,15 +56,15 @@
                         <p:tab title="Previous Education History">
                             <h:panelGrid columns="2" cellpadding="10">
                                 <h:outputText value="Previous School: "/> <h:outputText value="#{edit.previousSchl}"/> 
-                                <h:outputText value="Previous Class: "/> <h:outputText value="#{edit.previousClass}"/>    
+                                <h:outputText value="Previous Class: "/> <h:outputText value="#{classmode.gradeGet(edit.previousClass)}"/>    
                                 <p:commandButton value="Update" class="pull-left" type="button" onclick="PF('dlg1').show();" />
                             </h:panelGrid>
                         </p:tab>           
                         <p:tab title="Health History">
                             <h:panelGrid columns="2" cellpadding="10">
-                                <h:outputText value="Disability: "/> <h:outputText value="#{edit.disability}"/> 
+                                <h:outputText value="Disability: "/> <h:outputText value="#{classmode.disabilityGet(edit.disability)}"/> 
                                 <h:outputText value="Other Disability: "/> <h:outputText value="#{edit.otherDis}"/>  
-                                <h:outputText value="Blood Group: "/> <h:outputText value="#{edit.bgroup}"/>  
+                                <h:outputText value="Blood Group: "/> <h:outputText value="#{classmode.bloodGet(edit.bgroup)}"/>  
                                 <p:commandButton value="Update" class="pull-left" type="button" onclick="PF('dlg3').show();" />
                             </h:panelGrid>
                         </p:tab>
@@ -131,8 +131,8 @@
                                     <p:outputLabel for="sex" value="Sex: "></p:outputLabel>
                                     <p:selectOneMenu id="sex" requiredMessage="Sex is required" value="#{edit.sex}" style="width:125px" required="true">
                                         <f:selectItem itemLabel="Select Sex" itemValue=""  noSelectionOption="true" />
-                                        <f:selectItem itemLabel="Male" itemValue="Male" />
-                                        <f:selectItem itemLabel="Female" itemValue="Female" />                                   
+                                        <f:selectItem itemLabel="Male" itemValue="1" />
+                                        <f:selectItem itemLabel="Female" itemValue="2" />                                   
                                     </p:selectOneMenu> 
                                     <p:message for="sex"/>  
                                     <f:facet name="footer">
@@ -165,7 +165,7 @@
                                         <f:selectItems value="#{edit.relation}"
                                                        var="singlevalue"  
                                                        itemLabel="#{singlevalue.relation}"
-                                                       itemValue="#{singlevalue.relation}"/>
+                                                       itemValue="#{singlevalue.id}"/>
                                     </p:selectOneMenu>                                     
                                     <p:message for="relation"/>
 
@@ -198,7 +198,7 @@
                                         <f:selectItems value="#{edit.coun}"
                                                        var="singlevalue"  
                                                        itemLabel="#{singlevalue.country}"
-                                                       itemValue="#{singlevalue.country}"/>
+                                                       itemValue="#{singlevalue.id}"/>
                                     </p:selectOneMenu>                               
                                     <p:message for="gcount"/>
 
@@ -209,7 +209,7 @@
                                         <f:selectItems value="#{edit.states}"
                                                        var="singlevalue"  
                                                        itemLabel="#{singlevalue.state}"
-                                                       itemValue="#{singlevalue.state}"/>
+                                                       itemValue="#{singlevalue.id}"/>
                                     </p:selectOneMenu>    
                                     <p:message for="gstate"/>  
 
@@ -221,7 +221,7 @@
                                         <f:selectItems value="#{edit.lgamodel}"
                                                        var="singlevalue"  
                                                        itemLabel="#{singlevalue.lga}"
-                                                       itemValue="#{singlevalue.lga}"/>
+                                                       itemValue="#{singlevalue.id}"/>
                                     </p:selectOneMenu>                               
                                     <p:message for="lga"/>
 
@@ -254,7 +254,7 @@
                                         <f:selectItems value="#{edit.classmodel}"
                                                        var="singlevalue"  
                                                        itemLabel="#{singlevalue.tbclass}"
-                                                       itemValue="#{singlevalue.tbclass}"/>
+                                                       itemValue="#{singlevalue.id}"/>
                                     </p:selectOneMenu>
                                     <p:message for="class"/>
 
@@ -264,7 +264,7 @@
                                         <f:selectItems value="#{edit.grademodels}"
                                                        var="singlevalue"  
                                                        itemLabel="#{singlevalue.grade}"
-                                                       itemValue="#{singlevalue.grade}"/>
+                                                       itemValue="#{singlevalue.id}"/>
                                     </p:selectOneMenu>
                                     <p:message for="grade"/>
 
@@ -288,7 +288,7 @@
                                         <f:selectItems value="#{edit.dismodel}"
                                                        var="singlevalue"  
                                                        itemLabel="#{singlevalue.disability}"
-                                                       itemValue="#{singlevalue.disability}"/>
+                                                       itemValue="#{singlevalue.id}"/>
                                     </p:selectOneMenu>                                       
                                     <p:message for="disability"/>
 
@@ -305,7 +305,7 @@
                                         <f:selectItems value="#{freg.modelgroup}"
                                                        var="singlevalue"  
                                                        itemLabel="#{singlevalue.bloodgroup}"
-                                                       itemValue="#{singlevalue.bloodgroup}"/>
+                                                       itemValue="#{singlevalue.id}"/>
                                     </p:selectOneMenu>   
                                     <p:message for="bgrp"/>  
                                     <f:facet name="footer">
