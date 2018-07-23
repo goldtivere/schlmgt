@@ -68,7 +68,16 @@
                                     <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
                                     <p:dataExporter type="xml" target="s" fileName="report" pageOnly="true" />
                                 </h:commandLink>
-                            </f:facet>                           
+                            </f:facet>  
+                            <p:column>
+
+                                <f:facet name="header">
+                                    <h:outputText value="Student ID"/>
+                                </f:facet>
+
+                                <h:outputText value="#{papprv_rpt.studentid}"/>
+
+                            </p:column>
                             <p:column>
 
                                 <f:facet name="header">

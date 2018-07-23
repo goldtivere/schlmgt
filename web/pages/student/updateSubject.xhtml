@@ -43,7 +43,7 @@
                                 <f:selectItems value="#{classmode.classmodel}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.tbclass}"
-                                               itemValue="#{singlevalue.tbclass}"/>
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu>   
 
 
@@ -53,13 +53,15 @@
                                 <f:selectItems value="#{classmode.grademodels}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.grade}"
-                                               itemValue="#{singlevalue.grade}"/>
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu> 
 
                             <p:selectOneMenu id="gra" class="form-control" value="#{subjectUpdate.term}" required="true" requiredMessage="Grade required">                                
                                 <p:ajax listener="#{classmode.ontermChanges(subjectUpdate.term)}" update="gr" />
                                 <f:selectItem itemLabel="--Select Term--" itemValue="" noSelectionOption="true"/>
-                                <f:selectItems value="#{classmode.termList}"/>
+                                <f:selectItems value="#{classmode.termList}" var="singlevalue"  
+                                               itemLabel="#{singlevalue.term}"
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu> 
                             <p:selectOneMenu id="gr" class="form-control" value="#{subjectUpdate.year}" required="true" requiredMessage="Grade required">                                
                                 <p:ajax listener="#{subjectUpdate.onYearChange()}" update="nursery,nur" />
@@ -77,9 +79,9 @@
             <div class="col-md-6" style="margin-top: 20px;"> 
                 <p:panel visible="#{subjectUpdate.status}" id="nursery">
                     <div class="ibox-content">
-                        <p:outputLabel value="#{subjectUpdate.studentGrade}"></p:outputLabel>
+                        <p:outputLabel value="#{classmode.gradeGet(subjectUpdate.studentGrade)}"></p:outputLabel>
                         <br/>
-                        <p:outputLabel value="#{subjectUpdate.term}, #{subjectUpdate.year}"></p:outputLabel>
+                        <p:outputLabel value="#{classmode.termGet(subjectUpdate.term)}, #{subjectUpdate.year}"></p:outputLabel>
 
                         <p:dataTable id="n" class="table table-responsive" scrollable="true" scrollHeight="150" var="papprv_rpt" 
                                      value="#{subjectUpdate.sesTab}"

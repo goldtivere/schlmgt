@@ -38,12 +38,14 @@
                                 <f:selectItems value="#{classmode.grademodels}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.grade}"
-                                               itemValue="#{singlevalue.grade}"/>
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu>                             
                             <p:selectOneMenu id="gra" class="form-control" value="#{result.term}" required="true" requiredMessage="Term required">                                
                                 <p:ajax listener="#{classmode.ontermChanges(result.term)}" update="gr" />
                                 <f:selectItem itemLabel="--Select Term--" itemValue="" noSelectionOption="true"/>
-                                <f:selectItems value="#{classmode.termList}"/>
+                                <f:selectItems value="#{classmode.termList}" var="singlevalue"  
+                                               itemLabel="#{singlevalue.term}"
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu>                 
                             <p:selectOneMenu id="gr" class="form-control" value="#{result.year}" required="true" requiredMessage="Year required">  
                                 <p:ajax listener="#{result.onyearchange()}" update="nur,nurs,n" />
