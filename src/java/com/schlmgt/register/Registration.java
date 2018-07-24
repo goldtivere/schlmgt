@@ -46,20 +46,30 @@ public class Registration implements Serializable {
     private boolean staffStatus;
     private boolean but;
     private boolean put;
+    private Boolean loi;
     private UploadedFile csv;
     private String messangerOfTruth;
+    private boolean lut;
 
     @PostConstruct
     public void init() {
         studentStatus = false;
         staffStatus = false;
         but = false;
+        lut = false;
+        put = false;
 
     }
 
     public String regStudent() throws Exception {
 
         return "registerStudent.xhtml?faces-redirect=true";
+
+    }
+
+    public String regAdmin() throws Exception {
+
+        return "registerAdmin.xhtml?faces-redirect=true";
 
     }
 
@@ -74,18 +84,28 @@ public class Registration implements Serializable {
             setStaffStatus(true);
             setBut(false);
             setPut(false);
+            setLut(false);
         } else if ("2".equalsIgnoreCase(getRegistration()) && "Data upload".equalsIgnoreCase(getRegType())) {
             setStaffStatus(true);
             setBut(false);
             setPut(false);
+            setLut(false);
         } else if ("1".equalsIgnoreCase(getRegistration()) && "Data Entry".equalsIgnoreCase(getRegType())) {
             setStaffStatus(false);
             setBut(true);
             setPut(false);
+            setLut(false);
         } else if ("2".equalsIgnoreCase(getRegistration()) && "Data entry".equalsIgnoreCase(getRegType())) {
             setStaffStatus(false);
             setBut(false);
             setPut(true);
+            setLut(false);
+        } else if ("3".equalsIgnoreCase(getRegistration()) && "Data entry".equalsIgnoreCase(getRegType())) {
+            setLut(true);
+            setStaffStatus(false);
+            setBut(false);
+            setPut(false);
+
         }
     }
 
@@ -309,8 +329,8 @@ public class Registration implements Serializable {
                                     UUID idOne = UUID.randomUUID();
                                     //InputStream fin2 = file.getInputstream();                                    
                                     String insert = "insert into user_details (first_name,middlename,last_name,username,email_address,role_id,"
-                                            + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed,suspendedstatus) "
-                                            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                            + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed,suspendedstatus,roleassigned) "
+                                            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
                                     pstmt = con.prepareStatement(insert);
 
@@ -331,6 +351,7 @@ public class Registration implements Serializable {
                                     pstmt.setString(15, mode.getAddress());
                                     pstmt.setString(16, does);
                                     pstmt.setBoolean(17, false);
+                                    pstmt.setInt(18, 1);
 
                                     pstmt.executeUpdate();
 
@@ -847,9 +868,22 @@ public class Registration implements Serializable {
     }
 
     public void regDetails() {
-        typeValue.clear();
-        typeValue.add("Data Upload");
-        typeValue.add("Data Entry");
+        if ("3".equalsIgnoreCase(getRegistration())) {
+            typeValue.clear();
+            typeValue.add("Data Entry");
+        } else {
+            typeValue.clear();
+            typeValue.add("Data Upload");
+            typeValue.add("Data Entry");
+        }
+    }
+
+    public boolean isLut() {
+        return lut;
+    }
+
+    public void setLut(boolean lut) {
+        this.lut = lut;
     }
 
     public UploadedFile getCsv() {

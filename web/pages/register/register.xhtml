@@ -57,7 +57,7 @@
                                 <f:selectItems value="#{classmode.classmodel}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.tbclass}"
-                                               itemValue="#{singlevalue.tbclass}"/>
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu>   
                         </div>
                         <div class="form-group">
@@ -68,7 +68,7 @@
                                 <f:selectItems value="#{classmode.grademodels}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.grade}"
-                                               itemValue="#{singlevalue.grade}"/>
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu>
                         </div>
                         <div class="form-group">
@@ -126,7 +126,7 @@
 
 
                     </div>
-                    <p:commandButton class="btn btn-sm btn-primary m-t-n-xs" update="message"
+                    <p:commandButton class="btn btn-sm btn-primary m-t-n-xs" update="message,reg"
                                      actionListener="#{reg.register}" process="@this fname,lname,uname,email,mname,qual,add,grad,sclass,reg" value="Register"/>
 
 
