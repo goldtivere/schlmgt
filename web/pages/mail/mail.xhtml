@@ -57,7 +57,7 @@
                                 <f:selectItems value="#{classmode.classmodel}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.tbclass}"
-                                               itemValue="#{singlevalue.tbclass}"/>
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu>   
 
 
@@ -67,7 +67,7 @@
                                 <f:selectItems value="#{classmode.grademodels}"
                                                var="singlevalue"  
                                                itemLabel="#{singlevalue.grade}"
-                                               itemValue="#{singlevalue.grade}"/>
+                                               itemValue="#{singlevalue.id}"/>
                             </p:selectOneMenu> 
                             <p:selectOneMenu id="gr" class="form-control" value="#{sms.year}" required="true" requiredMessage="Grade required">                                
                                 <p:ajax listener="#{sms.ongradeChanges(sms.student_class,sms.student_grade)}" update="nursery,stafff" />
@@ -87,7 +87,7 @@
             <div style="margin-top: 20px;"> 
                 <p:panel visible="#{sms.status}" id="nursery">
                     <div class="ibox-content">
-                        <p:outputLabel value="#{sms.student_grade}"></p:outputLabel>
+                        <p:outputLabel value="#{classmode.gradeGet(sms.student_grade)}"></p:outputLabel>
                         <br/>
                         <p:dataTable id="ne" class="table table-responsive" scrollable="true" var="papprv_rpt" 
                                      value="#{sms.secModel}"
@@ -241,7 +241,7 @@
                         $('#loginLink').fadeOut();
                     }
                 }
-
+                
                 function handleLogin(xhr, status, args) {
                     if (args.validationFailed || !args.loggedIn) {
                         PF('dlg3').jq.effect("shake", {times: 5}, 100);
