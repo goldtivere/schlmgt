@@ -298,12 +298,11 @@ public class ResultUpdate implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "select average, COUNT(average) as countPosition from tbfinalcompute where studentclass=? and term=? and year=? and isdeleted=? GROUP BY average HAVING COUNT(average) > 0 order by average desc";
+            String query = "select average, COUNT(average) as countPosition from tbfinalcompute where studentclass=? and year=? and isdeleted=? GROUP BY average HAVING COUNT(average) > 0 order by average desc";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, getGrade());
-            pstmt.setString(2, getTerm());
-            pstmt.setString(3, getYear());
-            pstmt.setBoolean(4, false);
+            pstmt.setString(2, getYear());
+            pstmt.setBoolean(3, false);
             rs = pstmt.executeQuery();
             //            
             List<Double> lst = new ArrayList<>();
@@ -319,16 +318,15 @@ public class ResultUpdate implements Serializable {
 
             }
 
-            String updatePosition = "update tbfinalcompute set position=? where average=? and studentclass=? and term=? and year=?";
+            String updatePosition = "update tbfinalcompute set position=? where average=? and studentclass=? and year=?";
             pstmt = con.prepareStatement(updatePosition);
             int rank = 0;
             for (int i = 0; i < lst.size(); i++) {
 
                 pstmt.setString(1, String.valueOf(rank + 1));
                 pstmt.setDouble(2, lst.get(i));
-                pstmt.setString(3, getGrade());
-                pstmt.setString(4, getTerm());
-                pstmt.setString(5, getYear());
+                pstmt.setString(3, getGrade());               
+                pstmt.setString(4, getYear());
                 pstmt.executeUpdate();
                 rank += dbd.get(i);
             }
@@ -537,6 +535,7 @@ public class ResultUpdate implements Serializable {
                             updateCompute(studentId);
                             populatePosition();
                             updateComputeFinal(studentId);
+                            populatePositionFinal();
                             setMessangerOfTruth("Records Successfully Updated!!!.");
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
@@ -749,7 +748,7 @@ public class ResultUpdate implements Serializable {
             updateComputeFinal(modelResult.getStudentId());
             averagePosition(modelResult.getStudentId());
             populatePosition();
-
+            populatePositionFinal();
             setMessangerOfTruth("Result Updated!!");
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
@@ -1190,7 +1189,6 @@ public class ResultUpdate implements Serializable {
                         pstmt.setString(6, mm.getStudentReg());
 
                         pstmt.executeUpdate();
-                        
 
                     } else if ("2".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "update tbfinalcompute set secondterm=?,dateupdated=?,updatedby=? where studentclass=?"
@@ -1203,7 +1201,7 @@ public class ResultUpdate implements Serializable {
                         pstmt.setString(4, mm.getGrade());
                         pstmt.setString(5, mm.getYear());
                         pstmt.setString(6, mm.getStudentReg());
-                        pstmt.executeUpdate();                        
+                        pstmt.executeUpdate();
 
                     } else if ("3".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "update tbfinalcompute set thirdterm=?,dateupdated=?,updatedby=? where studentclass=?"
@@ -1216,7 +1214,7 @@ public class ResultUpdate implements Serializable {
                         pstmt.setString(4, mm.getGrade());
                         pstmt.setString(5, mm.getYear());
                         pstmt.setString(6, mm.getStudentReg());
-                        pstmt.executeUpdate();                        
+                        pstmt.executeUpdate();
 
                     }
                 } else if (!rs.next()) {
@@ -1236,7 +1234,6 @@ public class ResultUpdate implements Serializable {
                         pstmt.setString(7, createdby);
                         pstmt.setBoolean(8, false);
                         pstmt.executeUpdate();
-                        
 
                     } else if ("2".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,secondterm,datecreated,createdby,isdeleted) values("
@@ -1251,7 +1248,7 @@ public class ResultUpdate implements Serializable {
                         pstmt.setString(6, DateManipulation.dateAndTime());
                         pstmt.setString(7, createdby);
                         pstmt.setBoolean(8, false);
-                        pstmt.executeUpdate();                        
+                        pstmt.executeUpdate();
 
                     } else if ("3".equalsIgnoreCase(getTerm())) {
                         String resultDetail = "insert into tbfinalcompute (studentreg,studentclass,term,year,thirdterm,datecreated,createdby,isdeleted) values("
@@ -1267,7 +1264,7 @@ public class ResultUpdate implements Serializable {
                         pstmt.setString(7, createdby);
                         pstmt.setBoolean(8, false);
                         pstmt.executeUpdate();
-                        
+
                     }
                 }
             }
@@ -1433,6 +1430,7 @@ public class ResultUpdate implements Serializable {
                     pstmt.executeUpdate();
                 }
             }
+            populatePositionFinal();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1539,7 +1537,6 @@ public class ResultUpdate implements Serializable {
                 pstmt.setString(5, mode.getGrade());
                 pstmt.setString(6, mode.getYear());
                 pstmt.executeUpdate();
-               
 
             } else if ("2".equalsIgnoreCase(mode.getTerm())) {
                 String updatePosition = "update tbfinalcompute set secondterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and year=?";
@@ -1552,7 +1549,7 @@ public class ResultUpdate implements Serializable {
                 pstmt.setString(4, mode.getStudentReg());
                 pstmt.setString(5, mode.getGrade());
                 pstmt.setString(6, mode.getYear());
-                pstmt.executeUpdate();                
+                pstmt.executeUpdate();
 
             } else if ("3".equalsIgnoreCase(mode.getTerm())) {
                 String updatePosition = "update tbfinalcompute set thirdterm=?,dateupdated=?,updatedby=? where StudentReg=? and studentclass=? and year=?";
@@ -1565,10 +1562,10 @@ public class ResultUpdate implements Serializable {
                 pstmt.setString(4, mode.getStudentReg());
                 pstmt.setString(5, mode.getGrade());
                 pstmt.setString(6, mode.getYear());
-                pstmt.executeUpdate();                
+                pstmt.executeUpdate();
 
             }
-             populatePositionFinal();
+            populatePositionFinal();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

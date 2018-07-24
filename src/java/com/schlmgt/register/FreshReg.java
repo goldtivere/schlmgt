@@ -104,6 +104,7 @@ public class FreshReg implements Serializable {
     private String displaydate;
     private String imageLocation;
     private List<GradeModel> modeGrade;
+    private String sexs;
 
     @PostConstruct
     public void init() {
@@ -1064,6 +1065,14 @@ public class FreshReg implements Serializable {
             gradeMode.setGrade(gradeMode.getGrade());
             setArm(getArm());
             setSex(getSex());
+            if(getSex().equalsIgnoreCase("1"))
+            {
+                setSexs("Male");
+            }
+            else if(getSex().equalsIgnoreCase("2"))
+            {
+                setSexs("Female");
+            }
 
             modeldis.setDisability(modeldis.getDisability());
             setDisoption(getDisoption());
@@ -1077,6 +1086,14 @@ public class FreshReg implements Serializable {
     public void back() {
         setConfirmPanel(false);
         setStudentPanel(true);
+    }
+
+    public String getSexs() {
+        return sexs;
+    }
+
+    public void setSexs(String sexs) {
+        this.sexs = sexs;
     }
 
     public String getYear() {
