@@ -30,6 +30,7 @@
                                 <h:outputText value="Phone Number: "/> <h:outputText value="#{staffProfile.pnum}"/> 
                                 <h:outputText value="Email: "/> <h:outputText value="#{staffProfile.email}"/> 
                                 <h:outputText value="Date Employed: "/> <h:outputText value="#{staffProfile.dateEmployed}"/>                               
+                                <h:outputText value="Designation: " rendered="#{staffProfile.roleAssigned}" /> <h:outputText value="#{staffProfile.designation}" rendered="#{staffProfile.roleAssigned}"/>
                                 <h:outputText value="Staff Qualification: "/> <h:outputText value="#{staffProfile.highQua}"/>
                                 <h:outputText value="Staff Address "/> <h:outputText value="#{staffProfile.address}"/>
 
@@ -166,13 +167,17 @@
                                     <p:inputText id="qua" required="true" value="#{staffProfile.highQua}" requiredMessage="Highest Qualification is required" />
                                     <p:message for="qua"/>
 
+                                    <p:outputLabel for="desc" value="Designation: " rendered="#{staffProfile.roleAssigned}"></p:outputLabel>
+                                    <p:inputText id="desc" required="true"  rendered="#{staffProfile.roleAssigned}" value="#{staffProfile.designation}" requiredMessage="Designation is required" />
+                                    <p:message for="desc" rendered="#{staffProfile.roleAssigned}"/>
+
                                     <p:outputLabel for="dobs" value="Date Employed: "/> 
                                     <p:calendar id="dobs" yearRange="1980:2017" value="#{staffProfile.doe}" pattern="dd/MM/yyyy"  navigator="true" requiredMessage="Date Employed is required" required="true">
                                         <f:convertDateTime pattern="dd/MM/yyyy" />
                                     </p:calendar>
                                     <p:message for="dobs"/>                                       
                                     <f:facet name="footer">
-                                        <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs,add,qua" update=":templateForm:growl,:templateForm:pan" actionListener="#{staffProfile.staffUpload}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
+                                        <p:commandButton class="btn btn-primary pull-right" process="@this fnames,mnames,lnames,pnums,emails,dobs,add,qua,desc" update=":templateForm:growl,:templateForm:pan" actionListener="#{staffProfile.staffUpload}" oncomplete="handleLoginRequests(xhr, status, args)" style="margin-top: 20px;" value="update"/>
                                     </f:facet>
                                 </h:panelGrid>
                             </p:panel>
