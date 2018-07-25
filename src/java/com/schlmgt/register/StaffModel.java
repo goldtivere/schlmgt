@@ -12,7 +12,8 @@ import java.util.Date;
  *
  * @author Gold
  */
-public class StaffModel implements Serializable{
+public class StaffModel implements Serializable {
+
     private int id;
     private String staffId;
     private String fname;
@@ -29,6 +30,8 @@ public class StaffModel implements Serializable{
     private String dateStopped;
     private Date das;
     private String year;
+    private int roleAssigned;
+    private int roleid;
 
     public int getId() {
         return id;
@@ -70,7 +73,6 @@ public class StaffModel implements Serializable{
         this.das = das;
     }
 
-    
     public String getFname() {
         return fname;
     }
@@ -158,5 +160,21 @@ public class StaffModel implements Serializable{
     public void setYear(String year) {
         this.year = year;
     }
-    
+
+    public int getRoleAssigned() {
+        return roleAssigned;
+    }
+
+    public void setRoleAssigned(int roleAssigned) {
+        this.roleAssigned = roleAssigned;
+    }
+
+    public int getRoleid() {
+        return roleid;
+    }
+
+    public void setRoleid(int roleid) {
+        this.roleid = roleid;
+    }
+
 }

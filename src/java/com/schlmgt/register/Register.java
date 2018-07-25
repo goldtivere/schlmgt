@@ -48,7 +48,7 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean(name = "reg")
 @ViewScoped
 public class Register implements Serializable {
-
+    
     private String fname;
     private String lname;
     private String mname;
@@ -68,172 +68,172 @@ public class Register implements Serializable {
     private String year;
     private Date doe;
     private String imageLocation;
-
+    
     public String getImageLocation() {
         return imageLocation;
     }
-
+    
     public void setImageLocation(String imageLocation) {
         this.imageLocation = imageLocation;
     }
-
+    
     public String getYear() {
         return year;
     }
-
+    
     public void setYear(String year) {
         this.year = year;
     }
-
+    
     public String getMname() {
         return mname;
     }
-
+    
     public void setMname(String mname) {
         this.mname = mname;
     }
-
+    
     public Date getDoe() {
         return doe;
     }
-
+    
     public void setDoe(Date doe) {
         this.doe = doe;
     }
-
+    
     public String getAddress() {
         return address;
     }
-
+    
     public void setAddress(String address) {
         this.address = address;
     }
-
+    
     public String getHighQua() {
         return highQua;
     }
-
+    
     public void setHighQua(String highQua) {
         this.highQua = highQua;
     }
-
+    
     public String getStaffClass() {
         return staffClass;
     }
-
+    
     public void setStaffClass(String staffClass) {
         this.staffClass = staffClass;
     }
-
+    
     public String getStaffGrade() {
         return staffGrade;
     }
-
+    
     public void setStaffGrade(String staffGrade) {
         this.staffGrade = staffGrade;
     }
-
+    
     public String getRef_number() {
         return ref_number;
     }
-
+    
     public void setRef_number(String ref_number) {
         this.ref_number = ref_number;
     }
-
+    
     public String getPassport_url() {
         return passport_url;
     }
-
+    
     public void setPassport_url(String passport_url) {
         this.passport_url = passport_url;
     }
-
+    
     public String getRepassword() {
         return repassword;
     }
-
+    
     public void setRepassword(String repassword) {
         this.repassword = repassword;
     }
-
+    
     public String getMessangerOfTruth() {
         return messangerOfTruth;
     }
-
+    
     public void setMessangerOfTruth(String messangerOfTruth) {
         this.messangerOfTruth = messangerOfTruth;
     }
-
+    
     public UploadedFile getPassport_file() {
         return passport_file;
     }
-
+    
     public void setPassport_file(UploadedFile passport_file) {
         this.passport_file = passport_file;
     }
-
+    
     public String getFname() {
         return fname;
     }
-
+    
     public void setFname(String fname) {
         this.fname = fname;
     }
-
+    
     public String getLname() {
         return lname;
     }
-
+    
     public void setLname(String lname) {
         this.lname = lname;
     }
-
+    
     public String getUsername() {
         return username;
     }
-
+    
     public void setUsername(String username) {
         this.username = username;
     }
-
+    
     public String getPassword() {
         return password;
     }
-
+    
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public String getEmailadd() {
         return emailadd;
     }
-
+    
     public void setEmailadd(String emailadd) {
         this.emailadd = emailadd;
     }
-
+    
     public Register() {
         ref_number = generateRefNo();
     }
-
+    
     public String generateRefNo() {
-
+        
         try {
-
+            
             String timeStamp = new SimpleDateFormat("yyMMddHHmmss").format(Calendar.getInstance().getTime());
-
+            
             int rnd = new Random().nextInt(99999753);
             String temp_val = String.valueOf(rnd).concat(timeStamp);
             return temp_val;
-
+            
         } catch (Exception ex) {
-
+            
             ex.printStackTrace();
             return null;
-
+            
         }
-
+        
     }//end generateRefNo(...)
 
     public void refresh() {
@@ -244,18 +244,18 @@ public class Register implements Serializable {
         setAddress("");
         setHighQua("");
         setEmailadd("");
-        clearPix();
-
+        setPassport_url("");
+        
     }
-
+    
     public void clearPix() {
-
+        
         LoadPPTfile loadPPTfile = new LoadPPTfile();
-
+        
         try {
-
+            
             String file_ = "pix".concat(String.valueOf(getRef_number())).concat(".jpg");
-
+            
             if (!(loadPPTfile.isLoadPPtFile())) {
                 setMessangerOfTruth("Cannot load configuration file...");
                 setMessangerOfTruth("Operation failed");
@@ -264,22 +264,22 @@ public class Register implements Serializable {
             //
             Properties ppt = loadPPTfile.getPptFile();
             String url = ppt.getProperty("pst_location");
-
+            
             File file = new File(url + "".concat(file_));
             file.delete();
             //
             setPassport_file(null);
             passport_file = null;
             setPassport_url("");
-
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
+        
     }
-
+    
     public void handleFileUpload(FileUploadEvent event) {
-
+        
         setPassport_file(event.getFile());
         setPassport_url("");
         setImageLocation("");
@@ -288,34 +288,34 @@ public class Register implements Serializable {
         //System.out.println("fileNameByte:" + fileNameByte);
         FacesMessage message;
         UploadImagesX uploadImagesX = new UploadImagesX();
-
+        
         try {
-
+            
             if (!(uploadImagesX.uploadImg(getPassport_file(), "pix".concat(String.valueOf(getRef_number()))))) {
-
+                
                 message = new FacesMessage(FacesMessage.SEVERITY_FATAL, uploadImagesX.getMessangerOfTruth(), uploadImagesX.getMessangerOfTruth());
                 FacesContext.getCurrentInstance().addMessage(null, message);
 
                 //value.setPst_url(null);
                 return;
-
+                
             }
-
+            
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             setPassport_url(uploadImagesX.getPst_url());
             setImageLocation(uploadImagesX.getPst_loc());
             FacesContext.getCurrentInstance().addMessage(null, message);
-
+            
         } catch (Exception ex) {
-
+            
             ex.printStackTrace();
             message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, message);
-
+            
         }
-
+        
     }
-
+    
     public int staffIdCheck() throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
@@ -325,28 +325,28 @@ public class Register implements Serializable {
         String testflname = "Select * from user_details order by id DESC LIMIT 1";
         pstmt = con.prepareStatement(testflname);
         rs = pstmt.executeQuery();
-
+        
         if (rs.next()) {
             return rs.getInt("id");
         }
         return 0;
     }
-
+    
     public void classUpload(int studentId, String staffclass, String staffgrade, String year, String createdby) {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
+        
         try {
             con = dbConnections.mySqlDBconnection();
-
+            
             String nurseryInsert = "insert into tbstaffclass (staffid,staffclass,staffgrade,year,datecreated,"
                     + "datetimecreated,createdby,status) values "
                     + "(?,?,?,?,?,?,?,?)";
-
+            
             pstmt = con.prepareStatement(nurseryInsert);
-
+            
             pstmt.setInt(1, studentId);
             pstmt.setString(2, staffclass);
             pstmt.setString(3, staffgrade);
@@ -356,25 +356,25 @@ public class Register implements Serializable {
             pstmt.setString(7, createdby);
             pstmt.setBoolean(8, true);
             pstmt.executeUpdate();
-
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-
+    
     public void register() {
-
+        
         FacesContext context = FacesContext.getCurrentInstance();
-
+        
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         FacesMessage msg;
-
+        
         UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
         String on = String.valueOf(userObj);
-
+        
         if (userObj == null) {
             setMessangerOfTruth("Expired Session, pleasere - login " + on);
             msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -382,18 +382,18 @@ public class Register implements Serializable {
             );
             context.addMessage(null, msg);
         }
-
+        
         String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
         String createdId
                 = String.valueOf(userObj.getId());
         String roleId
                 = String.valueOf(userObj.getRole_id());
-
+        
         con = dbConnections.mySqlDBconnection();
         UUID idOne = UUID.randomUUID();
-
+        
         try {
-
+            
             String testflname = "Select * from user_details where first_name=? and last_name=? and is_deleted=?";
             pstmt = con.prepareStatement(testflname);
             pstmt.setString(1, getFname());
@@ -404,9 +404,9 @@ public class Register implements Serializable {
                 setMessangerOfTruth("First Name and Last Name Aleady exists!!");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);
-
+                
             } else {
-
+                
                 String testusername = "Select * from user_details where username=? and is_deleted=?";
                 pstmt = con.prepareStatement(testusername);
                 pstmt.setString(1, getUsername());
@@ -416,9 +416,9 @@ public class Register implements Serializable {
                     setMessangerOfTruth("Phone Number Aleady exists!!");
                     msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                     context.addMessage(null, msg);
-
+                    
                 } else {
-
+                    
                     String testemail = "Select * from user_details where email_address=? and is_deleted=?";
                     pstmt = con.prepareStatement(testemail);
                     pstmt.setString(1, getEmailadd());
@@ -428,9 +428,9 @@ public class Register implements Serializable {
                         setMessangerOfTruth("Email Aleady exists!!");
                         msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                         context.addMessage(null, msg);
-
+                        
                     } else {
-
+                        
                         con.setAutoCommit(false);
                         //InputStream fin2 = file.getInputstream();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
@@ -438,9 +438,9 @@ public class Register implements Serializable {
                         String insert = "insert into user_details (first_name,middlename,last_name,username,image_name,img_location,email_address,role_id,"
                                 + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed,suspendedstatus,roleAssigned) "
                                 + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
+                        
                         pstmt = con.prepareStatement(insert);
-
+                        
                         pstmt.setString(1, getFname());
                         pstmt.setString(2, getMname());
                         pstmt.setString(3, getLname());
@@ -461,14 +461,14 @@ public class Register implements Serializable {
                         pstmt.setString(18, does);
                         pstmt.setBoolean(19, false);
                         pstmt.setInt(20, 1);
-
+                        
                         pstmt.executeUpdate();
-
+                        
                         String fullname = getLname() + " " + getFname();
                         String slink = "http://localhost:8080/SchlMgt/faces/pages/createStaff/index.xhtml?id=";
                         String insertemail = "insert into staffstatus (guid,fullname,status,datelogged,staffemail,datetime,staffphone,link)"
                                 + "values(?,?,?,?,?,?,?,?)";
-
+                        
                         pstmt = con.prepareStatement(insertemail);
                         pstmt.setString(1, idOne.toString());
                         pstmt.setString(2, fullname);
@@ -478,9 +478,9 @@ public class Register implements Serializable {
                         pstmt.setString(6, DateManipulation.dateAndTime());
                         pstmt.setString(7, getUsername());
                         pstmt.setString(8, slink + idOne.toString());
-
+                        
                         pstmt.executeUpdate();
-
+                        
                         classUpload(staffIdCheck(), getStaffClass(), getStaffGrade(), getYear(), createdby);
 
                         /**
@@ -491,19 +491,19 @@ public class Register implements Serializable {
                         setMessangerOfTruth("User Created!!");
                         msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                         context.addMessage(null, msg);
-
+                        
                         refresh();
-
+                        
                         con.commit();
                     }
                 }
             }
-
+            
         } catch (Exception e) {
             e.printStackTrace();
-
+            
         }
-
+        
     }
-
+    
 }

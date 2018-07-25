@@ -70,6 +70,8 @@ public class StaffManagement implements Serializable {
                 coun.setAddress(rs.getString("address"));
                 coun.setDateEmployed(rs.getString("dateemployed"));
                 coun.setDateStopped(rs.getString("datestopped"));
+                coun.setRoleid(rs.getInt("roleid"));
+                coun.setRoleAssigned(rs.getInt("roleassigned"));
 
                 //
                 lst.add(coun);

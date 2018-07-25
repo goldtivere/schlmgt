@@ -160,7 +160,9 @@
                                                     <li>
                                                         <a href="#{request.contextPath}/faces/pages/register/staffProfile.xhtml"><i class="glyphicon glyphicon-edit"></i> <span class="nav-label">Staff Profile</span></a>                                   
                                                     </li>  
-                                                    <li><a href="#{request.contextPath}/faces/pages/register/classAssigned.xhtml"><i class="glyphicon glyphicon-blackboard"></i> <span class="nav-label">Class Assigned</span></a> </li>                                                    
+                                                    <p:panel rendered="#{staffProfile.roleAssigned}">
+                                                        <li><a href="#{request.contextPath}/faces/pages/register/classAssigned.xhtml"><i class="glyphicon glyphicon-blackboard"></i> <span class="nav-label">Class Assigned</span></a> </li>                                                    
+                                                    </p:panel>
                                                 </ul>
                                             </div>
                                         </div>                                        

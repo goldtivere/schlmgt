@@ -36,7 +36,7 @@
                                 <p:commandButton value="Update" class="pull-left" type="button" onclick="PF('dlg2').show();" />                               
                             </h:panelGrid>                                                                                                       
                         </p:tab>
-                        <p:tab title="Asigned Class">
+                        <p:tab title="Asigned Class" rendered="#{staffProfile.roleAssigned}">
                             <p:panel id="classAssigned">
                                 <h:panelGrid columns="2" cellpadding="10">
                                     <h:outputText value="Class Assigned: "/> <h:outputText value="#{staffProfile.staffGrade2}"/> 
