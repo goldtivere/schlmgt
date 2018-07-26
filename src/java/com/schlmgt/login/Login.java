@@ -71,6 +71,8 @@ public class Login implements Serializable {
                 dto.setEmail(rs.getString("email_address"));
                 dto.setRole_id(rs.getString("role_id"));                
                 dto.setCreatdBy(rs.getString("Created_by"));
+                dto.setRoleAssigned(rs.getInt("roleassigned"));
+                dto.setRoleid(rs.getInt("roleid"));
                 
                 context.getExternalContext().getSessionMap().put("sessn_nums", getDto());
                 

@@ -26,7 +26,8 @@ public class UserDetails implements Serializable {
     private Boolean isdeleted;
     private String role_id;
     private String creatdBy;
-    
+    private int roleAssigned;
+    private int roleid;
 
     public String getPassword() {
         return password;
@@ -67,7 +68,6 @@ public class UserDetails implements Serializable {
     public void setIsdeleted(Boolean isdeleted) {
         this.isdeleted = isdeleted;
     }
-    
 
     public String getImage() {
         return image;
@@ -77,7 +77,6 @@ public class UserDetails implements Serializable {
         this.image = image;
     }
 
-    
     public int getId() {
         return id;
     }
@@ -86,7 +85,6 @@ public class UserDetails implements Serializable {
         this.id = id;
     }
 
-    
     public String getCreatdBy() {
         return creatdBy;
     }
@@ -125,6 +123,22 @@ public class UserDetails implements Serializable {
 
     public void setRole_id(String role_id) {
         this.role_id = role_id;
+    }
+
+    public int getRoleAssigned() {
+        return roleAssigned;
+    }
+
+    public void setRoleAssigned(int roleAssigned) {
+        this.roleAssigned = roleAssigned;
+    }
+
+    public int getRoleid() {
+        return roleid;
+    }
+
+    public void setRoleid(int roleid) {
+        this.roleid = roleid;
     }
 
 }

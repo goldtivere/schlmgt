@@ -5,6 +5,9 @@
  */
 package com.schlmgt.filter;
 
+import com.schlmgt.login.Login;
+import com.schlmgt.login.UserDetails;
+import static com.sun.faces.facelets.util.Path.context;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,8 +39,15 @@ public class filter implements Filter {
             HttpServletRequest reqt = (HttpServletRequest) request;
             HttpServletResponse resp = (HttpServletResponse) response;
             HttpSession ses = reqt.getSession(false);
-
             String reqURI = reqt.getRequestURI();
+
+            if (ses != null && ses.getAttribute("sessn_nums") != null) {
+                UserDetails l = (UserDetails) ses.getAttribute("sessn_nums");
+                if(l.getRoleAssigned()==1 && reqURI.contains("faces/register/"))
+                {
+                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                }
+            }
             if (reqURI.contains("/faces/index.xhtml") || (ses != null && ses.getAttribute("sessn_nums") != null) || reqURI.contains("javax.faces.resource")) {
                 chain.doFilter(request, response);
             } else if (reqURI.contains("faces/pages/createStaff/index.xhtml") || reqURI.contains("faces/pages/create/index.xhtml")) {
