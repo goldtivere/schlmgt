@@ -179,8 +179,7 @@ public class SmsSend implements Serializable {
                 coun.setStaffClass(rs.getString("staffclass"));
                 coun.setStaffGrade(rs.getString("staffgrade"));
                 coun.setYear(rs.getString("year"));
-                //
-                System.out.println(rs.getString("staffid") + " okay " + rs.getString("first_name"));
+                //                
                 lst.add(coun);
             }
 
