@@ -245,6 +245,7 @@ public class Register implements Serializable {
         setHighQua("");
         setEmailadd("");
         setPassport_url("");
+        setDoe(null);
         
     }
     
@@ -430,8 +431,7 @@ public class Register implements Serializable {
                         context.addMessage(null, msg);
                         
                     } else {
-                        
-                        con.setAutoCommit(false);
+                                                
                         //InputStream fin2 = file.getInputstream();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
                         String does = format.format(getDoe());
@@ -493,8 +493,7 @@ public class Register implements Serializable {
                         context.addMessage(null, msg);
                         
                         refresh();
-                        
-                        con.commit();
+                                               
                     }
                 }
             }

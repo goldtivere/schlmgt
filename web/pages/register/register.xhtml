@@ -63,7 +63,7 @@
                         <div class="form-group">
                             <p:outputLabel value="Class: "></p:outputLabel>
                             <p:selectOneMenu id="grad" class="form-control" value="#{reg.staffGrade}" required="true" requiredMessage="Grade required">                                
-                                <p:ajax listener="#{classmode.ontermChanges()}" /> 
+                                <p:ajax listener="#{classmode.ontermChanges()}" update="gr"/> 
                                 <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
                                 <f:selectItems value="#{classmode.grademodels}"
                                                var="singlevalue"  

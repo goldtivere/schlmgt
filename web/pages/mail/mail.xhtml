@@ -157,19 +157,20 @@
                 </p:panel> 
                 <p:panel visible="#{sms.status1}" id="stafff">
                     <div class="ibox-content">
-                        <p:outputLabel value="#{sms.student_grade}"></p:outputLabel>
+
                         <br/>
+
                         <p:dataTable id="no" class="table table-responsive" scrollable="true" var="papprv_rpt" 
                                      value="#{sms.staffModel}"
                                      selection="#{sms.staffModel1}"
-                                     rowKey="#{papprv_rpt.id}"
+                                     rowKey="#{papprv_rpt.staffId}"
                                      paginatorTemplate="{CurrentPageReport}  
                                      {FirstPageLink} {PreviousPageLink} 
                                      {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                      scrollHeight="350" 
                                      widgetVar="resultTable1"
                                      draggableColumns="true" rows="15" style="margin-bottom:20px"
-                                     emptyMessage="No Result found with given criteria" filteredValue="#{sms.secModel2}"> 
+                                     emptyMessage="No Result found with given criteria" filteredValue="#{sms.staffModel2}"> 
                             <f:facet name="header">
                                 <p:outputPanel>
                                     <h:outputText value="Search all fields" />
@@ -211,14 +212,14 @@
 
                             </p:column>
                             <p:column headerText="Class Assigned" filterBy="#{papprv_rpt.staffGrade}">
-                                <h:outputText value="#{papprv_rpt.staffGrade}"/>
+                                <h:outputText value="#{classmode.gradeGet(papprv_rpt.staffGrade)}"/>
 
                             </p:column>                            
                             <f:facet name="footer">
                                 <p:column headerText="Action" style="width:60px" exportable="false">                                
                                     <p:commandButton value="Send Message" id="please" icon="ui-icon-pencil" process="@this no" 
-                                                     oncomplete="PF('dlg3').show()">                                        
-                                    </p:commandButton>                               
+                                                     oncomplete="PF('dlg3').show()">                                             
+                                    </p:commandButton>                                       
                                 </p:column>
                             </f:facet>
                         </p:dataTable> 
@@ -241,7 +242,7 @@
                         $('#loginLink').fadeOut();
                     }
                 }
-                
+
                 function handleLogin(xhr, status, args) {
                     if (args.validationFailed || !args.loggedIn) {
                         PF('dlg3').jq.effect("shake", {times: 5}, 100);
