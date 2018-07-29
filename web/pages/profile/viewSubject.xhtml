@@ -20,10 +20,12 @@
         <div class="row">  
             <div class="ibox-content">
                 <p:panel id="damn" style="border: none">
-                    <p:selectOneMenu id="gra" class="form-control" value="#{classmode.termGet(vaClass.term)}" required="true" requiredMessage="Term required">
+                    <p:selectOneMenu id="gra" class="form-control" value="#{vaClass.term}" required="true" requiredMessage="Term required">
                         <p:ajax listener="#{vaClass.ontermchange(vaClass.term)}" update="gr"/>
                         <f:selectItem itemLabel="--Select Term--" itemValue="" noSelectionOption="true"/>
-                        <f:selectItems value="#{vaClass.terms}"/>
+                        <f:selectItems value="#{vaClass.terms}" var="singlevalue"  
+                                       itemLabel="#{singlevalue.term}"
+                                       itemValue="#{singlevalue.id}"/>
                     </p:selectOneMenu> 
                     <p:selectOneMenu id="gr" class="form-control" value="#{vaClass.year}" required="true" requiredMessage="Year required">   
                         <p:ajax listener="#{vaClass.onYearChange(vaClass.term, vaClass.year)}" update="su,damn" />

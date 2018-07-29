@@ -28,6 +28,8 @@ public class UserDetails implements Serializable {
     private String creatdBy;
     private int roleAssigned;
     private int roleid;
+    private String staffClass;
+    private String staffGrade;
 
     public String getPassword() {
         return password;
@@ -139,6 +141,22 @@ public class UserDetails implements Serializable {
 
     public void setRoleid(int roleid) {
         this.roleid = roleid;
+    }
+
+    public String getStaffClass() {
+        return staffClass;
+    }
+
+    public void setStaffClass(String staffClass) {
+        this.staffClass = staffClass;
+    }
+
+    public String getStaffGrade() {
+        return staffGrade;
+    }
+
+    public void setStaffGrade(String staffGrade) {
+        this.staffGrade = staffGrade;
     }
 
 }

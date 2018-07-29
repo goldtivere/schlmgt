@@ -53,25 +53,43 @@
 
                             </li>
                             <li>
-                                <a href="#{request.contextPath}/faces/pages/home/homepage.xhtml"><i class="fa fa-home"></i> <span class="nav-label">Home</span></a>                                   
+                            <h:outputLink value="#{request.contextPath}/faces/pages/home/homepage.xhtml">
+                                <i class="fa fa-home"></i> <span class="nav-label">Home</span>
+                            </h:outputLink>                                                             
                             </li>
-                            <li>
-                                <a href="#{request.contextPath}/faces/pages/register/registration.xhtml"><i class="fa fa-user-plus"></i> <span class="nav-label">Register</span></a>                                   
+
+                            <li>  
+                            <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/register/registration.xhtml">
+                                <i class="fa fa-user-plus"></i> <span class="nav-label">Register</span>
+                            </h:outputLink>                             
                             </li>
-                            <li>
-                                <a href="#{request.contextPath}/faces/pages/profile/studentprofile.xhtml"><i class="fa fa-user"></i> <span class="nav-label">Profile</span></a>
+
+                            <li>   
+                            <h:outputLink value="#{request.contextPath}/faces/pages/profile/studentprofile.xhtml">
+                                <i class="fa fa-user"></i> <span class="nav-label">Profile</span>
+                            </h:outputLink> 
 
                             </li>  
                             <li>
-                                <a href="#{request.contextPath}/faces/pages/student/updateSubject.xhtml"><i class="fa fa-file-text" aria-hidden="true"></i> <span class="nav-label">Update Subject</span></a>
+
+                            <h:outputLink value="#{request.contextPath}/faces/pages/student/updateSubject.xhtml">
+                                <i class="fa fa-file-text" aria-hidden="true"></i> <span class="nav-label">Update Subject</span>
+                            </h:outputLink>                                 
 
                             </li>  
                             <li>
-                                <a href="#{request.contextPath}/faces/pages/result/updateResult.xhtml"><i class="fa fa-clipboard" aria-hidden="true"></i> <span class="nav-label">Update Result</span></a>
+
+                            <h:outputLink value="#{request.contextPath}/faces/pages/result/updateResult.xhtml">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i> <span class="nav-label">Update Result</span>
+
+                            </h:outputLink> 
 
                             </li> 
                             <li>
-                                <a href="#{request.contextPath}/faces/pages/role/userManagement.xhtml"><i class="fa fa-user" aria-hidden="true"></i> <span class="nav-label">Manage user</span></a>
+                            <h:outputLink value="#{request.contextPath}/faces/pages/role/userManagement.xhtml">
+                                <i class="fa fa-user" aria-hidden="true"></i> <span class="nav-label">Manage user</span>
+
+                            </h:outputLink>                             
 
                             </li>
                             <li class="drop">

@@ -198,9 +198,9 @@ public class ClassGrade implements Serializable {
 
             return value;
         } catch (NumberFormatException e) {
-           return null;
+            return null;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
 
@@ -243,9 +243,9 @@ public class ClassGrade implements Serializable {
 
             return value;
         } catch (NumberFormatException e) {
-           return null;
+            return null;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
 
@@ -287,8 +287,8 @@ public class ClassGrade implements Serializable {
             }
 
             return value;
-        }catch (NumberFormatException e) {
-           return null;
+        } catch (NumberFormatException e) {
+            return null;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -332,8 +332,8 @@ public class ClassGrade implements Serializable {
             }
 
             return value;
-        }catch (NumberFormatException e) {
-           return null;
+        } catch (NumberFormatException e) {
+            return null;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -377,11 +377,10 @@ public class ClassGrade implements Serializable {
             }
 
             return value;
-        }
-        catch (NumberFormatException e) {
-           return null;
+        } catch (NumberFormatException e) {
+            return null;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
 
@@ -423,8 +422,8 @@ public class ClassGrade implements Serializable {
             }
 
             return value;
-        }catch (NumberFormatException e) {
-           return null;
+        } catch (NumberFormatException e) {
+            return null;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -468,11 +467,10 @@ public class ClassGrade implements Serializable {
             }
 
             return value;
-        }
-        catch (NumberFormatException e) {
-           return null;
+        } catch (NumberFormatException e) {
+            return null;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
 
@@ -514,11 +512,11 @@ public class ClassGrade implements Serializable {
             }
 
             return value;
-        }
-        catch (NumberFormatException e) {
-           return null;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
 
@@ -560,11 +558,10 @@ public class ClassGrade implements Serializable {
             }
 
             return value;
-        }
-        catch (NumberFormatException e) {
-           return null;
+        } catch (NumberFormatException e) {
+            return null;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
 
@@ -580,7 +577,7 @@ public class ClassGrade implements Serializable {
             }
 
         }
-    }   
+    }
 
     public void ontermChanges() throws Exception {
 

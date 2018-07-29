@@ -6,6 +6,7 @@
 package com.schlmgt.profile;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.register.TermModel;
 import com.schlmgt.updateSubject.SessionTable;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -33,7 +34,7 @@ public class ClassView implements Serializable {
     private String year;
     private String term;
     private String classType;
-    private List<String> terms;
+    private List<TermModel> terms;
     private List<String> years;
 
     @PostConstruct
@@ -49,7 +50,7 @@ public class ClassView implements Serializable {
     }
 
     public void onYearChange(String term, String year) throws Exception {
-        System.out.println(term + " " + year);
+        
         sub = testMic(term, year);
     }
 
@@ -63,7 +64,7 @@ public class ClassView implements Serializable {
         con = dbConnections.mySqlDBconnection();
         String studId;
 
-        System.out.println(term + " " + year);
+        
 
         try {
             setTerm(term);
@@ -83,7 +84,7 @@ public class ClassView implements Serializable {
 
                 lst.add(coun);
             }
-            System.out.println(edits.getStudentid());
+            
             return lst;
 
         } catch (Exception e) {
@@ -122,7 +123,7 @@ public class ClassView implements Serializable {
         PreparedStatement pstmt = null;
 
         try {
-
+            
             con = dbConnections.mySqlDBconnection();
             String query = "SELECT distinct year FROM yearterm where term=?";
             pstmt = con.prepareStatement(query);
@@ -155,19 +156,48 @@ public class ClassView implements Serializable {
         }
     }
 
-    public List<String> termDropdown() throws Exception {
+    public List<TermModel> termDropdown() throws Exception {
 
-        //
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
         try {
-            List<String> lst = new ArrayList<>();
-            lst.add("First Term");
-            lst.add("Second Term");
-            lst.add("Third Term");
-            return lst;
 
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbterm";
+            pstmt = con.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            //
+            List<TermModel> lst = new ArrayList<>();
+            while (rs.next()) {
+
+                TermModel coun = new TermModel();
+                coun.setId(rs.getInt("id"));
+                coun.setTerm(rs.getString("term"));
+
+                //
+                lst.add(coun);
+            }
+
+            return lst;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
 
         }
     }
@@ -186,7 +216,7 @@ public class ClassView implements Serializable {
             pstmt.setString(1, edits.getStudentid());
             pstmt.setBoolean(2, true);
             rs = pstmt.executeQuery();
-
+            
             if (rs.next()) {
                 setCurrentClass(rs.getString("class"));
                 setClassType(rs.getString("classtype"));
@@ -225,7 +255,7 @@ public class ClassView implements Serializable {
 
                 lst.add(coun);
             }
-            System.out.println(edits.getStudentid());
+            
             return lst;
 
         } catch (Exception e) {
@@ -247,11 +277,11 @@ public class ClassView implements Serializable {
 
     }
 
-    public List<String> getTerms() {
+    public List<TermModel> getTerms() {
         return terms;
     }
 
-    public void setTerms(List<String> terms) {
+    public void setTerms(List<TermModel> terms) {
         this.terms = terms;
     }
 
