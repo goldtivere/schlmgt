@@ -181,10 +181,16 @@
                                                     <li>
                                                         <a href="#{request.contextPath}/faces/pages/profile/editprofile.xhtml"><i class="glyphicon glyphicon-edit"></i> <span class="nav-label">Edit Profile</span></a>                                   
                                                     </li>  
-                                                    <li><a href="#{request.contextPath}/faces/pages/profile/editSubject.xhtml"><i class="glyphicon glyphicon-blackboard"></i> <span class="nav-label">Edit Class</span></a> </li>
-                                                    <li><a href="#{request.contextPath}/faces/pages/profile/viewSubject.xhtml"><i class="glyphicon glyphicon-blackboard"></i> <span class="nav-label">Subject Offered</span></a> 
+                                                    <li>
+
+                                                    <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/profile/editSubject.xhtml">
+                                                        <i class="glyphicon glyphicon-blackboard"></i> <span class="nav-label">Edit Class</span>
+                                                    </h:outputLink>                                                      
+
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/faces/pages/staff/viewSubject.xhtml"><i class="glyphicon glyphicon-blackboard"></i> <span class="nav-label">Subject Offered</span></a> 
                                                     </li>                                                    
-                                                    <li><a href="#{request.contextPath}/faces/pages/profile/viewResult.xhtml"><i class="glyphicon glyphicon-book"></i>Result Upload</a></li>                                  
+                                                    <li><a href="#{request.contextPath}/faces/pages/staff/viewResult.xhtml"><i class="glyphicon glyphicon-book"></i>Result Upload</a></li>                                  
                                                 </ul>
                                             </div>
                                         </div>                                        
