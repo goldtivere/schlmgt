@@ -79,7 +79,7 @@
 
                         </p:column> 
                         <p:column headerText="Class Assigned" filterBy="#{papprv_rpt.staffGrade}">
-                            <h:outputText value="#{papprv_rpt.staffGrade}"/>
+                            <h:outputText value="#{classmode.gradeGet(papprv_rpt.staffGrade)}"/>
 
                         </p:column>
                         <p:column headerText="Date Employed" filterBy="#{papprv_rpt.dateEmployed}">

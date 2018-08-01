@@ -414,14 +414,18 @@ public class StaffProfile implements Serializable {
             PreparedStatement pstmt = null;
             ResultSet rs = null;
             con = dbConnections.mySqlDBconnection();
+            FacesContext context = FacesContext.getCurrentInstance();
+            RequestContext cont = RequestContext.getCurrentInstance();
+            ExternalContext externalContext = context.getExternalContext();
             String studId;
-
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
             FacesContext ctx = FacesContext.getCurrentInstance();
             StaffModel staff = (StaffModel) ctx.getExternalContext().getApplicationMap().get("staffRecord");
             //test for null...
             staffModel = staff;
-
-            if (staffModel != null) {
+            if (userObj.getRoleAssigned() == 1) {
+                setPnum(userObj.getUser_name());
+            } else if (userObj.getRoleAssigned() == 2 && staffModel != null) {
                 setPnum(staffModel.getPnum());
             }
 

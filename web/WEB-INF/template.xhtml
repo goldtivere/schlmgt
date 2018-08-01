@@ -95,6 +95,13 @@
                             </h:outputLink>                             
 
                             </li>
+                            <li>
+                            <h:outputLink rendered="#{login.roleAssigned1}" value="#{request.contextPath}/faces/pages/staff/staffProfile.xhtml">
+                                <i class="fa fa-user" aria-hidden="true"></i> <span class="nav-label">Manage Staff</span>
+
+                            </h:outputLink>                             
+
+                            </li>
                             <li class="drop">
                                 <a href="#"><i class="fa fa-info"></i> <span class="nav-label">Status</span><span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level collapse">
@@ -122,14 +129,18 @@
                             <ul class="nav navbar-top-links navbar-right">
 
                                 <li>
-                                    <a href="#{request.contextPath}/faces/pages/register/staffManagement.xhtml"><i class="fa fa-user-plus"></i></a>                                   
+                                <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/register/staffManagement.xhtml">
+                                    <i class="fa fa-user-plus"></i>
+
+                                </h:outputLink>                               
                                 </li>
                                 <li>
-                                    <a href="#{request.contextPath}/faces/pages/mail/mail.xhtml">
-                                        <div>
-                                            <i class="fa fa-envelope fa-fw"></i>
-                                        </div>
-                                    </a>
+                                <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/mail/mail.xhtml">
+                                    <div>
+                                        <i class="fa fa-envelope fa-fw"></i>
+                                    </div>
+
+                                </h:outputLink>
                                 </li>
 
                                 <li>

@@ -84,7 +84,7 @@
 
                             </li> 
                             <li>
-                            <h:outputLink value="#{request.contextPath}/faces/pages/role/userManagement.xhtml">
+                            <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/role/userManagement.xhtml">
                                 <i class="fa fa-user" aria-hidden="true"></i> <span class="nav-label">Manage user</span>
 
                             </h:outputLink>                             
@@ -93,6 +93,13 @@
                             <li>
                             <h:outputLink rendered="#{login.roleAssigned1}" value="#{request.contextPath}/faces/pages/staff/studentManagement.xhtml">
                                 <i class="fa fa-user" aria-hidden="true"></i> <span class="nav-label">Manage Student</span>
+
+                            </h:outputLink>                             
+
+                            </li>
+                            <li>
+                            <h:outputLink rendered="#{login.roleAssigned1}" value="#{request.contextPath}/faces/pages/staff/staffProfile.xhtml">
+                                <i class="fa fa-user" aria-hidden="true"></i> <span class="nav-label">Manage Staff</span>
 
                             </h:outputLink>                             
 
@@ -125,14 +132,18 @@
                             <ul class="nav navbar-top-links navbar-right">
 
                                 <li>
-                                    <a href="#{request.contextPath}/faces/pages/register/staffManagement.xhtml"><i class="fa fa-user-plus"></i></a>                                   
+                                <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/register/staffManagement.xhtml">
+                                    <i class="fa fa-user-plus"></i>
+
+                                </h:outputLink>                               
                                 </li>
                                 <li>
-                                    <a href="#{request.contextPath}/faces/pages/mail/mail.xhtml">
-                                        <div>
-                                            <i class="fa fa-envelope fa-fw"></i>
-                                        </div>
-                                    </a>
+                                <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/mail/mail.xhtml">
+                                    <div>
+                                        <i class="fa fa-envelope fa-fw"></i>
+                                    </div>
+
+                                </h:outputLink>
                                 </li>
 
                                 <li>
@@ -179,11 +190,22 @@
                                             <div class="profile-user-menu">
                                                 <ul class="nav">
                                                     <li>
-                                                        <a href="#{request.contextPath}/faces/pages/register/staffProfile.xhtml"><i class="glyphicon glyphicon-edit"></i> <span class="nav-label">Staff Profile</span></a>                                   
+                                                    <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/register/staffProfile.xhtml">
+                                                        <i class="glyphicon glyphicon-edit"></i> <span class="nav-label">Staff Profile</span>
+                                                    </h:outputLink>                                                       
                                                     </li>  
-                                                    <p:panel rendered="#{staffProfile.roleAssigned1}" style="border:none;">
-                                                        <li><a href="#{request.contextPath}/faces/pages/register/classAssigned.xhtml"><i class="glyphicon glyphicon-blackboard"></i> <span class="nav-label">Class Assigned</span></a> </li>                                                    
-                                                    </p:panel>
+                                                    <li>
+                                                    <h:outputLink rendered="#{login.roleAssigned1}" value="#{request.contextPath}/faces/pages/staff/staffProfile.xhtml">
+                                                        <i class="glyphicon glyphicon-edit"></i> <span class="nav-label">Staff Profile</span>
+                                                    </h:outputLink>                                                       
+                                                    </li>  
+
+                                                    <li>
+                                                    <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/register/classAssigned.xhtml">
+                                                        <i class="glyphicon glyphicon-blackboard"></i> <span class="nav-label">Class Assigned</span>
+                                                    </h:outputLink>
+                                                    </li>                                                   
+
                                                 </ul>
                                             </div>
                                         </div>                                        
