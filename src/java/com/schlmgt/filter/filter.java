@@ -43,9 +43,8 @@ public class filter implements Filter {
 
             if (ses != null && ses.getAttribute("sessn_nums") != null) {
                 UserDetails l = (UserDetails) ses.getAttribute("sessn_nums");
-                if(l.getRoleAssigned()==1 && reqURI.contains("faces/pages/register/"))
-                {
-                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                if (l.getRoleAssigned() == 1 && (reqURI.contains("faces/pages/register/") || reqURI.contains("faces/pages/profile/"))) {
+                    resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 }
             }
             if (reqURI.contains("/faces/index.xhtml") || (ses != null && ses.getAttribute("sessn_nums") != null) || reqURI.contains("javax.faces.resource")) {

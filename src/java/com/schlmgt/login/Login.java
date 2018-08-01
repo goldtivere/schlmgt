@@ -33,6 +33,7 @@ public class Login implements Serializable {
     private String messangerOfTruth;
     private UserDetails dto = new UserDetails();
     private boolean roleAssigned;
+    private boolean roleAssigned1;
     private int assignedRole;
 
     public void loginpage() throws Exception {
@@ -87,9 +88,12 @@ public class Login implements Serializable {
 
                 if (getAssignedRole() == 1) {
                     setRoleAssigned(false);
+                    setRoleAssigned1(true);
+
                 } else if (getAssignedRole() == 2) {
                     setRoleAssigned(true);
-                }                
+                    setRoleAssigned1(false);
+                }
 
             } else {
 
@@ -208,6 +212,14 @@ public class Login implements Serializable {
 
     public void setAssignedRole(int assignedRole) {
         this.assignedRole = assignedRole;
+    }
+
+    public boolean isRoleAssigned1() {
+        return roleAssigned1;
+    }
+
+    public void setRoleAssigned1(boolean roleAssigned1) {
+        this.roleAssigned1 = roleAssigned1;
     }
 
 }

@@ -46,11 +46,7 @@
                                         <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">
                                                     <h:outputText styleClass="outputLabel" value= "#{login.dto.first_name} #{login.dto.last_name}"/>
                                                 </strong>
-                                            </span></span> </a>
-                                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                        <li class="#{pgeNav.titlePane}"><a href="#{request.contextPath}/pages/profile/studentprofile.xhtml">Profile</a></li>                                           
-                                        <li><p:commandButton actionListener="#{login.noactivity}" value="Logout"/></li>
-                                    </ul>
+                                            </span></span> </a>                                    
                                 </div>
 
                             </li>
@@ -67,21 +63,21 @@
                             </li>
 
                             <li>   
-                            <h:outputLink value="#{request.contextPath}/faces/pages/profile/studentprofile.xhtml">
+                            <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/profile/studentprofile.xhtml">
                                 <i class="fa fa-user"></i> <span class="nav-label">Profile</span>
                             </h:outputLink> 
 
                             </li>  
                             <li>
 
-                            <h:outputLink value="#{request.contextPath}/faces/pages/student/updateSubject.xhtml">
+                            <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/student/updateSubject.xhtml">
                                 <i class="fa fa-file-text" aria-hidden="true"></i> <span class="nav-label">Update Subject</span>
                             </h:outputLink>                                 
 
                             </li>  
                             <li>
 
-                            <h:outputLink value="#{request.contextPath}/faces/pages/result/updateResult.xhtml">
+                            <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/result/updateResult.xhtml">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i> <span class="nav-label">Update Result</span>
 
                             </h:outputLink> 
@@ -90,6 +86,13 @@
                             <li>
                             <h:outputLink value="#{request.contextPath}/faces/pages/role/userManagement.xhtml">
                                 <i class="fa fa-user" aria-hidden="true"></i> <span class="nav-label">Manage user</span>
+
+                            </h:outputLink>                             
+
+                            </li>
+                            <li>
+                            <h:outputLink rendered="#{login.roleAssigned1}" value="#{request.contextPath}/faces/pages/staff/studentManagement.xhtml">
+                                <i class="fa fa-user" aria-hidden="true"></i> <span class="nav-label">Manage Student</span>
 
                             </h:outputLink>                             
 

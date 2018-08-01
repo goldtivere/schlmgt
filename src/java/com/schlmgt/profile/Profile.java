@@ -6,6 +6,7 @@
 package com.schlmgt.profile;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.login.UserDetails;
 import com.schlmgt.register.GradeModel;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -19,8 +20,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.NavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.swing.table.TableModel;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -35,6 +38,7 @@ public class Profile implements Serializable {
     private List<NurseryModel> nursModel;
     private List<PrimaryModel> priModel;
     private List<SecondaryModel> secModel;
+    private List<SecondaryModel> secModel1;
     private ClassModel model = new ClassModel();
     private GradeModel gradModel = new GradeModel();
     private String student_class;
@@ -58,6 +62,19 @@ public class Profile implements Serializable {
             pbool = false;
             sbool = false;
             fbool = true;
+
+            FacesMessage msg;
+            FacesContext context = FacesContext.getCurrentInstance();
+            RequestContext cont = RequestContext.getCurrentInstance();
+            ExternalContext externalContext = context.getExternalContext();
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+
+            if (userObj.getRoleAssigned() == 1) {
+
+                secModel = onSecondaryChange(classGet(userObj.getId()));
+                setSecondary(true);
+              
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -71,7 +88,7 @@ public class Profile implements Serializable {
             ctx.getExternalContext().getApplicationMap().remove("SecData");
             ctx.getExternalContext().getApplicationMap().put("SecData", secRecord);
             String url = "editprofile.xhtml?faces-redirect=true";
-            nav.handleNavigation(ctx, null, url);            
+            nav.handleNavigation(ctx, null, url);
             ctx.renderResponse();
 
         } catch (Exception ex) {
@@ -83,9 +100,7 @@ public class Profile implements Serializable {
     public void searchTab() {
         try {
 
-            secModel = onSecondarySearch(getSfname());
-
-            System.out.println(getNfname() + " f " + getPfname() + " a " + getSfname());
+            secModel = onSecondarySearch(getSfname());            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -178,8 +193,7 @@ public class Profile implements Serializable {
         Connection con = null;
         ResultSet rs = null;
         PreparedStatement pstmt = null;
-        try {
-            System.out.println(tbclas);
+        try {           
             con = dbConnections.mySqlDBconnection();
             String query = "SELECT * FROM tbstudentclass where classtype=? and currentclass=?";
             pstmt = con.prepareStatement(query);
@@ -226,6 +240,44 @@ public class Profile implements Serializable {
         }
     }
 
+    public String classGet(int tbclas) throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        try {        
+            con = dbConnections.mySqlDBconnection();
+            String query = "SELECT * FROM tbstaffclass where staffid=? and status=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, tbclas);
+            pstmt.setBoolean(2, true);
+            rs = pstmt.executeQuery();
+            //
+
+            if (rs.next()) {
+
+                return rs.getString("staffClass");
+            }
+
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
     public List<String> secondaryAuto() throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -237,11 +289,12 @@ public class Profile implements Serializable {
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM tbstudentclass where classtype=?";
+            String query = "SELECT * FROM tbstudentclass where classtype=? and currentclass=?";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, model.getTbclass());
+            pstmt.setBoolean(2, true);
             rs = pstmt.executeQuery();
-            //
+
             List<String> lst = new ArrayList<>();
             String fullname;
             while (rs.next()) {
@@ -506,6 +559,14 @@ public class Profile implements Serializable {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public List<SecondaryModel> getSecModel1() {
+        return secModel1;
+    }
+
+    public void setSecModel1(List<SecondaryModel> secModel1) {
+        this.secModel1 = secModel1;
     }
 
 }
