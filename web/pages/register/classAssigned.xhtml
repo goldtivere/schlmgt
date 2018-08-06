@@ -3,35 +3,70 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template.xhtml">
+                template="/WEB-INF/template2.xhtml">
+
 
 
     <ui:define name="title">
-        Staff Details
+        Staff Profile
     </ui:define>
 
-    <ui:define name="content">
-        <div class="row">               
-            <div class="ibox-content" style="margin-top: 20px;">
-                <div class="form-group">                                                        
-                    <p:dataTable id="s" class="table table-responsive" scrollable="true" scrollHeight="500" var="papprv_rpt" 
-                                 value="#{staff.staff}"
+    <ui:define name="Subtitle">
+        Class Assigned
+    </ui:define>
+
+
+    <ui:define name="content2">
+        <div class="row">  
+            <div class="ibox-content">
+                <p:messages closable="true" id="dude"></p:messages>
+                <p:panel style="border: none" id="up">
+                    <p:outputLabel value="Current Class: "/> <p:outputLabel value="#{classmode.gradeGet(classAssigned.staffgrade)}"/>
+                    <br/>                   
+                    <p:outputLabel value="Year: "/> <p:outputLabel value="#{classAssigned.year}"/>
+                    <br/>
+                    <p:outputLabel value=" Next Class: " />
+
+                    <p:selectOneMenu id="sclass" class="form-control" value="#{classmode.classGet(classAssigned.staffClass)}" required="true" requiredMessage="Class required">
+
+
+                        <p:ajax listener="#{classmode.onClassChanges(classAssigned.staffClass)}" update="grad" />
+                        <f:selectItem itemLabel="--Select Class--" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{classmode.classmodel}"
+                                       var="singlevalue"  
+                                       itemLabel="#{singlevalue.tbclass}"
+                                       itemValue="#{singlevalue.id}"/>
+                    </p:selectOneMenu>   
+
+
+
+                    <p:selectOneMenu id="grad" class="form-control" value="#{classmode.gradeGet(classAssigned.staffgrade)}" required="true" requiredMessage="Grade required">                                
+                        <p:ajax listener="#{classmode.ontermChanges()}" update="gr" />
+                        <f:selectItem itemLabel="--Select Grade--" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{classmode.grademodels}"
+                                       var="singlevalue"  
+                                       itemLabel="#{singlevalue.grade}"
+                                       itemValue="#{singlevalue.id}"/>
+                    </p:selectOneMenu> 
+
+
+                 
+                    <p:selectOneMenu id="gr" class="form-control" value="#{classAssigned.year}" required="true" requiredMessage="Year required">                                                    
+                        <f:selectItem itemLabel="--Select Year--" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{classmode.term}"/>
+                    </p:selectOneMenu>  
+                    <br/>
+                    <p:commandButton value="Set Current Class" process="@this gr,grad,sclass" actionListener="#{editClass.currentClass()}" />
+
+                    <p:dataTable id="s" class="table table-responsive" var="papprv_rpt" 
+                                 value="#{classAssigned.listmodel}"
                                  rowKey="#{papprv_rpt.id}"
-                                 selection="#{staff.staff1}"
                                  paginatorTemplate="{CurrentPageReport}  
                                  {FirstPageLink} {PreviousPageLink} 
                                  {PageLinks} {NextPageLink} {LastPageLink} {Exporters} "
                                  paginator="true"
                                  rowsPerPageTemplate="5,10,15"
-                                 widgetVar="resultTable"
-                                 emptyMessage="No Result found with given criteria" filteredValue="#{staff.staff2}"
                                  draggableColumns="true" rows="15" style="margin-bottom:20px">
-                        <f:facet name="header">
-                            <p:outputPanel>
-                                <h:outputText value="Search all fields" />
-                                <p:inputText id="globalFilter" onkeyup="PF('resultTable').filter()" style="width:150px" placeholder="Enter keyword"/>
-                            </p:outputPanel>
-                        </f:facet> 
 
                         <f:facet name="{Exporters}">
                             <h:commandLink immediate="true">
@@ -53,49 +88,32 @@
                                 <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
                                 <p:dataExporter type="xml" target="s" fileName="report" pageOnly="true" />
                             </h:commandLink>
-                        </f:facet>                                                  
+                        </f:facet>                           
+                        <p:column>
 
-                        <p:column headerText="First Name" filterBy="#{papprv_rpt.fname}">
-                            <h:outputText value="#{papprv_rpt.fname}"/>
+                            <f:facet name="header">
+                                <h:outputText value="Previous Class"/>
+                            </f:facet>
 
-                        </p:column>                           
-
-                        <p:column headerText="Middle Name" filterBy="#{papprv_rpt.mname}">
-                            <h:outputText value="#{papprv_rpt.mname}"/>
-
-                        </p:column>                           
-
-                        <p:column headerText="Last Name" filterBy="#{papprv_rpt.lname}">
-                            <h:outputText value="#{papprv_rpt.lname}"/>
-
-                        </p:column>
-
-                        <p:column headerText="Highest Qualifiacation" filterBy="#{papprv_rpt.highQua}">
-                            <h:outputText value="#{papprv_rpt.highQua}"/>
-
-                        </p:column>
-                        <p:column headerText="Address" filterBy="#{papprv_rpt.address}">
-                            <h:outputText value="#{papprv_rpt.address}"/>
-
-                        </p:column> 
-                        <p:column headerText="Class Assigned" filterBy="#{papprv_rpt.staffGrade}">
                             <h:outputText value="#{classmode.gradeGet(papprv_rpt.staffGrade)}"/>
 
-                        </p:column>
-                        <p:column headerText="Date Employed" filterBy="#{papprv_rpt.dateEmployed}">
-                            <h:outputText value="#{papprv_rpt.dateEmployed}"/>
+                        </p:column>                       
 
-                        </p:column>
-                        <p:column style="width:60px" exportable="false">
-                            <f:facet name="header">Action</f:facet>
-                            <p:commandButton value="" icon="ui-icon-search" process="@this"
-                                             actionListener="#{staff.selectReco(papprv_rpt)}"/>                          
-                        </p:column>
+                        <p:column>
+
+                            <f:facet name="header">
+                                <h:outputText value="Year"/>
+                            </f:facet>
+
+                            <h:outputText value="#{papprv_rpt.year}"/>
+
+                        </p:column>                    
                     </p:dataTable> 
+                </p:panel>
+            </div>
 
-                </div>
-            </div>      
         </div>
+
     </ui:define>
 
 

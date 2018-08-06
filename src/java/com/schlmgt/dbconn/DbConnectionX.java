@@ -7,24 +7,20 @@
  */
 package com.schlmgt.dbconn;
 
- 
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 import com.schlmgt.logic.LoadPPTfile;
- 
 
 public class DbConnectionX implements Serializable {
 
     LoadPPTfile loadPPTfile = new LoadPPTfile();
     private String messangerOfTruth;
     private boolean testconnection;
-  
-   
 
     public Connection mySqlDBconnection() {
- 
+
         try {
 
             if (!(loadPPTfile.isLoadPPtFile())) {
@@ -35,18 +31,21 @@ public class DbConnectionX implements Serializable {
 
             Properties ppt = loadPPTfile.getPptFile();
             String url = ppt.getProperty("mysql_db_url");
+            String dburl = ppt.getProperty("mysqldb");
+            String username = ppt.getProperty("username");;
+            String password = ppt.getProperty("password");
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection(url);
+            //Connection con=DriverManager.getConnetion(dburl,username,password);
 
             setTestconnection(true);
-             
+
             return con;
 
         } catch (Exception e) {
 
-            
             setTestconnection(false);
-            setMessangerOfTruth("Error from DbConnection.class " +  e.getMessage());
+            setMessangerOfTruth("Error from DbConnection.class " + e.getMessage());
             return null;
 
         }

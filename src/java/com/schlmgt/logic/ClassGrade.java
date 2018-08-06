@@ -733,6 +733,10 @@ public class ClassGrade implements Serializable {
 
     }
 
+    public void onClassChangeStaff() {
+
+    }
+
     public List<String> getTerm() {
         return term;
     }
