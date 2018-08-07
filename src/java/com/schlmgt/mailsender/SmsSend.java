@@ -6,6 +6,7 @@
 package com.schlmgt.mailsender;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.filter.ThreadRunner;
 import com.schlmgt.logic.DateManipulation;
 import com.schlmgt.login.UserDetails;
 import com.schlmgt.profile.ClassModel;
@@ -21,6 +22,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 import javax.el.PropertyNotFoundException;
 import javax.faces.application.FacesMessage;
@@ -72,9 +75,19 @@ public class SmsSend implements Serializable {
         try {
             setStatus(false);
             setStatus1(false);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+            ExecutorService service = Executors.newCachedThreadPool();
+            if (new ThreadRunner().doTransaction().getStatus()) {
+                service.execute(new ThreadRunner());
+                System.out.println(new ThreadRunner().doTransaction() + " ThreadName is1: " + Thread.currentThread().getName());
+
+            } else {
+                service.shutdown();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void ongradeChanges(String studentClass, String studentGrade) throws Exception {
@@ -235,7 +248,7 @@ public class SmsSend implements Serializable {
                     pstmt.setString(4, DateManipulation.dateAlone());
                     pstmt.setString(5, DateManipulation.dateAndTime());
                     pstmt.setString(6, createdby);
-                    pstmt.executeUpdate();                    
+                    pstmt.executeUpdate();
 
                 }
 
@@ -290,7 +303,7 @@ public class SmsSend implements Serializable {
                     pstmt.setString(4, DateManipulation.dateAlone());
                     pstmt.setString(5, DateManipulation.dateAndTime());
                     pstmt.setString(6, createdby);
-                    pstmt.executeUpdate();                    
+                    pstmt.executeUpdate();
 
                 }
 
@@ -310,7 +323,6 @@ public class SmsSend implements Serializable {
         }
 
     }
-
 
     public String getMessangerOfTruth() {
         return messangerOfTruth;
