@@ -35,8 +35,8 @@ public class DbConnectionX implements Serializable {
             String username = ppt.getProperty("username");;
             String password = ppt.getProperty("password");
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection(url);
-            //Connection con=DriverManager.getConnetion(dburl,username,password);
+            //Connection con = DriverManager.getConnection(url);
+            Connection con = DriverManager.getConnection(dburl, username, password);
 
             setTestconnection(true);
 

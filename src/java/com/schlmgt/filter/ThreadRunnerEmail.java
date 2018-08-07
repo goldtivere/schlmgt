@@ -18,6 +18,8 @@ public class ThreadRunnerEmail implements Runnable {
 
     private SITembeddedImageEmailUtil embeddedImageEmailUtil = new SITembeddedImageEmailUtil();
     private SITembeddedImageEmailUtil embeddedImageEmailUtils = new SITembeddedImageEmailUtil();
+    private boolean message1;
+    private boolean message2;
 
     public void run() {
 
@@ -30,11 +32,8 @@ public class ThreadRunnerEmail implements Runnable {
                 //get information the connect to the internet that's all
                 String tempData = "";//stores fomatted data, delete if repeatition...
 
-                if (doTransaction() && doUrlSend()) {
-                    //good stuff
-                } else {
-                    //good stuff, but ehnn
-                }
+                doTransaction();
+                doUrlSend();
 
                 Thread t = new Thread();
                 //t.sleep(20000);
@@ -53,7 +52,7 @@ public class ThreadRunnerEmail implements Runnable {
 
     }//end of run method...
 
-    public boolean doTransaction() throws Exception {
+    public void doTransaction() throws Exception {
 
         Connection con = null;
         DbConnectionX dbCon = new DbConnectionX();
@@ -66,8 +65,8 @@ public class ThreadRunnerEmail implements Runnable {
             rs = pstmt.executeQuery();
             //
             int k = 0;
-            while (rs.next()) {
-
+            if (rs.next()) {
+                System.out.println("I got here");
                 int unityOrNot = 1;//1 unity 2=others
                 String updateData = "";
 
@@ -122,45 +121,37 @@ public class ThreadRunnerEmail implements Runnable {
                 body.append("</body>");
                 body.append("</html>");
 
-                try {
+                if (embeddedImageEmailUtil.sendOut(account,
+                        subject, body.toString())) {
 
-                    if (embeddedImageEmailUtil.sendOut(account,
-                            subject, body.toString())) {
+                    updateData = "update staffstatus set status=1 "
+                            + "where staffphone='" + user_id + "' and "
+                            + "fullname='" + fullname + "' and id='" + id + "'";
+                    pstmt = con.prepareStatement(updateData);
+                    pstmt.executeUpdate();
+                    System.out.println("Hi");
+                } else {
 
-                        updateData = "update staffstatus set status=1 "
-                                + "where staffphone='" + user_id + "' and "
-                                + "fullname='" + fullname + "' and id='" + id + "'";
-                        pstmt = con.prepareStatement(updateData);
-                        pstmt.executeUpdate();
-                        System.out.println("Hi");
-                    } else {
+                    updateData = "update Staffstatus set status=0 "
+                            + "where user_id='" + user_id + "' and "
+                            + "fullname='" + fullname + "' and id='" + id + "'";
 
-                        updateData = "update Staffstatus set status=0 "
-                                + "where user_id='" + user_id + "' and "
-                                + "fullname='" + fullname + "' and id='" + id + "'";
-
-                        pstmt = con.prepareStatement(updateData);
-                        pstmt.executeUpdate();
-                        System.out.println("Low");
-                    }
-
-                } catch (Exception ex) {
-
-                    System.out.println("Could not send email.");
-                    ex.printStackTrace();
-
+                    pstmt = con.prepareStatement(updateData);
+                    pstmt.executeUpdate();
+                    System.out.println("Low");
                 }
 
+                setMessage1(true);
                 //return true;
-            }//end while
-
-            return true;
+            } else {
+                setMessage1(false);
+                
+            }
 
         } catch (Exception e) {
 
             System.out.println("Exception from doTransaction method.....");
             e.printStackTrace();
-            return false;
 
         } finally {
 
@@ -184,7 +175,7 @@ public class ThreadRunnerEmail implements Runnable {
 
     }//end doTransact()
 
-    public boolean doUrlSend() throws Exception {
+    public void doUrlSend() throws Exception {
 
         Connection con = null;
         DbConnectionX dbCon = new DbConnectionX();
@@ -199,7 +190,7 @@ public class ThreadRunnerEmail implements Runnable {
 
             //
             int k = 0;
-            while (rs.next()) {
+            if (rs.next()) {
 
                 int unityOrNot = 1;//1 unity 2=others
                 String updateData = "";
@@ -255,45 +246,36 @@ public class ThreadRunnerEmail implements Runnable {
                 body.append("</body>");
                 body.append("</html>");
 
-                try {
+                if (embeddedImageEmailUtils.sendOut(account,
+                        subject, body.toString())) {
 
-                    if (embeddedImageEmailUtils.sendOut(account,
-                            subject, body.toString())) {
+                    updateData = "update studentstatus set status=1 "
+                            + "where guid='" + guid + "' and "
+                            + "link='" + slink + "'";
+                    pstmt = con.prepareStatement(updateData);
+                    pstmt.executeUpdate();
 
-                        updateData = "update studentstatus set status=1 "
-                                + "where guid='" + guid + "' and "
-                                + "link='" + slink + "'";
-                        pstmt = con.prepareStatement(updateData);
-                        pstmt.executeUpdate();
+                } else {
 
-                    } else {
+                    updateData = "update studentstatus set status=0 "
+                            + "where guid='" + guid + "' and "
+                            + "link='" + slink + "'";
 
-                        updateData = "update studentstatus set status=0 "
-                                + "where guid='" + guid + "' and "
-                                + "link='" + slink + "'";
-
-                        pstmt = con.prepareStatement(updateData);
-                        pstmt.executeUpdate();
-
-                    }
-
-                } catch (Exception ex) {
-
-                    System.out.println("Could not send email.");
-                    ex.printStackTrace();
+                    pstmt = con.prepareStatement(updateData);
+                    pstmt.executeUpdate();
 
                 }
+            } else {
+                setMessage2(true);
+                
+            }
 
-                //return true;
-            }//end while
-
-            return true;
-
+            //return true;
+            //end while
         } catch (Exception e) {
 
             System.out.println("Exception from doTransaction method.....");
             e.printStackTrace();
-            return false;
 
         } finally {
 
@@ -316,4 +298,21 @@ public class ThreadRunnerEmail implements Runnable {
         }
 
     }//end doTransact()
+
+    public boolean isMessage1() {
+        return message1;
+    }
+
+    public void setMessage1(boolean message1) {
+        this.message1 = message1;
+    }
+
+    public boolean isMessage2() {
+        return message2;
+    }
+
+    public void setMessage2(boolean message2) {
+        this.message2 = message2;
+    }
+
 }

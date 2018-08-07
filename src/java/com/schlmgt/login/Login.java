@@ -44,13 +44,10 @@ public class Login implements Serializable {
     public void init() {
         try {
             ExecutorService service = Executors.newCachedThreadPool();
-            if (new ThreadRunnerEmail().doTransaction() || new ThreadRunnerEmail().doUrlSend()) {
+            
                 service.execute(new ThreadRunnerEmail());
                 System.out.println(new ThreadRunnerEmail() + " ThreadName is1: " + Thread.currentThread().getName());
 
-            } else {
-               System.out.println("Hi Gold");
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

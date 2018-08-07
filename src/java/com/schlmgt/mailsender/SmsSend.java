@@ -82,7 +82,7 @@ public class SmsSend implements Serializable {
                 System.out.println(new ThreadRunner().doTransaction() + " ThreadName is1: " + Thread.currentThread().getName());
 
             } else {
-                service.shutdown();
+               
             }
         } catch (Exception e) {
             e.printStackTrace();

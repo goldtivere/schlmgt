@@ -71,8 +71,7 @@ public class ThreadRunner implements Runnable {
 
             } else {
 
-                messageModel.setStatus(false);
-                messageModel.setStatus_msg("no record");
+                messageModel.setStatus(false);               
 
                 return messageModel;
 
