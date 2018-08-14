@@ -23,6 +23,12 @@ public class DbConnectionX implements Serializable {
 
         try {
 
+//            String dburl = "jdbc:mysql://node34984-school.njs.jelastic.vps-host.net/schlmgt";
+//            String username = "schlmgt";
+//            String password = "Gd0ay1k4firCBKix";
+//            Class.forName("com.mysql.jdbc.Driver");
+//            //Connection con = DriverManager.getConnection(url);
+//            Connection con = DriverManager.getConnection(dburl, username, password);
             if (!(loadPPTfile.isLoadPPtFile())) {
                 setMessangerOfTruth("Cannot load configuration file...");
                 setTestconnection(false);
@@ -31,12 +37,8 @@ public class DbConnectionX implements Serializable {
 
             Properties ppt = loadPPTfile.getPptFile();
             String url = ppt.getProperty("mysql_db_url");
-            String dburl = ppt.getProperty("mysqldb");
-            String username = ppt.getProperty("username");;
-            String password = ppt.getProperty("password");
             Class.forName("com.mysql.jdbc.Driver");
-            //Connection con = DriverManager.getConnection(url);
-            Connection con = DriverManager.getConnection(dburl, username, password);
+            Connection con = DriverManager.getConnection(url);
 
             setTestconnection(true);
 

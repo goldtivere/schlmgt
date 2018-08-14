@@ -40,18 +40,7 @@ public class Login implements Serializable {
     private boolean roleAssigned1;
     private int assignedRole;
 
-    @PostConstruct
-    public void init() {
-        try {
-            ExecutorService service = Executors.newCachedThreadPool();
-            
-                service.execute(new ThreadRunnerEmail());
-                System.out.println(new ThreadRunnerEmail() + " ThreadName is1: " + Thread.currentThread().getName());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+   
 
     public void loginpage() throws Exception {
 

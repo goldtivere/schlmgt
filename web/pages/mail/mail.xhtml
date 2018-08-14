@@ -21,7 +21,7 @@
                             <h:panelGrid columns="2">
                                 <p:inputTextarea id="txt" required="true" value="#{sms.search_item}"/>
 
-                                <p:commandButton class="btn btn-primary pull-right" update="okay,:templateForm:wata,:templateForm:watta" process="@this txt" actionListener="#{sms.sendStudent}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="Send Message"/>
+                                <p:commandButton class="btn btn-primary pull-right" update="okay,:templateForm:wata,:templateForm:watta" process="@this txt" action="#{sms.sendStudent}" oncomplete="handleLoginRequest(xhr, status, args)" style="margin-top: 20px;" value="Send Message" />
                             </h:panelGrid>
                         </p:outputPanel>
 
@@ -35,7 +35,7 @@
                             <h:panelGrid columns="2">
                                 <p:inputTextarea id="txts" required="true" value="#{sms.gohome}"/>
 
-                                <p:commandButton class="btn btn-primary pull-right" update="staffWe,:templateForm:wata,:templateForm:watta" process="@this txts" actionListener="#{sms.sendStaff}" oncomplete="handleLogin(xhr, status, args)" style="margin-top: 20px;" value="Send Message"/>
+                                <p:commandButton class="btn btn-primary pull-right" update="staffWe,:templateForm:wata,:templateForm:watta" process="@this txts" action="#{sms.sendStaff}" oncomplete="handleLogin(xhr, status, args)" style="margin-top: 20px;" value="Send Message"/>
                             </h:panelGrid>
                         </p:outputPanel>
 

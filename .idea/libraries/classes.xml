@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="classes">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/build/web/WEB-INF/classes/commons-digester-2.1.jar.zip!/" />
+      <root url="jar://$PROJECT_DIR$/build/web/WEB-INF/classes/commons-beanutils-1.8.3.jar.zip!/" />
+      <root url="jar://$PROJECT_DIR$/build/web/WEB-INF/classes/commons-beanutils-1.8.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/web/WEB-INF/classes/commons-digester-2.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

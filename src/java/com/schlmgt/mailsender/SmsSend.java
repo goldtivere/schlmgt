@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.annotation.PostConstruct;
 import javax.el.PropertyNotFoundException;
 import javax.faces.application.FacesMessage;
@@ -33,6 +34,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.swing.table.TableModel;
+import org.mike.test.ThreadTest;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -77,13 +79,9 @@ public class SmsSend implements Serializable {
             setStatus1(false);
 
             ExecutorService service = Executors.newCachedThreadPool();
-            if (new ThreadRunner().doTransaction().getStatus()) {
-                service.execute(new ThreadRunner());
-                System.out.println(new ThreadRunner().doTransaction() + " ThreadName is1: " + Thread.currentThread().getName());
 
-            } else {
-               
-            }
+            service.execute(new ThreadRunner());
+                   
         } catch (Exception e) {
             e.printStackTrace();
         }

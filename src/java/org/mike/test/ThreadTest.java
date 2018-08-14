@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.schlmgt.filter;
+package org.mike.test;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.filter.MessageModel;
 import com.schlmgt.logic.DateManipulation;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -16,33 +16,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.xml.sax.InputSource;
-import org.w3c.dom.Document;
 
 /**
  *
  * @author Gold
  */
-public class ThreadRunner implements Runnable {
+public class ThreadTest implements Callable<Boolean> {
 
     private boolean valueGet;
 
-    public void run(){
-        try
-        {
-        runValue();
+    @Override
+    public Boolean call() throws Exception {
+        doTransaction();
+        if (isValueGet()) {
+            runValue();
+            return true;
+        } else {
+            return false;
         }
-        catch(Exception e)
-        {
-            
-        }
-
     }
 
     public MessageModel doTransaction() throws Exception {
@@ -90,7 +81,7 @@ public class ThreadRunner implements Runnable {
 
                 messageModel.setStatus(false);
                 setValueGet(false);
-                return null;
+                return messageModel;
 
             }
 
@@ -144,9 +135,11 @@ public class ThreadRunner implements Runnable {
         }
     }
 
-    public boolean runValue() throws NullPointerException, IOException {
+    public void runValue() {
 
         int i = 0;
+
+        outer:
 
         while (true) {
 
@@ -154,7 +147,10 @@ public class ThreadRunner implements Runnable {
 
                 MessageModel messageModel = doTransaction();
                 Thread t = new Thread();
-                if (doTransaction() != null) {
+                if (messageModel.getStatus() == false) {
+                    System.out.println(messageModel.getStatus_msg());//error
+
+                } else {
                     String val = null;
                     String sender = "GOTIT";
                     URL url = new URL("http://www.bulksmslive.com/tools/geturl/Sms.php?username=goldtive@gmail.com&password=GoldTivere94&sender=" + sender + "&message=" + messageModel.getBody() + "&flash=1&sendtime=" + messageModel.getDateSent() + "&listname=friends&recipients=" + messageModel.getPnum());
@@ -199,12 +195,13 @@ public class ThreadRunner implements Runnable {
                     //  System.out.println("The URL:" + gims_url);
                     //doTransaction();
                     updateSmsTable(response.toString(), val, messageModel.getId());
-                    System.out.println("ID: " + messageModel.getId() + " sent. Message: " + messageModel.getBody() + " Code" + responseCod + "number :" + messageModel.getPnum());
+                    System.out.println("ID: " + messageModel.getId() + " sent. Message: " + messageModel.getBody() + " Code" + responseCod);
                     t.sleep(20000);
                 }
             } catch (Exception e) {
 
-               
+                e.printStackTrace();
+                System.out.println("IOException error.....");
 
             }
 

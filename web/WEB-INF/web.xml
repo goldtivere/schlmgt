@@ -38,7 +38,7 @@
     </session-config>
     <welcome-file-list>
         <!--<welcome-file>faces/index.xhtml</welcome-file>-->
-        <welcome-file>faces/profile/teststudent.xhtml</welcome-file>
+        <welcome-file>faces/index.xhtml</welcome-file>
         
     </welcome-file-list>           
 </web-app>
