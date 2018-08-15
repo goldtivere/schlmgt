@@ -60,9 +60,10 @@ public class ThreadRunnerEmail implements Runnable {
         ResultSet rs = null;
         PreparedStatement pstmt = null;
         try {
+            StaffEmailModel staffdetail = staffDetails();
 
             if (staffDetails() != null) {
-                StaffEmailModel staffdetail = staffDetails();
+
                 String updateData = "";
                 System.out.println("guid:" + staffdetail.getFullname() + ",request time:" + new java.util.Date().toString());
 
@@ -129,7 +130,7 @@ public class ThreadRunnerEmail implements Runnable {
                 }
 
             } else {
-                
+
             }
             //return true;
 
@@ -167,9 +168,9 @@ public class ThreadRunnerEmail implements Runnable {
         ResultSet rs = null;
         PreparedStatement pstmt = null;
         try {
-
+            StudentEmailModel sudentEmail = studentDetails();
             if (studentDetails() != null) {
-                StudentEmailModel sudentEmail = studentDetails();
+
                 String updateData = "";
 
                 System.out.println("guid:" + sudentEmail.getFullname() + ",request time:" + new java.util.Date().toString());
@@ -237,7 +238,7 @@ public class ThreadRunnerEmail implements Runnable {
                 }
 
             } else {
-                
+
             }
 
             //return true;

@@ -150,8 +150,9 @@ public class ThreadRunner implements Runnable {
             try {
 
                 Thread t = new Thread();
+                MessageModel messageModel = doTransaction();
                 if (doTransaction() != null) {
-                    MessageModel messageModel = doTransaction();
+
                     String val = null;
                     String sender = "GOTIT";
                     URL url = new URL("http://www.bulksmslive.com/tools/geturl/Sms.php?username=goldtive@gmail.com&password=GoldTivere94&sender=" + sender + "&message=" + messageModel.getBody() + "&flash=1&sendtime=" + messageModel.getDateSent() + "&listname=friends&recipients=" + messageModel.getPnum());
@@ -197,7 +198,7 @@ public class ThreadRunner implements Runnable {
                     //doTransaction();
                     updateSmsTable(response.toString(), val, messageModel.getId());
                     System.out.println("ID: " + messageModel.getId() + " sent. Message: " + messageModel.getBody() + " Code" + responseCod + "number :" + messageModel.getPnum());
-                    t.sleep(1000);
+                    t.sleep(10000);
                 } else {
 
                 }
