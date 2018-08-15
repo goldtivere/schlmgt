@@ -6,6 +6,7 @@
 package com.schlmgt.register;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.filter.ThreadRunnerEmail;
 import com.schlmgt.imgupload.UploadImagesX;
 import com.schlmgt.logic.DateManipulation;
 import com.schlmgt.login.UserDetails;
@@ -19,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -58,6 +61,9 @@ public class Registration implements Serializable {
         but = false;
         lut = false;
         put = false;
+        ExecutorService service = Executors.newCachedThreadPool();
+
+            service.execute(new ThreadRunnerEmail());
 
     }
 

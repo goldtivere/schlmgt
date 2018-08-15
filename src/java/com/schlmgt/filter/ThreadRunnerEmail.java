@@ -129,7 +129,7 @@ public class ThreadRunnerEmail implements Runnable {
                 }
 
             } else {
-                System.out.println("HI HOW");
+                
             }
             //return true;
 
@@ -237,7 +237,7 @@ public class ThreadRunnerEmail implements Runnable {
                 }
 
             } else {
-                System.out.println("This boy");
+                
             }
 
             //return true;
