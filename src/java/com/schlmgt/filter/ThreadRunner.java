@@ -33,14 +33,11 @@ public class ThreadRunner implements Runnable {
 
     private boolean valueGet;
 
-    public void run(){
-        try
-        {
-        runValue();
-        }
-        catch(Exception e)
-        {
-            
+    public void run() {
+        try {
+            runValue();
+        } catch (Exception e) {
+
         }
 
     }
@@ -97,7 +94,7 @@ public class ThreadRunner implements Runnable {
         } catch (Exception e) {
 
             System.out.print("Exception from doTransaction method.....");
-
+            e.printStackTrace();
             messageModel.setStatus(false);
             messageModel.setStatus_msg("Error:" + e.getMessage());
 
@@ -152,9 +149,9 @@ public class ThreadRunner implements Runnable {
 
             try {
 
-                MessageModel messageModel = doTransaction();
                 Thread t = new Thread();
                 if (doTransaction() != null) {
+                    MessageModel messageModel = doTransaction();
                     String val = null;
                     String sender = "GOTIT";
                     URL url = new URL("http://www.bulksmslive.com/tools/geturl/Sms.php?username=goldtive@gmail.com&password=GoldTivere94&sender=" + sender + "&message=" + messageModel.getBody() + "&flash=1&sendtime=" + messageModel.getDateSent() + "&listname=friends&recipients=" + messageModel.getPnum());
@@ -200,11 +197,11 @@ public class ThreadRunner implements Runnable {
                     //doTransaction();
                     updateSmsTable(response.toString(), val, messageModel.getId());
                     System.out.println("ID: " + messageModel.getId() + " sent. Message: " + messageModel.getBody() + " Code" + responseCod + "number :" + messageModel.getPnum());
-                    t.sleep(20000);
+                    t.sleep(1000);
+                } else {
+
                 }
             } catch (Exception e) {
-
-               
 
             }
 

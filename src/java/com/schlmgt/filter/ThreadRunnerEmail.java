@@ -6,6 +6,7 @@
 package com.schlmgt.filter;
 
 import com.schlmgt.dbconn.DbConnectionX;
+import com.schlmgt.register.StudentModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,30 +60,16 @@ public class ThreadRunnerEmail implements Runnable {
         ResultSet rs = null;
         PreparedStatement pstmt = null;
         try {
-            con = dbCon.mySqlDBconnection();
-            String querySMSDetails = "select * from Staffstatus where status=0";
-            pstmt = con.prepareStatement(querySMSDetails);
-            rs = pstmt.executeQuery();
-            //
-            int k = 0;
-            if (rs.next()) {
-                System.out.println("I got here");
-                int unityOrNot = 1;//1 unity 2=others
+
+            if (staffDetails() != null) {
+                StaffEmailModel staffdetail = staffDetails();
                 String updateData = "";
+                System.out.println("guid:" + staffdetail.getFullname() + ",request time:" + new java.util.Date().toString());
 
-                String user_id = rs.getString("staffPhone");
-                String fullname = rs.getString("fullname");
-                String slink = rs.getString("link");
-                String id = rs.getString("id");
-
-                String account = rs.getString("staffemail");//email account
-
-                System.out.println("guid:" + fullname + ",request time:" + new java.util.Date().toString());
-
-                String message = "Dear " + fullname + ", \n Please click on the link or copy to your browser to create an account."
+                String message = "Dear " + staffdetail.getFullname() + ", \n Please click on the link or copy to your browser to create an account."
                         + "Link expires in 3days.  "
-                        + slink
-                        + "\n Login ID:" + user_id;
+                        + staffdetail.getLink()
+                        + "\n Login ID:" + staffdetail.getPhone();
 
                 String subject = "Account Details";
                 String title_ = "<title>Account Details</title>";
@@ -121,32 +108,30 @@ public class ThreadRunnerEmail implements Runnable {
                 body.append("</body>");
                 body.append("</html>");
 
-                if (embeddedImageEmailUtil.sendOut(account,
+                if (embeddedImageEmailUtil.sendOut(staffdetail.getEmail(),
                         subject, body.toString())) {
 
                     updateData = "update staffstatus set status=1 "
-                            + "where staffphone='" + user_id + "' and "
-                            + "fullname='" + fullname + "' and id='" + id + "'";
+                            + "where staffphone='" + staffdetail.getPhone() + "' and "
+                            + "fullname='" + staffdetail.getFullname() + "' and id='" + staffdetail.getId() + "'";
                     pstmt = con.prepareStatement(updateData);
                     pstmt.executeUpdate();
                     System.out.println("Hi");
                 } else {
 
                     updateData = "update Staffstatus set status=0 "
-                            + "where user_id='" + user_id + "' and "
-                            + "fullname='" + fullname + "' and id='" + id + "'";
+                            + "where staffphone='" + staffdetail.getPhone() + "' and "
+                            + "fullname=" + staffdetail.getFullname() + "' and id='" + staffdetail.getId() + "'";
 
                     pstmt = con.prepareStatement(updateData);
                     pstmt.executeUpdate();
                     System.out.println("Low");
                 }
 
-                setMessage1(true);
-                //return true;
             } else {
-                setMessage1(false);
-                
+                System.out.println("HI HOW");
             }
+            //return true;
 
         } catch (Exception e) {
 
@@ -182,32 +167,17 @@ public class ThreadRunnerEmail implements Runnable {
         ResultSet rs = null;
         PreparedStatement pstmt = null;
         try {
-            con = dbCon.mySqlDBconnection();
 
-            String querySMSDetails = "select * from studentstatus where status=0";
-            pstmt = con.prepareStatement(querySMSDetails);
-            rs = pstmt.executeQuery();
-
-            //
-            int k = 0;
-            if (rs.next()) {
-
-                int unityOrNot = 1;//1 unity 2=others
+            if (studentDetails() != null) {
+                StudentEmailModel sudentEmail = studentDetails();
                 String updateData = "";
 
-                String slink = rs.getString("link");
-                String guid = rs.getString("guid");
-                String fullname = rs.getString("full_name");
-                String stuId = rs.getString("studentid");
+                System.out.println("guid:" + sudentEmail.getFullname() + ",request time:" + new java.util.Date().toString());
 
-                String account = rs.getString("studentemail");//email account
-
-                System.out.println("guid:" + fullname + ",request time:" + new java.util.Date().toString());
-
-                String message = "Dear " + fullname + ", \n Please click on the link or copy to your browser to create an account."
+                String message = "Dear " + sudentEmail.getFullname() + ", \n Please click on the link or copy to your browser to create an account."
                         + "Link expires in 3days.  "
-                        + slink
-                        + "\n Student Registration Number:" + stuId;
+                        + sudentEmail.getSlink()
+                        + "\n Student Registration Number:" + sudentEmail.getStudentId();
 
                 String subject = "Account Registration";
                 String title_ = "<title>Account Details</title>";
@@ -246,28 +216,28 @@ public class ThreadRunnerEmail implements Runnable {
                 body.append("</body>");
                 body.append("</html>");
 
-                if (embeddedImageEmailUtils.sendOut(account,
+                if (embeddedImageEmailUtils.sendOut(sudentEmail.getStudentEmail(),
                         subject, body.toString())) {
 
                     updateData = "update studentstatus set status=1 "
-                            + "where guid='" + guid + "' and "
-                            + "link='" + slink + "'";
+                            + "where guid='" + sudentEmail.getGuid() + "' and "
+                            + "link='" + sudentEmail.getSlink() + "'";
                     pstmt = con.prepareStatement(updateData);
                     pstmt.executeUpdate();
 
                 } else {
 
                     updateData = "update studentstatus set status=0 "
-                            + "where guid='" + guid + "' and "
-                            + "link='" + slink + "'";
+                            + "where guid='" + sudentEmail.getGuid() + "' and "
+                            + "link='" + sudentEmail.getSlink() + "'";
 
                     pstmt = con.prepareStatement(updateData);
                     pstmt.executeUpdate();
 
                 }
+
             } else {
-                setMessage2(true);
-                
+                System.out.println("This boy");
             }
 
             //return true;
@@ -298,6 +268,113 @@ public class ThreadRunnerEmail implements Runnable {
         }
 
     }//end doTransact()
+
+    public StudentEmailModel studentDetails() throws Exception {
+
+        Connection con = null;
+        DbConnectionX dbCon = new DbConnectionX();
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        String sms_url;
+
+        try {
+            con = dbCon.mySqlDBconnection();
+            String querySMSDetails = "select * from studentstatus where status=0";
+            pstmt = con.prepareStatement(querySMSDetails);
+            rs = pstmt.executeQuery();
+            String updateData = null;
+            StudentEmailModel studentEmailModel = new StudentEmailModel();
+            if (rs.next()) {
+
+                studentEmailModel.setSlink(rs.getString("link"));
+                studentEmailModel.setGuid(rs.getString("guid"));
+                studentEmailModel.setFullname(rs.getString("full_name"));
+                studentEmailModel.setStudentId(rs.getString("studentid"));
+
+                studentEmailModel.setStudentEmail(rs.getString("studentemail"));//email account
+                return studentEmailModel;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+
+            System.out.print("Exception from studentDetails method.....");
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+            }
+
+            if (!(pstmt == null)) {
+                pstmt.close();
+            }
+
+            if (!(rs == null)) {
+                rs.close();
+            }
+
+        }
+
+    }//end doTransaction...
+
+    public StaffEmailModel staffDetails() throws Exception {
+
+        Connection con = null;
+        DbConnectionX dbCon = new DbConnectionX();
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        String sms_url;
+
+        try {
+            con = dbCon.mySqlDBconnection();
+            String querySMSDetails = "select * from Staffstatus where status=0";
+            pstmt = con.prepareStatement(querySMSDetails);
+            rs = pstmt.executeQuery();
+            //
+
+            StaffEmailModel staffEmailModel = new StaffEmailModel();
+            if (rs.next()) {
+                System.out.println("I got here");
+
+                staffEmailModel.setPhone(rs.getString("staffPhone"));
+                staffEmailModel.setFullname(rs.getString("fullname"));
+                staffEmailModel.setLink(rs.getString("link"));
+                staffEmailModel.setId(rs.getInt("id"));
+
+                staffEmailModel.setEmail(rs.getString("staffemail"));//email account
+
+                return staffEmailModel;
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+
+            System.out.print("Exception from staffDetails method.....");
+            e.printStackTrace();
+            return null;
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+            }
+
+            if (!(pstmt == null)) {
+                pstmt.close();
+            }
+
+            if (!(rs == null)) {
+                rs.close();
+            }
+
+        }
+
+    }//end doTransaction...
 
     public boolean isMessage1() {
         return message1;
