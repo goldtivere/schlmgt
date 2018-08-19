@@ -63,7 +63,7 @@ public class Registration implements Serializable {
         put = false;
         ExecutorService service = Executors.newCachedThreadPool();
 
-            service.execute(new ThreadRunnerEmail());
+        service.execute(new ThreadRunnerEmail());
 
     }
 
@@ -335,8 +335,9 @@ public class Registration implements Serializable {
                                     UUID idOne = UUID.randomUUID();
                                     //InputStream fin2 = file.getInputstream();                                    
                                     String insert = "insert into user_details (first_name,middlename,last_name,username,email_address,role_id,"
-                                            + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed,suspendedstatus,roleassigned) "
-                                            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                                            + "date_created,date_time_created,created_by,is_deleted,staffclass,staffgrade,staffyear,highestqua,address,dateemployed,suspendedstatus,roleassigned,"
+                                            + "canupdateresult,canupdatesubject,canregisterstudent,canregisterstaff,cansenttext,canregisteradmin) "
+                                            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
                                     pstmt = con.prepareStatement(insert);
 
@@ -358,6 +359,12 @@ public class Registration implements Serializable {
                                     pstmt.setString(16, does);
                                     pstmt.setBoolean(17, false);
                                     pstmt.setInt(18, 1);
+                                    pstmt.setBoolean(19, false);
+                                    pstmt.setBoolean(20, false);
+                                    pstmt.setBoolean(21, false);
+                                    pstmt.setBoolean(22, false);
+                                    pstmt.setBoolean(23, false);
+                                    pstmt.setBoolean(24, false);
 
                                     pstmt.executeUpdate();
 

@@ -120,13 +120,7 @@ public class ThreadRunnerEmail implements Runnable {
                     System.out.println("Hi");
                 } else {
 
-                    updateData = "update Staffstatus set status=0 "
-                            + "where staffphone='" + staffdetail.getPhone() + "' and "
-                            + "fullname=" + staffdetail.getFullname() + "' and id='" + staffdetail.getId() + "'";
-
-                    pstmt = con.prepareStatement(updateData);
-                    pstmt.executeUpdate();
-                    System.out.println("Low");
+                   
                 }
 
             } else {
