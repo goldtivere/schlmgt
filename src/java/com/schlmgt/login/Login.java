@@ -96,7 +96,7 @@ public class Login implements Serializable {
                     setRoleAssigned(false);
                     setRoleAssigned1(true);
 
-                } else if (getAssignedRole() == 2) {
+                } else if (getAssignedRole() == 3) {
                     setRoleAssigned(true);
                     setRoleAssigned1(false);
                 }
