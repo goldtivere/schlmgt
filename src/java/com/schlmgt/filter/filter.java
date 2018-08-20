@@ -46,6 +46,15 @@ public class filter implements Filter {
                 if (l.getRoleAssigned() == 1 && (reqURI.contains("faces/pages/register/") || reqURI.contains("faces/pages/profile/") || reqURI.contains("faces/pages/report/"))) {
                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 }
+
+                if (l.getRoleAssigned() == 2 && l.isCanUpdateSubject() && reqURI.contains("faces/pages/student/")) {
+                    chain.doFilter(request, response);
+                } 
+
+                if (l.getRoleAssigned() == 2 && l.isCanUpdateResult() && reqURI.contains("faces/pages/result/")) {
+                    chain.doFilter(request, response);
+                } 
+
             }
             if (reqURI.contains("/faces/index.xhtml") || (ses != null && ses.getAttribute("sessn_nums") != null) || reqURI.contains("javax.faces.resource")) {
                 chain.doFilter(request, response);

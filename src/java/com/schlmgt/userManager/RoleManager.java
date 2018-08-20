@@ -13,15 +13,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 /**
  *
  * @author Gold
  */
-public class RoleManager implements Serializable{
-    
-    public List<RoleManagerModel> displayResult() throws Exception {
+@ManagedBean(name = "roleManager")
+@ViewScoped
+public class RoleManager implements Serializable {
+
+    private List<RoleManagerModel> roleManager;
+    private List<RoleManagerModel> roleManager1;
+
+    @PostConstruct
+    public void init() {
+        try {
+            roleManager = displayRole();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<RoleManagerModel> displayRole() throws Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
         DbConnectionX dbConnections = new DbConnectionX();
@@ -32,9 +49,10 @@ public class RoleManager implements Serializable{
         try {
 
             con = dbConnections.mySqlDBconnection();
-            String query = "SELECT * FROM user_details where isdeleted=?,suspendedstatus=?";
-            pstmt = con.prepareStatement(query);           
-            pstmt.setBoolean(4, false);
+            String query = "SELECT * FROM user_details where is_deleted=? and suspendedstatus=? and roleassigned=2";
+            pstmt = con.prepareStatement(query);
+            pstmt.setBoolean(1, false);
+            pstmt.setBoolean(2, false);
             rs = pstmt.executeQuery();
             //
             List<RoleManagerModel> lst = new ArrayList<>();
@@ -50,7 +68,7 @@ public class RoleManager implements Serializable{
                 coun.setCanRegisterStudent(rs.getBoolean("canregisterstudent"));
                 coun.setCanRegisterStaff(rs.getBoolean("canregisterstaff"));
                 coun.setCanSendMessage(rs.getBoolean("cansendText"));
-    
+
                 lst.add(coun);
             }
 
@@ -72,5 +90,21 @@ public class RoleManager implements Serializable{
 
         }
     }
-    
+
+    public List<RoleManagerModel> getRoleManager() {
+        return roleManager;
+    }
+
+    public void setRoleManager(List<RoleManagerModel> roleManager) {
+        this.roleManager = roleManager;
+    }
+
+    public List<RoleManagerModel> getRoleManager1() {
+        return roleManager1;
+    }
+
+    public void setRoleManager1(List<RoleManagerModel> roleManager1) {
+        this.roleManager1 = roleManager1;
+    }
+
 }

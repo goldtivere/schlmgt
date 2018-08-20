@@ -30,6 +30,11 @@ public class UserDetails implements Serializable {
     private int roleid;
     private String staffClass;
     private String staffGrade;
+    private boolean canUpdateResult;
+    private boolean canUpdateSubject;
+    private boolean canRegisterStudent;
+    private boolean canRegisterStaff;
+    private boolean canSendMessage;
 
     public String getPassword() {
         return password;
@@ -157,6 +162,46 @@ public class UserDetails implements Serializable {
 
     public void setStaffGrade(String staffGrade) {
         this.staffGrade = staffGrade;
+    }
+
+    public boolean isCanUpdateResult() {
+        return canUpdateResult;
+    }
+
+    public void setCanUpdateResult(boolean canUpdateResult) {
+        this.canUpdateResult = canUpdateResult;
+    }
+
+    public boolean isCanUpdateSubject() {
+        return canUpdateSubject;
+    }
+
+    public void setCanUpdateSubject(boolean canUpdateSubject) {
+        this.canUpdateSubject = canUpdateSubject;
+    }
+
+    public boolean isCanRegisterStudent() {
+        return canRegisterStudent;
+    }
+
+    public void setCanRegisterStudent(boolean canRegisterStudent) {
+        this.canRegisterStudent = canRegisterStudent;
+    }
+
+    public boolean isCanRegisterStaff() {
+        return canRegisterStaff;
+    }
+
+    public void setCanRegisterStaff(boolean canRegisterStaff) {
+        this.canRegisterStaff = canRegisterStaff;
+    }
+
+    public boolean isCanSendMessage() {
+        return canSendMessage;
+    }
+
+    public void setCanSendMessage(boolean canSendMessage) {
+        this.canSendMessage = canSendMessage;
     }
 
 }

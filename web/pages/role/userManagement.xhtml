@@ -18,8 +18,8 @@
             <p:panel id="nur">                
                 <p:panel id="nurs" style="border: none;">
                     <p:dataTable id="n" class="table table-responsive" scrollable="true" var="papprv_rpt" 
-                                 value="#{result.resultmodel}"
-                                 selection="#{result.resultmodel1}"
+                                 value="#{roleManager.roleManager}"
+                                 selection="#{roleManager.roleManager1}"
                                  rowKey="#{papprv_rpt.id}"
                                  paginatorTemplate="{Exporters}"
                                  paginator="true"
@@ -55,50 +55,49 @@
                             </h:commandLink>
                         </f:facet>                                                  
                         <p:column exportable="false" selectionMode="multiple" style="width:30px;text-align:center"/>
-                        <p:column headerText="First Name" filterBy="#{papprv_rpt.studentId}">
-                            <h:outputText value="#{papprv_rpt.studentId}"/>
+                        <p:column headerText="First Name" filterBy="#{papprv_rpt.firstName}">
+                            <h:outputText value="#{papprv_rpt.firstName}"/>
 
                         </p:column>
-                        <p:column headerText="Middle Name" filterBy="#{papprv_rpt.arm}">
-                            <h:outputText value="#{papprv_rpt.arm}"/>
+                        <p:column headerText="Middle Name" filterBy="#{papprv_rpt.middleName}">
+                            <h:outputText value="#{papprv_rpt.middleName}"/>
 
                         </p:column>
-                        <p:column headerText="Last Name" filterBy="#{papprv_rpt.subject}">
-                            <h:outputText value="#{papprv_rpt.subject}"/>
+                        <p:column headerText="Last Name" filterBy="#{papprv_rpt.lastName}">
+                            <h:outputText value="#{papprv_rpt.lastName}"/>
 
                         </p:column>
                         <p:column headerText="Can update Result">
-                            <h:outputText value="#{papprv_rpt.firstTest}"/>
-
+                            <p:selectBooleanCheckbox value="#{papprv_rpt.canUpdateResult}" />                            
                         </p:column>
                         <p:column headerText="Can Update Subject">
-                            <h:outputText value="#{papprv_rpt.secondTest}"/>
+                            <p:selectBooleanCheckbox value="#{papprv_rpt.canUpdateSubject}" />                            
 
                         </p:column>
                         <p:column headerText="Can Register Student">
-                            <h:outputText value="#{papprv_rpt.exam}"/>
+                            <p:selectBooleanCheckbox value="#{papprv_rpt.canRegisterStudent}" />                            
 
                         </p:column>
                         <p:column headerText="Can Register Staff">
-                            <h:outputText value="#{papprv_rpt.total}"/>
+                            <p:selectBooleanCheckbox value="#{papprv_rpt.canRegisterStaff}" />                            
 
                         </p:column>
-                         <p:column headerText="Can Send Text Message">
-                            <h:outputText value="#{papprv_rpt.total}"/>
+                        <p:column headerText="Can Send Text Message">
+                            <p:selectBooleanCheckbox value="#{papprv_rpt.canSendMessage}" />                            
 
                         </p:column>
-                        <p:column headerText="Action" style="width:70px" exportable="false">                                
-                            <p:commandButton value="Update" alt="search" id="please" update=":templateForm:ooo:okay,:templateForm:ooo:upda" process="@this" 
+                        <p:column headerText="Action" exportable="false">                                
+                            <p:commandButton value="Update" alt="search" id="please" update="" process="@this" 
                                              oncomplete="PF('dlg2').show()"> 
                                 <f:setPropertyActionListener value="#{papprv_rpt}" target="#{result.modelResult}" />
                             </p:commandButton>                               
                         </p:column>
-                        
+
                     </p:dataTable> 
                 </p:panel>                    
             </p:panel>
         </div>
-       
+
     </ui:define>
 
 

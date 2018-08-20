@@ -38,9 +38,8 @@ public class Login implements Serializable {
     private UserDetails dto = new UserDetails();
     private boolean roleAssigned;
     private boolean roleAssigned1;
+    private boolean roleAssigned2;
     private int assignedRole;
-
-   
 
     public void loginpage() throws Exception {
 
@@ -83,6 +82,11 @@ public class Login implements Serializable {
                 dto.setRoleAssigned(rs.getInt("roleassigned"));
                 setAssignedRole(rs.getInt("roleassigned"));
                 dto.setRoleid(rs.getInt("roleid"));
+                dto.setCanRegisterStaff(rs.getBoolean("canregisterstaff"));
+                dto.setCanRegisterStudent(rs.getBoolean("canregisterstudent"));
+                dto.setCanUpdateResult(rs.getBoolean("canupdateresult"));
+                dto.setCanUpdateSubject(rs.getBoolean("canupdatesubject"));
+                dto.setCanSendMessage(rs.getBoolean("cansendtext"));
 
                 context.getExternalContext().getSessionMap().put("sessn_nums", getDto());
 
@@ -94,11 +98,18 @@ public class Login implements Serializable {
 
                 if (getAssignedRole() == 1) {
                     setRoleAssigned(false);
+                    setRoleAssigned2(false);
                     setRoleAssigned1(true);
 
                 } else if (getAssignedRole() == 3) {
                     setRoleAssigned(true);
                     setRoleAssigned1(false);
+                    setRoleAssigned2(false);
+                }
+                if (getAssignedRole() == 2 && dto.isCanUpdateResult()) {
+                    setRoleAssigned(false);
+                    setRoleAssigned1(false);
+                    setRoleAssigned2(true);
                 }
 
             } else {
@@ -226,6 +237,14 @@ public class Login implements Serializable {
 
     public void setRoleAssigned1(boolean roleAssigned1) {
         this.roleAssigned1 = roleAssigned1;
+    }
+
+    public boolean isRoleAssigned2() {
+        return roleAssigned2;
+    }
+
+    public void setRoleAssigned2(boolean roleAssigned2) {
+        this.roleAssigned2 = roleAssigned2;
     }
 
 }
