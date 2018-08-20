@@ -111,6 +111,19 @@ public class Login implements Serializable {
                     setRoleAssigned1(false);
                     setRoleAssigned2(true);
                 }
+                
+                 if (getAssignedRole() == 2 && dto.isCanSendMessage()) {
+                    setRoleAssigned(false);
+                    setRoleAssigned1(false);
+                    setRoleAssigned2(true);
+                }
+                 
+                  if (getAssignedRole() == 2 && dto.isCanUpdateSubject()) {
+                    setRoleAssigned(false);
+                    setRoleAssigned1(false);
+                    setRoleAssigned2(true);
+                }
+
 
             } else {
 
