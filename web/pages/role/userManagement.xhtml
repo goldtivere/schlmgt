@@ -18,8 +18,8 @@
             <p:panel id="nur">                
                 <p:panel id="nurs" style="border: none;">
                     <p:dataTable id="n" class="table table-responsive" scrollable="true" var="papprv_rpt" 
-                                 value="#{roleManager.roleManager}"
-                                 selection="#{roleManager.roleManager1}"
+                                 value="#{roleManager.roleManager}"  
+                                 selection="#{roleManager.roleManager2}"
                                  rowKey="#{papprv_rpt.id}"
                                  paginatorTemplate="{Exporters}"
                                  paginator="true"
@@ -53,8 +53,8 @@
                                 <p:graphicImage value="/images/xml.png" style="width: 20px; height: 20px;"/>
                                 <p:dataExporter type="xml" target="n" fileName="report" pageOnly="true" />
                             </h:commandLink>
-                        </f:facet>                                                  
-                        <p:column exportable="false" selectionMode="multiple" style="width:30px;text-align:center"/>
+                        </f:facet>  
+                         <p:column selectionMode="single" style="width:30px;text-align:center"/>
                         <p:column headerText="First Name" filterBy="#{papprv_rpt.firstName}">
                             <h:outputText value="#{papprv_rpt.firstName}"/>
 
@@ -86,11 +86,9 @@
                             <p:selectBooleanCheckbox value="#{papprv_rpt.canSendMessage}" />                            
 
                         </p:column>
-                        <p:column headerText="Action" exportable="false">                                
-                            <p:commandButton value="Update" alt="search" id="please" update="" process="@this" 
-                                             oncomplete="PF('dlg2').show()"> 
-                                <f:setPropertyActionListener value="#{papprv_rpt}" target="#{result.modelResult}" />
-                            </p:commandButton>                               
+                        <p:column headerText="Action" exportable="false"> 
+                            <p:commandButton process="@this n" actionListener="#{roleManager.updateRole}" update=":templateForm:n,:templateForm:wow"  value="update">                                                                                             
+                            </p:commandButton>                                                                               
                         </p:column>
 
                     </p:dataTable> 
