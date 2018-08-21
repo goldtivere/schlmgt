@@ -125,6 +125,11 @@ public class Login implements Serializable {
                     setRoleAssigned1(false);
                     setCanupdateSubject(true);
                 }
+                   if (getAssignedRole() == 2 && (dto.isCanRegisterStaff() || dto.isCanRegisterStudent())) {
+                    setRoleAssigned(false);
+                    setRoleAssigned1(false);
+                    setCancreatestaff(true);
+                }
 
 
             } else {

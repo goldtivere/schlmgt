@@ -53,6 +53,10 @@ public class Registration implements Serializable {
     private UploadedFile csv;
     private String messangerOfTruth;
     private boolean lut;
+    private boolean staff;
+    private boolean student;
+    private boolean admin;
+    private boolean staffStudent;
 
     @PostConstruct
     public void init() {
@@ -61,6 +65,27 @@ public class Registration implements Serializable {
         but = false;
         lut = false;
         put = false;
+        FacesContext context = FacesContext.getCurrentInstance();
+        UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+
+        if (userObj.getRoleAssigned() == 3) {
+            setAdmin(true);
+            
+        } 
+        if(userObj.getRoleAssigned() == 2 && userObj.isCanRegisterStaff() && !userObj.isCanRegisterStudent()) {
+            
+            setStaff(true);
+            
+        } 
+        if (userObj.getRoleAssigned() == 2 && userObj.isCanRegisterStudent() && !userObj.isCanRegisterStaff()) {
+           
+            setStudent(true);
+        }
+         if (userObj.getRoleAssigned() == 2 && userObj.isCanRegisterStudent() && userObj.isCanRegisterStaff()) {
+           
+             setStaffStudent(true);
+        }
+
         ExecutorService service = Executors.newCachedThreadPool();
 
         service.execute(new ThreadRunnerEmail());
@@ -969,6 +994,38 @@ public class Registration implements Serializable {
 
     public void setRegType(String regType) {
         this.regType = regType;
+    }
+
+    public boolean isStaff() {
+        return staff;
+    }
+
+    public void setStaff(boolean staff) {
+        this.staff = staff;
+    }
+
+    public boolean isStudent() {
+        return student;
+    }
+
+    public void setStudent(boolean student) {
+        this.student = student;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public boolean isStaffStudent() {
+        return staffStudent;
+    }
+
+    public void setStaffStudent(boolean staffStudent) {
+        this.staffStudent = staffStudent;
     }
 
 }

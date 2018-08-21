@@ -58,6 +58,10 @@ public class filter implements Filter {
                 if (l.getRoleAssigned() == 2 && !l.isCanSendMessage()&& reqURI.contains("faces/pages/mail/")) {
                      resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 } 
+                
+                 if (l.getRoleAssigned() == 2 && (!l.isCanRegisterStaff() || !l.isCanRegisterStaff()) && reqURI.contains("faces/pages/register/")) {
+                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                } 
                
 
             }

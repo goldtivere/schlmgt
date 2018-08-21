@@ -59,6 +59,11 @@
                                 <i class="fa fa-user-plus"></i> <span class="nav-label">Register</span>
                             </h:outputLink>                             
                             </li>
+                            <li>  
+                            <h:outputLink rendered="#{login.cancreatestaff}" value="#{request.contextPath}/faces/pages/register/registration.xhtml">
+                                <i class="fa fa-user-plus"></i> <span class="nav-label">Register</span>
+                            </h:outputLink>                             
+                            </li>
 
                             <li>   
                             <h:outputLink rendered="#{login.roleAssigned}" value="#{request.contextPath}/faces/pages/profile/studentprofile.xhtml">

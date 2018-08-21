@@ -18,13 +18,32 @@
                 <div class="form-group">
                     <div class="text-center">                        
                         <p:panel id="dude" style="border: none;">
-                            <p:selectOneMenu id="sclass" class="form-control" value="#{registration.registration}" required="true" requiredMessage="Registration required">
+                            <p:selectOneMenu rendered="#{registration.admin}"  class="form-control" value="#{registration.registration}" required="true" requiredMessage="Registration required">
                                 <p:ajax listener="#{registration.regDetails()}" update="grad" />
                                 <f:selectItem itemLabel="--Select Registration--" itemValue="" noSelectionOption="true"/>                                
                                 <f:selectItem itemLabel="Student" itemValue="1" />                                
                                 <f:selectItem itemLabel="Staff" itemValue="2" />   
                                 <f:selectItem itemLabel="Admin" itemValue="3" /> 
-                            </p:selectOneMenu>   
+                            </p:selectOneMenu>  
+                            
+                            <p:selectOneMenu rendered="#{registration.student}" class="form-control" value="#{registration.registration}" required="true" requiredMessage="Registration required">
+                                <p:ajax listener="#{registration.regDetails()}" update="grad" />
+                                <f:selectItem itemLabel="--Select Registration--" itemValue="" noSelectionOption="true"/>                                
+                                <f:selectItem itemLabel="Student" itemValue="1" />                                                               
+                            </p:selectOneMenu>  
+                            
+                             <p:selectOneMenu rendered="#{registration.staff}" class="form-control" value="#{registration.registration}" required="true" requiredMessage="Registration required">
+                                <p:ajax listener="#{registration.regDetails()}" update="grad" />
+                                <f:selectItem itemLabel="--Select Registration--" itemValue="" noSelectionOption="true"/>                                                                                           
+                                <f:selectItem itemLabel="Staff" itemValue="2" />                                   
+                            </p:selectOneMenu>  
+                            
+                            <p:selectOneMenu rendered="#{registration.staffStudent}" class="form-control" value="#{registration.registration}" required="true" requiredMessage="Registration required">
+                                <p:ajax listener="#{registration.regDetails()}" update="grad" />
+                                <f:selectItem itemLabel="--Select Registration--" itemValue="" noSelectionOption="true"/>                                
+                                <f:selectItem itemLabel="Student" itemValue="1" />                                
+                                <f:selectItem itemLabel="Staff" itemValue="2" />                                   
+                            </p:selectOneMenu> 
 
 
 
