@@ -38,7 +38,11 @@ public class Login implements Serializable {
     private UserDetails dto = new UserDetails();
     private boolean roleAssigned;
     private boolean roleAssigned1;
-    private boolean roleAssigned2;
+    private boolean canupdateResult;
+    private boolean canupdateSubject;
+    private boolean cancreatestaff;
+    private boolean cancreatestudent;
+    private boolean cansendtext;
     private int assignedRole;
 
     public void loginpage() throws Exception {
@@ -97,31 +101,29 @@ public class Login implements Serializable {
                 context.renderResponse();
 
                 if (getAssignedRole() == 1) {
-                    setRoleAssigned(false);
-                    setRoleAssigned2(false);
+                    setRoleAssigned(false);                    
                     setRoleAssigned1(true);
 
                 } else if (getAssignedRole() == 3) {
                     setRoleAssigned(true);
-                    setRoleAssigned1(false);
-                    setRoleAssigned2(false);
+                    setRoleAssigned1(false);                    
                 }
                 if (getAssignedRole() == 2 && dto.isCanUpdateResult()) {
                     setRoleAssigned(false);
                     setRoleAssigned1(false);
-                    setRoleAssigned2(true);
+                    setCanupdateResult(true);
                 }
                 
                  if (getAssignedRole() == 2 && dto.isCanSendMessage()) {
                     setRoleAssigned(false);
                     setRoleAssigned1(false);
-                    setRoleAssigned2(true);
+                    setCansendtext(true);
                 }
                  
                   if (getAssignedRole() == 2 && dto.isCanUpdateSubject()) {
                     setRoleAssigned(false);
                     setRoleAssigned1(false);
-                    setRoleAssigned2(true);
+                    setCanupdateSubject(true);
                 }
 
 
@@ -252,12 +254,45 @@ public class Login implements Serializable {
         this.roleAssigned1 = roleAssigned1;
     }
 
-    public boolean isRoleAssigned2() {
-        return roleAssigned2;
+    public boolean isCanupdateResult() {
+        return canupdateResult;
     }
 
-    public void setRoleAssigned2(boolean roleAssigned2) {
-        this.roleAssigned2 = roleAssigned2;
+    public void setCanupdateResult(boolean canupdateResult) {
+        this.canupdateResult = canupdateResult;
     }
+
+    public boolean isCanupdateSubject() {
+        return canupdateSubject;
+    }
+
+    public void setCanupdateSubject(boolean canupdateSubject) {
+        this.canupdateSubject = canupdateSubject;
+    }
+
+    public boolean isCancreatestaff() {
+        return cancreatestaff;
+    }
+
+    public void setCancreatestaff(boolean cancreatestaff) {
+        this.cancreatestaff = cancreatestaff;
+    }
+
+    public boolean isCancreatestudent() {
+        return cancreatestudent;
+    }
+
+    public void setCancreatestudent(boolean cancreatestudent) {
+        this.cancreatestudent = cancreatestudent;
+    }
+
+    public boolean isCansendtext() {
+        return cansendtext;
+    }
+
+    public void setCansendtext(boolean cansendtext) {
+        this.cansendtext = cansendtext;
+    }
+
 
 }

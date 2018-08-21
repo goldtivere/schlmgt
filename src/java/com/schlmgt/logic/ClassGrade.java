@@ -489,6 +489,7 @@ public class ClassGrade implements Serializable {
     }
 
     public String termGet(String termValue) throws SQLException {
+        
         FacesContext context = FacesContext.getCurrentInstance();
 
         DbConnectionX dbConnections = new DbConnectionX();
@@ -497,6 +498,7 @@ public class ClassGrade implements Serializable {
         PreparedStatement pstmt = null;
 
         try {
+            
 
             con = dbConnections.mySqlDBconnection();
             String query = "SELECT * FROM tbterm where id=?";
@@ -513,7 +515,7 @@ public class ClassGrade implements Serializable {
 
             return value;
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            
             return null;
 
         } catch (Exception e) {

@@ -47,13 +47,18 @@ public class filter implements Filter {
                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 }
 
-                if (l.getRoleAssigned() == 2 && l.isCanUpdateSubject() && reqURI.contains("faces/pages/student/")) {
-                    chain.doFilter(request, response);
+                if (l.getRoleAssigned() == 2 && !l.isCanUpdateSubject() && reqURI.contains("faces/pages/student/")) {
+                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 } 
-
-                if (l.getRoleAssigned() == 2 && l.isCanUpdateResult() && reqURI.contains("faces/pages/result/")) {
-                    chain.doFilter(request, response);
+                
+                if (l.getRoleAssigned() == 2 && !l.isCanUpdateResult()&& reqURI.contains("faces/pages/result/")) {
+                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 } 
+                
+                if (l.getRoleAssigned() == 2 && !l.isCanSendMessage()&& reqURI.contains("faces/pages/mail/")) {
+                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                } 
+               
 
             }
             if (reqURI.contains("/faces/index.xhtml") || (ses != null && ses.getAttribute("sessn_nums") != null) || reqURI.contains("javax.faces.resource")) {
