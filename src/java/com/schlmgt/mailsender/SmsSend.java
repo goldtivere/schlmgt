@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.el.PropertyNotFoundException;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.NavigationHandler;
@@ -71,17 +73,14 @@ public class SmsSend implements Serializable {
     private Boolean nursery, primary, secondary;
     private Boolean nbool, pbool, sbool, fbool, status, status1;
     private String messangerOfTruth;
+    private ExecutorService service;
 
     @PostConstruct
     public void init() {
         try {
             setStatus(false);
             setStatus1(false);
-
-            ExecutorService service = Executors.newCachedThreadPool();
-
-            service.execute(new ThreadRunner());
-                   
+           
         } catch (Exception e) {
             e.printStackTrace();
         }

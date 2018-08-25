@@ -6,6 +6,9 @@
             org.primefaces.webapp.filter.FileUploadFilter
         </filter-class>
     </filter>
+    <listener>
+        <listener-class>com.schlmgt.filter.BackgroundJobManager</listener-class>
+    </listener>
     <filter-mapping>
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <servlet-name>Faces Servlet</servlet-name>
