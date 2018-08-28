@@ -86,10 +86,6 @@ public class Registration implements Serializable {
             setStaffStudent(true);
         }
 
-        ExecutorService service = Executors.newCachedThreadPool();
-
-        service.execute(new ThreadRunnerEmail());
-
     }
 
     public String regStudent() throws Exception {
@@ -435,9 +431,10 @@ public class Registration implements Serializable {
                 context.addMessage(null, message);
             }
         } catch (IllegalStateException e) {
-            setMessangerOfTruth("Please format Phone number field to take text and not number");
+            setMessangerOfTruth("Please check that phone number and sex is in the correct format");
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, message);
+            e.printStackTrace();
         } catch (Exception exx) {
             exx.printStackTrace();
         } finally {
@@ -585,7 +582,9 @@ public class Registration implements Serializable {
                         if (ro.getCell(6) != null) {
                             mode.setSex((int) ro.getCell(6).getNumericCellValue());
                         } else {
-                            mode.setSex(0);
+                            setMessangerOfTruth("Sex should be 1(male) or 2(female): Row " + (i + 1));
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
                         }
 
                         if (ro.getCell(7) != null) {
@@ -633,43 +632,57 @@ public class Registration implements Serializable {
                         if (ro.getCell(14) != null) {
                             mode.setPreviousClass((int) ro.getCell(14).getNumericCellValue());
                         } else {
-                            mode.setPreviousClass(0);
+                            setMessangerOfTruth("Previous class field is required: Row " + (i + 1));
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
                         }
 
                         if (ro.getCell(15) != null) {
                             mode.setPreviousGrade((int) ro.getCell(15).getNumericCellValue());
                         } else {
-                            mode.setPreviousGrade(0);
+                            setMessangerOfTruth("Previous Grade field is required: Row " + (i + 1));
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
                         }
 
                         if (ro.getCell(16) != null) {
                             mode.setCurrentClass((int) ro.getCell(16).getNumericCellValue());
                         } else {
-                            mode.setCurrentClass(0);
+                            setMessangerOfTruth("Current class field is required: " + studentDetails.toString());
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
                         }
 
                         if (ro.getCell(17) != null) {
                             mode.setCurrentGrade((int) ro.getCell(17).getNumericCellValue());
                         } else {
-                            mode.setCurrentGrade(0);
+                            setMessangerOfTruth("Cuurent Grade field is required: Row " + (i + 1));
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
                         }
 
                         if (ro.getCell(18) != null) {
                             mode.setArm(ro.getCell(18).getStringCellValue());
                         } else {
-                            mode.setArm(null);
+                            setMessangerOfTruth("Arm is required:Row " + (i + 1));
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
                         }
 
                         if (ro.getCell(19) != null) {
                             mode.setTerm((int) ro.getCell(19).getNumericCellValue());
                         } else {
-                            mode.setTerm(0);
+                            setMessangerOfTruth("Term field is required: Row " + (i + 1));
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
                         }
 
                         if (ro.getCell(20) != null) {
                             mode.setYear(df.formatCellValue(ro.getCell(20)));
                         } else {
-                            mode.setYear(null);
+                            setMessangerOfTruth("Year field is required: Row " + (i + 1));
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, message);
                         }
 
                         fullname = mode.getLname() + " " + mode.getMname() + " " + mode.getFname();
@@ -827,9 +840,10 @@ public class Registration implements Serializable {
                 context.addMessage(null, message);
             }
         } catch (IllegalStateException e) {
-            setMessangerOfTruth("Please format Phone number field to take text and not number");
+            setMessangerOfTruth("Please check that phone number and sex is in the correct format");
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, message);
+            e.printStackTrace();
         } catch (Exception exx) {
             exx.printStackTrace();
         } finally {

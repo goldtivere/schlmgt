@@ -120,7 +120,6 @@ public class ThreadRunnerEmail implements Runnable {
                     System.out.println("Hi");
                 } else {
 
-                   
                 }
 
             } else {
@@ -274,8 +273,9 @@ public class ThreadRunnerEmail implements Runnable {
 
         try {
             con = dbCon.mySqlDBconnection();
-            String querySMSDetails = "select * from studentstatus where status=0";
+            String querySMSDetails = "select * from studentstatus where status=?";
             pstmt = con.prepareStatement(querySMSDetails);
+            pstmt.setBoolean(1, false);
             rs = pstmt.executeQuery();
             String updateData = null;
             StudentEmailModel studentEmailModel = new StudentEmailModel();
@@ -326,8 +326,9 @@ public class ThreadRunnerEmail implements Runnable {
 
         try {
             con = dbCon.mySqlDBconnection();
-            String querySMSDetails = "select * from Staffstatus where status=0";
+            String querySMSDetails = "select * from Staffstatus where status=?";
             pstmt = con.prepareStatement(querySMSDetails);
+            pstmt.setBoolean(1, false);
             rs = pstmt.executeQuery();
             //
 
