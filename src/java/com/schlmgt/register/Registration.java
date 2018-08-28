@@ -434,7 +434,6 @@ public class Registration implements Serializable {
             setMessangerOfTruth("Please check that phone number and sex is in the correct format");
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, message);
-            e.printStackTrace();
         } catch (Exception exx) {
             exx.printStackTrace();
         } finally {
@@ -585,6 +584,7 @@ public class Registration implements Serializable {
                             setMessangerOfTruth("Sex should be 1(male) or 2(female): Row " + (i + 1));
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
+                            break;
                         }
 
                         if (ro.getCell(7) != null) {
@@ -635,6 +635,7 @@ public class Registration implements Serializable {
                             setMessangerOfTruth("Previous class field is required: Row " + (i + 1));
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
+                            break;
                         }
 
                         if (ro.getCell(15) != null) {
@@ -643,6 +644,7 @@ public class Registration implements Serializable {
                             setMessangerOfTruth("Previous Grade field is required: Row " + (i + 1));
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
+                            break;
                         }
 
                         if (ro.getCell(16) != null) {
@@ -651,6 +653,7 @@ public class Registration implements Serializable {
                             setMessangerOfTruth("Current class field is required: " + studentDetails.toString());
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
+                            break;
                         }
 
                         if (ro.getCell(17) != null) {
@@ -659,6 +662,7 @@ public class Registration implements Serializable {
                             setMessangerOfTruth("Cuurent Grade field is required: Row " + (i + 1));
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
+                            break;
                         }
 
                         if (ro.getCell(18) != null) {
@@ -667,6 +671,7 @@ public class Registration implements Serializable {
                             setMessangerOfTruth("Arm is required:Row " + (i + 1));
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
+                            break;
                         }
 
                         if (ro.getCell(19) != null) {
@@ -675,6 +680,7 @@ public class Registration implements Serializable {
                             setMessangerOfTruth("Term field is required: Row " + (i + 1));
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
+                            break;
                         }
 
                         if (ro.getCell(20) != null) {
@@ -683,6 +689,7 @@ public class Registration implements Serializable {
                             setMessangerOfTruth("Year field is required: Row " + (i + 1));
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
+                            break;
                         }
 
                         fullname = mode.getLname() + " " + mode.getMname() + " " + mode.getFname();
@@ -756,6 +763,11 @@ public class Registration implements Serializable {
                             break;
                         } else if (mode.getCurrentClass() == 3 && (mode.getCurrentGrade() != 9 && mode.getCurrentGrade() != 10 && mode.getCurrentGrade() != 11 && mode.getCurrentGrade() != 12 && mode.getCurrentGrade() != 13 && mode.getCurrentGrade() != 14)) {
                             setMessangerOfTruth("Current Class Secondary must have current grade 9(Jss 1),10(Jss 2),11(Jss 3), 12(SS 1),13(SS 2) or 14 (SS 3): Row " + (i + 1));
+                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                            context.addMessage(null, msg);
+                            break;
+                        } else if (mode.getTerm() != 1 && mode.getTerm() != 2 && mode.getTerm() != 3) {
+                            setMessangerOfTruth("Term must be either; 1(First Term),2(Second Term),3(Third Term). Row: " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
