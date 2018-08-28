@@ -64,8 +64,8 @@ public class StaffManagement implements Serializable {
                 coun.setLname(rs.getString("last_name"));
                 coun.setPnum(rs.getString("username"));
                 coun.setEmail(rs.getString("email_address"));
-                coun.setStaffClass(rs.getString("staffclass"));
-                coun.setStaffGrade(rs.getString("staffgrade"));
+                coun.setStaffClass(Integer.parseInt(rs.getString("staffclass")));
+                coun.setStaffGrade(Integer.parseInt(rs.getString("staffgrade")));
                 coun.setHighQua(rs.getString("HighestQua"));
                 coun.setAddress(rs.getString("address"));
                 coun.setDateEmployed(rs.getString("dateemployed"));

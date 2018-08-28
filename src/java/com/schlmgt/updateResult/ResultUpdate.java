@@ -287,6 +287,129 @@ public class ResultUpdate implements Serializable {
         }
     }
 
+    public void populatePositionArm() throws SQLException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            con = dbConnections.mySqlDBconnection();
+            String query = "select average, COUNT(average) as countPosition from tbresultcompute where studentclass=? and term=? and year=? and isdeleted=? GROUP BY average HAVING COUNT(average) > 0 order by average desc";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
+            rs = pstmt.executeQuery();
+            //
+            List<Double> lst = new ArrayList<>();
+            List<Double> dbd = new ArrayList<>();
+
+            while (rs.next()) {
+
+                ReportModel coun = new ReportModel();
+
+                lst.add(rs.getDouble("average"));
+                dbd.add(rs.getDouble("countPosition"));
+                //
+
+            }
+
+            String queryArm = "select distinct(arm) from tbresultcompute where studentclass=? and term=? and year=? and isdeleted=?";
+            pstmt = con.prepareStatement(queryArm);
+            pstmt.setString(1, getGrade());
+            pstmt.setString(2, getTerm());
+            pstmt.setString(3, getYear());
+            pstmt.setBoolean(4, false);
+            rs = pstmt.executeQuery();
+            //
+
+            List<String> rm = new ArrayList<>();
+
+            while (rs.next()) {
+
+                ReportModel coun = new ReportModel();
+                rm.add(rs.getString("arm"));
+                //
+
+            }
+
+            String queryArms = "select average, COUNT(average) as countPosition from tbresultcompute where studentclass=? and term=? and year=? and arm=? and isdeleted=? GROUP BY average HAVING COUNT(average) > 0 order by average desc";
+            pstmt = con.prepareStatement(queryArms);
+            List<Double> avgss = new ArrayList<>();
+            List<Double> posi = new ArrayList<>();
+
+            for (int i = 0; i < rm.size(); i++) {
+                pstmt.setString(1, getGrade());
+                pstmt.setString(2, getTerm());
+                pstmt.setString(3, getYear());
+                pstmt.setString(4, rm.get(i));
+                pstmt.setBoolean(5, false);
+                rs = pstmt.executeQuery();
+
+                while (rs.next()) {
+
+                    ReportModel coun = new ReportModel();
+
+                    avgss.add(rs.getDouble("average"));
+                    posi.add(rs.getDouble("countPosition"));
+                    //
+
+                }
+
+                String updatePositionArm = "update tbresultcompute set postionArm=? where average=? and studentclass=? and term=? and year=? and arm=?";
+                pstmt = con.prepareStatement(updatePositionArm);
+                int rank = 0;
+                for (int t = 0; t < avgss.size(); t++) {
+
+                    pstmt.setString(1, String.valueOf(rank + 1));
+                    pstmt.setDouble(2, avgss.get(t));
+                    pstmt.setString(3, getGrade());
+                    pstmt.setString(4, getTerm());
+                    pstmt.setString(5, getYear());
+                    pstmt.setString(6, rm.get(i));
+                    pstmt.executeUpdate();
+                    rank += posi.get(t);
+                }
+
+            }
+            //           
+
+            String updatePosition = "update tbresultcompute set postion=? where average=? and studentclass=? and term=? and year=?";
+            pstmt = con.prepareStatement(updatePosition);
+            int rank = 0;
+            for (int i = 0; i < lst.size(); i++) {
+
+                pstmt.setString(1, String.valueOf(rank + 1));
+                pstmt.setDouble(2, lst.get(i));
+                pstmt.setString(3, getGrade());
+                pstmt.setString(4, getTerm());
+                pstmt.setString(5, getYear());
+                pstmt.executeUpdate();
+                rank += dbd.get(i);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        } finally {
+
+            if (!(con == null)) {
+                con.close();
+                con = null;
+            }
+            if (!(pstmt == null)) {
+                pstmt.close();
+                pstmt = null;
+            }
+
+        }
+    }
+
     public void populatePositionFinal() throws SQLException {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -325,7 +448,7 @@ public class ResultUpdate implements Serializable {
 
                 pstmt.setString(1, String.valueOf(rank + 1));
                 pstmt.setDouble(2, lst.get(i));
-                pstmt.setString(3, getGrade());               
+                pstmt.setString(3, getGrade());
                 pstmt.setString(4, getYear());
                 pstmt.executeUpdate();
                 rank += dbd.get(i);
@@ -534,6 +657,7 @@ public class ResultUpdate implements Serializable {
                             updateStudentGrade();
                             updateCompute(studentId);
                             populatePosition();
+                            populatePositionArm();
                             updateComputeFinal(studentId);
                             populatePositionFinal();
                             setMessangerOfTruth("Records Successfully Updated!!!.");
@@ -742,6 +866,7 @@ public class ResultUpdate implements Serializable {
             pstmt.setInt(9, modelResult.getId());
             pstmt.executeUpdate();
             updateStudentGrade();
+            updateStudentArm();
             resultmodel = displayResult();
             updateResultCompute(totalScore(modelResult.getStudentId()), modelResult.getStudentId());
             System.out.println(modelResult.getStudentId());
@@ -1079,7 +1204,7 @@ public class ResultUpdate implements Serializable {
             int createdId = userObj.getId();
             List<ResultModel> arrayDude = new ArrayList<>();
             for (int i = 0; i < studentId.size(); i++) {
-                String query = "SELECT distinct(studentreg) as regNum,sum(totalscore) as total,studentclass,term,year FROM tbstudentresult where studentclass=? and term=? and year=? and studentreg=? and isdeleted=?";
+                String query = "SELECT distinct(studentreg) as regNum,sum(totalscore) as total,studentclass,term,arm,year FROM tbstudentresult where studentclass=? and term=? and year=? and studentreg=? and isdeleted=?";
                 pstmt = con.prepareStatement(query);
                 pstmt.setString(1, getGrade());
                 pstmt.setString(2, getTerm());
@@ -1093,6 +1218,7 @@ public class ResultUpdate implements Serializable {
                     mode.setStudentId(rs.getString("regNum"));
                     mode.setTotal(rs.getDouble("total"));
                     mode.setAvg(rs.getDouble("total") / numberOfSubjects());
+                    mode.setArm(rs.getString("arm"));
                     mode.setNumofsub(numberOfSubjects());
                     mode.setStudentclass(rs.getString("studentclass"));
                     mode.setTerm(rs.getString("term"));
@@ -1102,22 +1228,23 @@ public class ResultUpdate implements Serializable {
                 }
             }
 
-            String resultDetail = "insert into tbresultcompute (studentreg,studentclass,term,year,totalscore,numberofsubject,average,createdby,datecreated,datealone,isdeleted) values("
-                    + "?,?,?,?,?,?,?,?,?,?,?)";
+            String resultDetail = "insert into tbresultcompute (studentreg,studentclass,term,arm,year,totalscore,numberofsubject,average,createdby,datecreated,datealone,isdeleted) values("
+                    + "?,?,?,?,?,?,?,?,?,?,?,?)";
             pstmt = con.prepareStatement(resultDetail);
 
             for (ResultModel mm : arrayDude) {
                 pstmt.setString(1, mm.getStudentId());
                 pstmt.setString(2, mm.getStudentclass());
                 pstmt.setString(3, mm.getTerm());
-                pstmt.setString(4, mm.getYear());
-                pstmt.setDouble(5, mm.getTotal());
-                pstmt.setInt(6, mm.getNumofsub());
-                pstmt.setDouble(7, mm.getAvg());
-                pstmt.setString(8, createdby);
-                pstmt.setString(9, DateManipulation.dateAndTime());
-                pstmt.setString(10, DateManipulation.dateAlone());
-                pstmt.setBoolean(11, false);
+                pstmt.setString(4, mm.getArm());
+                pstmt.setString(5, mm.getYear());
+                pstmt.setDouble(6, mm.getTotal());
+                pstmt.setInt(7, mm.getNumofsub());
+                pstmt.setDouble(8, mm.getAvg());
+                pstmt.setString(9, createdby);
+                pstmt.setString(10, DateManipulation.dateAndTime());
+                pstmt.setString(11, DateManipulation.dateAlone());
+                pstmt.setBoolean(12, false);
                 pstmt.executeUpdate();
             }
 

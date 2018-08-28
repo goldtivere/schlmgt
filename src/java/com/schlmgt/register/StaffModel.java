@@ -23,8 +23,8 @@ public class StaffModel implements Serializable {
     private String pnum;
     private String highQua;
     private String address;
-    private String staffClass;
-    private String staffGrade;
+    private int staffClass;
+    private int staffGrade;
     private Date doe;
     private String dateEmployed;
     private String dateStopped;
@@ -129,19 +129,19 @@ public class StaffModel implements Serializable {
         this.address = address;
     }
 
-    public String getStaffClass() {
+    public int getStaffClass() {
         return staffClass;
     }
 
-    public void setStaffClass(String staffClass) {
+    public void setStaffClass(int staffClass) {
         this.staffClass = staffClass;
     }
 
-    public String getStaffGrade() {
+    public int getStaffGrade() {
         return staffGrade;
     }
 
-    public void setStaffGrade(String staffGrade) {
+    public void setStaffGrade(int staffGrade) {
         this.staffGrade = staffGrade;
     }
 

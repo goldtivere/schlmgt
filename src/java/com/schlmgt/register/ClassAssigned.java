@@ -61,7 +61,7 @@ public class ClassAssigned implements Serializable {
             FacesContext ctx = FacesContext.getCurrentInstance();
             StaffModel staff = (StaffModel) ctx.getExternalContext().getApplicationMap().get("staffRecord");
             //test for null...
-            modelStaff=staff;
+            modelStaff = staff;
             int pnum = 0;
             if (modelStaff != null || modelStaff.equals(null)) {
                 pnum = modelStaff.getId();
@@ -103,8 +103,8 @@ public class ClassAssigned implements Serializable {
             FacesContext ctx = FacesContext.getCurrentInstance();
             StaffModel staff = (StaffModel) ctx.getExternalContext().getApplicationMap().get("staffRecord");
             //test for null...
-            
-            modelStaff=staff;
+
+            modelStaff = staff;
             int pnum = 0;
             if (modelStaff != null) {
                 pnum = modelStaff.getId();
@@ -121,8 +121,8 @@ public class ClassAssigned implements Serializable {
 
                 StaffModel coun = new StaffModel();
                 coun.setId(rs.getInt("id"));
-                coun.setStaffClass(rs.getString("staffclass"));
-                coun.setStaffGrade(rs.getString("staffgrade"));
+                coun.setStaffClass(Integer.parseInt(rs.getString("staffclass")));
+                coun.setStaffGrade(Integer.parseInt(rs.getString("staffgrade")));
                 coun.setYear(rs.getString("year"));
 
                 lst.add(coun);

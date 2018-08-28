@@ -70,20 +70,20 @@ public class Registration implements Serializable {
 
         if (userObj.getRoleAssigned() == 3) {
             setAdmin(true);
-            
-        } 
-        if(userObj.getRoleAssigned() == 2 && userObj.isCanRegisterStaff() && !userObj.isCanRegisterStudent()) {
-            
+
+        }
+        if (userObj.getRoleAssigned() == 2 && userObj.isCanRegisterStaff() && !userObj.isCanRegisterStudent()) {
+
             setStaff(true);
-            
-        } 
+
+        }
         if (userObj.getRoleAssigned() == 2 && userObj.isCanRegisterStudent() && !userObj.isCanRegisterStaff()) {
-           
+
             setStudent(true);
         }
-         if (userObj.getRoleAssigned() == 2 && userObj.isCanRegisterStudent() && userObj.isCanRegisterStaff()) {
-           
-             setStaffStudent(true);
+        if (userObj.getRoleAssigned() == 2 && userObj.isCanRegisterStudent() && userObj.isCanRegisterStaff()) {
+
+            setStaffStudent(true);
         }
 
         ExecutorService service = Executors.newCachedThreadPool();
@@ -267,7 +267,7 @@ public class Registration implements Serializable {
                             mode.setAddress(null);
                         }
                         if (ro.getCell(7) != null) {
-                            mode.setStaffClass(ro.getCell(7).getStringCellValue());
+                            mode.setStaffClass((int) ro.getCell(7).getNumericCellValue());
                         } else {
                             setMessangerOfTruth("Staff Class is required: Row " + i);
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
@@ -275,7 +275,7 @@ public class Registration implements Serializable {
                             break;
                         }
                         if (ro.getCell(8) != null) {
-                            mode.setStaffGrade(ro.getCell(8).getStringCellValue());
+                            mode.setStaffGrade((int) ro.getCell(8).getNumericCellValue());
                         } else {
                             setMessangerOfTruth("Staff Grade is required: Row " + i);
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
@@ -299,23 +299,23 @@ public class Registration implements Serializable {
                             context.addMessage(null, msg);
                             break;
                         }
-                        if (!"Nursery".equalsIgnoreCase(mode.getStaffClass()) && !"Primary".equalsIgnoreCase(mode.getStaffClass()) && !"Secondary".equalsIgnoreCase(mode.getStaffClass())) {
-                            setMessangerOfTruth("Staff Class field should be either ; Nursery, Primary or Secondary: Row " + (i + 1));
+                        if (mode.getStaffClass() != 1 && mode.getStaffClass() != 2 && mode.getStaffClass() != 3) {
+                            setMessangerOfTruth("Staff Class field should be either ; 1(Nursery), 2(Primary) or 3(Secondary): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if ("Nursery".equalsIgnoreCase(mode.getStaffClass()) && (!"Nursery 1".equalsIgnoreCase(mode.getStaffGrade()) && !"Nursery 2".equalsIgnoreCase(mode.getStaffGrade()) && !"Nursery 3".equalsIgnoreCase(mode.getStaffGrade()))) {
-                            setMessangerOfTruth("Staff Class Nursery must have current grade Nursery 1,Nursery 2 or Nursery 3: Row " + (i + 1));
+                        } else if (mode.getStaffClass() == 1 && (mode.getStaffGrade() != 1 && mode.getStaffGrade() != 2 && mode.getStaffGrade() != 3)) {
+                            setMessangerOfTruth("Staff Class 1(Nursery) must have current grade 1(Nursery 1),2(Nursery 2) or 3(Nursery 3): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if ("Primary".equalsIgnoreCase(mode.getStaffClass()) && (!"Primary 1".equalsIgnoreCase(mode.getStaffGrade()) && !"Primary 2".equalsIgnoreCase(mode.getStaffGrade()) && !"Primary 3".equalsIgnoreCase(mode.getStaffGrade()) && !"Primary 4".equalsIgnoreCase(mode.getStaffGrade()) && !"Primary 5".equalsIgnoreCase(mode.getStaffGrade()))) {
-                            setMessangerOfTruth("Current Class Primary must have current grade Primary 1,Primary 2, Primary 3, Primary 4 or Primary 5: Row " + (i + 1));
+                        } else if (mode.getStaffClass() == 2 && (mode.getStaffGrade() != 4 && mode.getStaffGrade() != 5 && mode.getStaffGrade() != 6 && mode.getStaffGrade() != 7 && mode.getStaffGrade() != 8)) {
+                            setMessangerOfTruth("Staff Class 2(Primary) must have current grade 4(Primary 1),5(Primary 2), 6(Primary 3), 7(Primary 4) or 8(Primary 5): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if ("Secondary".equalsIgnoreCase(mode.getStaffClass()) && (!"Jss 1".equalsIgnoreCase(mode.getStaffGrade()) && !"Jss 2".equalsIgnoreCase(mode.getStaffGrade()) && !"Jss 3".equalsIgnoreCase(mode.getStaffGrade()) && !"SS 1".equalsIgnoreCase(mode.getStaffGrade()) && !"SS 2".equalsIgnoreCase(mode.getStaffGrade()) && !"SS 3".equalsIgnoreCase(mode.getStaffGrade()))) {
-                            setMessangerOfTruth("Previous Class Secondary must have current grade Nursery 1,Nursery 2 or Nursery 3: Row " + (i + 1));
+                        } else if (mode.getStaffClass() == 3 && (mode.getStaffGrade() != 9 && mode.getStaffGrade() != 10 && mode.getStaffGrade() != 11 && mode.getStaffGrade() != 12 && mode.getStaffGrade() != 13 && mode.getStaffGrade() != 14)) {
+                            setMessangerOfTruth("Staff Class Secondary must have previous grade 9(Jss 1),10(Jss 2),11(Jss 3), 12(SS 1),13(SS 2) or 14 (SS 3): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
@@ -376,8 +376,8 @@ public class Registration implements Serializable {
                                     pstmt.setString(8, DateManipulation.dateAndTime());
                                     pstmt.setString(9, createdby);
                                     pstmt.setBoolean(10, false);
-                                    pstmt.setString(11, mode.getStaffClass());
-                                    pstmt.setString(12, mode.getStaffGrade());
+                                    pstmt.setString(11, String.valueOf(mode.getStaffClass()));
+                                    pstmt.setString(12, String.valueOf(mode.getStaffGrade()));
                                     pstmt.setString(13, mode.getYear());
                                     pstmt.setString(14, mode.getHighQua());
                                     pstmt.setString(15, mode.getAddress());
@@ -409,7 +409,7 @@ public class Registration implements Serializable {
                                     pstmt.setString(8, slink + idOne.toString());
 
                                     pstmt.executeUpdate();
-                                    rg.classUpload(rg.staffIdCheck(), mode.getStaffClass(), mode.getStaffGrade(), mode.getYear(), createdby);
+                                    rg.classUpload(rg.staffIdCheck(), String.valueOf(mode.getStaffClass()), String.valueOf(mode.getStaffGrade()), mode.getYear(), createdby);
                                     success++;
                                     /**
                                      * MailSender send = new MailSender();
@@ -583,9 +583,9 @@ public class Registration implements Serializable {
                         }
 
                         if (ro.getCell(6) != null) {
-                            mode.setSex(ro.getCell(6).getStringCellValue());
+                            mode.setSex((int) ro.getCell(6).getNumericCellValue());
                         } else {
-                            mode.setSex(null);
+                            mode.setSex(0);
                         }
 
                         if (ro.getCell(7) != null) {
@@ -631,27 +631,27 @@ public class Registration implements Serializable {
                         }
 
                         if (ro.getCell(14) != null) {
-                            mode.setPreviousClass(ro.getCell(14).getStringCellValue());
+                            mode.setPreviousClass((int) ro.getCell(14).getNumericCellValue());
                         } else {
-                            mode.setPreviousClass(null);
+                            mode.setPreviousClass(0);
                         }
 
                         if (ro.getCell(15) != null) {
-                            mode.setPreviousGrade(ro.getCell(15).getStringCellValue());
+                            mode.setPreviousGrade((int) ro.getCell(15).getNumericCellValue());
                         } else {
-                            mode.setPreviousGrade(null);
+                            mode.setPreviousGrade(0);
                         }
 
                         if (ro.getCell(16) != null) {
-                            mode.setCurrentClass(ro.getCell(16).getStringCellValue());
+                            mode.setCurrentClass((int) ro.getCell(16).getNumericCellValue());
                         } else {
-                            mode.setCurrentClass(null);
+                            mode.setCurrentClass(0);
                         }
 
                         if (ro.getCell(17) != null) {
-                            mode.setCurrentGrade(ro.getCell(17).getStringCellValue());
+                            mode.setCurrentGrade((int) ro.getCell(17).getNumericCellValue());
                         } else {
-                            mode.setCurrentGrade(null);
+                            mode.setCurrentGrade(0);
                         }
 
                         if (ro.getCell(18) != null) {
@@ -661,9 +661,9 @@ public class Registration implements Serializable {
                         }
 
                         if (ro.getCell(19) != null) {
-                            mode.setTerm(ro.getCell(19).getStringCellValue());
+                            mode.setTerm((int) ro.getCell(19).getNumericCellValue());
                         } else {
-                            mode.setTerm(null);
+                            mode.setTerm(0);
                         }
 
                         if (ro.getCell(20) != null) {
@@ -680,9 +680,9 @@ public class Registration implements Serializable {
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if (!"Male".equalsIgnoreCase(mode.getSex()) && !"Female".equalsIgnoreCase(mode.getSex())) {
+                        } else if (mode.getSex() != 1 && mode.getSex() != 2) {
 
-                            setMessangerOfTruth("Sex is either Male or Female: Row " + (i + 1));
+                            setMessangerOfTruth("Sex is either 1(male) or 2(female): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
@@ -706,43 +706,43 @@ public class Registration implements Serializable {
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if (!"Nursery".equalsIgnoreCase(mode.getPreviousClass()) && !"Primary".equalsIgnoreCase(mode.getPreviousClass()) && !"Secondary".equalsIgnoreCase(mode.getPreviousClass())) {
-                            setMessangerOfTruth("Previous Class field should be either ; Nursery, Primary or Secondary: Row " + (i + 1));
+                        } else if (mode.getPreviousClass() != 1 && mode.getPreviousClass() != 2 && mode.getPreviousClass() != 3) {
+                            setMessangerOfTruth("Previous Class field should be either ; 1(Nursery), 2(Primary) or 3(Secondary): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if (!"Nursery".equalsIgnoreCase(mode.getCurrentClass()) && !"Primary".equalsIgnoreCase(mode.getCurrentClass()) && !"Secondary".equalsIgnoreCase(mode.getCurrentClass())) {
-                            setMessangerOfTruth("Current Class field should be either ; Nursery, Primary or Secondary: Row " + (i + 1));
+                        } else if (mode.getCurrentClass() != 1 && mode.getCurrentClass() != 2 && mode.getCurrentClass() != 3) {
+                            setMessangerOfTruth("Current Class field should be either ; 1(Nursery), 2(Primary) or 3(Secondary): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if ("Nursery".equalsIgnoreCase(mode.getCurrentClass()) && (!"Nursery 1".equalsIgnoreCase(mode.getCurrentGrade()) && !"Nursery 2".equalsIgnoreCase(mode.getCurrentGrade()) && !"Nursery 3".equalsIgnoreCase(mode.getCurrentGrade()))) {
-                            setMessangerOfTruth("Current Class Nursery must have current grade Nursery 1,Nursery 2 or Nursery 3: Row " + (i + 1));
+                        } else if (mode.getCurrentClass() == 1 && (mode.getCurrentGrade() != 1 && mode.getCurrentGrade() != 2 && mode.getCurrentGrade() != 3)) {
+                            setMessangerOfTruth("Current Class 1(Nursery) must have current grade 1(Nursery 1),2(Nursery 2) or 3(Nursery 3): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if ("Primary".equalsIgnoreCase(mode.getCurrentClass()) && (!"Primary 1".equalsIgnoreCase(mode.getCurrentGrade()) && !"Primary 2".equalsIgnoreCase(mode.getCurrentGrade()) && !"Primary 3".equalsIgnoreCase(mode.getCurrentGrade()) && !"Primary 4".equalsIgnoreCase(mode.getCurrentGrade()) && !"Primary 5".equalsIgnoreCase(mode.getCurrentGrade()))) {
-                            setMessangerOfTruth("Current Class Primary must have current grade Primary 1,Primary 2, Primary 3, Primary 4 or Primary 5: Row " + (i + 1));
+                        } else if (mode.getCurrentClass() == 2 && (mode.getCurrentGrade() != 4 && mode.getCurrentGrade() != 5 && mode.getCurrentGrade() != 6 && mode.getCurrentGrade() != 7 && mode.getCurrentGrade() != 8)) {
+                            setMessangerOfTruth("Current Class 2(Primary) must have current grade 4(Primary 1),5(Primary 2), 6(Primary 3), 7(Primary 4) or 8(Primary 5): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if ("Nursery".equalsIgnoreCase(mode.getPreviousClass()) && (!"Nursery 1".equalsIgnoreCase(mode.getPreviousGrade()) && !"Nursery 2".equalsIgnoreCase(mode.getPreviousGrade()) && !"Nursery 3".equalsIgnoreCase(mode.getPreviousGrade()))) {
-                            setMessangerOfTruth("Previous Class Nursery must have current grade Nursery 1,Nursery 2 or Nursery 3: Row " + (i + 1));
+                        } else if (mode.getPreviousClass() == 1 && (mode.getPreviousGrade() != 1 && mode.getPreviousGrade() != 2 && mode.getPreviousGrade() != 3)) {
+                            setMessangerOfTruth("Previous Class 1(Nursery) must have current grade 1(Nursery 1), 2(Nursery 2) or 3(Nursery 3): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if ("Primary".equalsIgnoreCase(mode.getPreviousClass()) && (!"Primary 1".equalsIgnoreCase(mode.getPreviousGrade()) && !"Primary 2".equalsIgnoreCase(mode.getPreviousGrade()) && !"Primary 3".equalsIgnoreCase(mode.getPreviousGrade()) && !"Primary 4".equalsIgnoreCase(mode.getPreviousGrade()) && !"Primary 5".equalsIgnoreCase(mode.getPreviousGrade()))) {
-                            setMessangerOfTruth("Previous Class Primary must have current grade Primary 1,Primary 2, Primary 3, Primary 4 or Primary 5: Row " + (i + 1));
+                        } else if (mode.getPreviousClass() == 2 && (mode.getPreviousGrade() != 4 && mode.getPreviousGrade() != 5 && mode.getPreviousGrade() != 6 && mode.getPreviousGrade() != 7 && mode.getPreviousGrade() != 8)) {
+                            setMessangerOfTruth("Previous Class 2(Primary) must have current grade 4(Primary 1),5(Primary 2), 6(Primary 3), 7(Primary 4) or 8(Primary 5): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if ("Secondary".equalsIgnoreCase(mode.getPreviousClass()) && (!"Jss 1".equalsIgnoreCase(mode.getPreviousGrade()) && !"Jss 2".equalsIgnoreCase(mode.getPreviousGrade()) && !"Jss 3".equalsIgnoreCase(mode.getPreviousGrade()) && !"SS 1".equalsIgnoreCase(mode.getPreviousGrade()) && !"SS 2".equalsIgnoreCase(mode.getPreviousGrade()) && !"SS 3".equalsIgnoreCase(mode.getPreviousGrade()))) {
-                            setMessangerOfTruth("Previous Class Secondary must have current grade Nursery 1,Nursery 2 or Nursery 3: Row " + (i + 1));
+                        } else if (mode.getPreviousClass() == 3 && (mode.getPreviousGrade() != 9 && mode.getPreviousGrade() != 10 && mode.getPreviousGrade() != 11 && mode.getPreviousGrade() != 12 && mode.getPreviousGrade() != 13 && mode.getPreviousGrade() != 14)) {
+                            setMessangerOfTruth("Previous Class Secondary must have previous grade 9(Jss 1),10(Jss 2),11(Jss 3), 12(SS 1),13(SS 2) or 14 (SS 3): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
-                        } else if ("Secondary".equalsIgnoreCase(mode.getCurrentClass()) && (!"Jss 1".equalsIgnoreCase(mode.getCurrentGrade()) && !"Jss 2".equalsIgnoreCase(mode.getCurrentGrade()) && !"Jss 3".equalsIgnoreCase(mode.getCurrentGrade()) && !"SS 1".equalsIgnoreCase(mode.getCurrentGrade()) && !"SS 2".equalsIgnoreCase(mode.getCurrentGrade()) && !"SS 3".equalsIgnoreCase(mode.getCurrentGrade()))) {
-                            setMessangerOfTruth("Current Class Secondary must have current grade Primary 1,Primary 2, Primary 3, Primary 4 or Primary 5: Row " + (i + 1));
+                        } else if (mode.getCurrentClass() == 3 && (mode.getCurrentGrade() != 9 && mode.getCurrentGrade() != 10 && mode.getCurrentGrade() != 11 && mode.getCurrentGrade() != 12 && mode.getCurrentGrade() != 13 && mode.getCurrentGrade() != 14)) {
+                            setMessangerOfTruth("Current Class Secondary must have current grade 9(Jss 1),10(Jss 2),11(Jss 3), 12(SS 1),13(SS 2) or 14 (SS 3): Row " + (i + 1));
                             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, msg);
                             break;
@@ -769,7 +769,7 @@ public class Registration implements Serializable {
                             pstmt.setString(5, dob);
                             pstmt.setString(6, mode.getPnum());
                             pstmt.setString(7, mode.getEmail());
-                            pstmt.setString(8, mode.getSex());
+                            pstmt.setString(8, String.valueOf(mode.getSex()));
                             pstmt.setString(9, mode.getPfname());
                             pstmt.setString(10, mode.getPmname());
                             pstmt.setString(11, mode.getPlname());
@@ -778,10 +778,10 @@ public class Registration implements Serializable {
                             pstmt.setString(14, mode.getPemail());
                             pstmt.setString(15, mode.getAddress());
                             pstmt.setString(16, mode.getPreviousEdu());
-                            pstmt.setString(17, mode.getPreviousClass());
-                            pstmt.setString(18, mode.getPreviousGrade());
-                            pstmt.setString(19, mode.getCurrentClass());
-                            pstmt.setString(20, mode.getCurrentGrade());
+                            pstmt.setString(17, String.valueOf(mode.getPreviousClass()));
+                            pstmt.setString(18, String.valueOf(mode.getPreviousGrade()));
+                            pstmt.setString(19, String.valueOf(mode.getCurrentClass()));
+                            pstmt.setString(20, String.valueOf(mode.getCurrentGrade()));
                             pstmt.setString(21, mode.getArm());
                             pstmt.setString(22, createdby);
                             pstmt.setString(23, DateManipulation.dateAlone());
@@ -806,7 +806,7 @@ public class Registration implements Serializable {
                             pstmt.setString(8, slink + idOne.toString());
 
                             pstmt.executeUpdate();
-                            classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), mode.getCurrentClass(), mode.getArm(), mode.getTerm(), mode.getYear(), createdby, fullname, mode.getCurrentGrade());
+                            classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), String.valueOf(mode.getCurrentClass()), mode.getArm(), String.valueOf(mode.getTerm()), mode.getYear(), createdby, fullname, String.valueOf(mode.getCurrentGrade()));
 
                             success++;
 

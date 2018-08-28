@@ -19,7 +19,7 @@ public class StudentModel implements Serializable{
     private Date dob;
     private String pnum;
     private String email;
-    private String sex;
+    private int sex;
     private String pfname;
     private String pmname;
     private String plname;
@@ -31,12 +31,12 @@ public class StudentModel implements Serializable{
     private String lga;
     private String address;
     private String previousEdu;
-    private String previousClass;
-    private String previousGrade;
-    private String currentClass;
-    private String currentGrade;
+    private int previousClass;
+    private int previousGrade;
+    private int currentClass;
+    private int currentGrade;
     private String arm;
-    private String term;
+    private int term;
     private String year;
     private String Disability;
     private String Bgroup;
@@ -89,11 +89,11 @@ public class StudentModel implements Serializable{
         this.email = email;
     }
 
-    public String getSex() {
+    public int getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(int sex) {
         this.sex = sex;
     }
 
@@ -185,35 +185,35 @@ public class StudentModel implements Serializable{
         this.previousEdu = previousEdu;
     }
 
-    public String getPreviousClass() {
+    public int getPreviousClass() {
         return previousClass;
     }
 
-    public void setPreviousClass(String previousClass) {
+    public void setPreviousClass(int previousClass) {
         this.previousClass = previousClass;
     }
 
-    public String getPreviousGrade() {
+    public int getPreviousGrade() {
         return previousGrade;
     }
 
-    public void setPreviousGrade(String previousGrade) {
+    public void setPreviousGrade(int previousGrade) {
         this.previousGrade = previousGrade;
     }
 
-    public String getCurrentClass() {
+    public int getCurrentClass() {
         return currentClass;
     }
 
-    public void setCurrentClass(String currentClass) {
+    public void setCurrentClass(int currentClass) {
         this.currentClass = currentClass;
     }
 
-    public String getCurrentGrade() {
+    public int getCurrentGrade() {
         return currentGrade;
     }
 
-    public void setCurrentGrade(String currentGrade) {
+    public void setCurrentGrade(int currentGrade) {
         this.currentGrade = currentGrade;
     }
 
@@ -225,11 +225,11 @@ public class StudentModel implements Serializable{
         this.arm = arm;
     }
 
-    public String getTerm() {
+    public int getTerm() {
         return term;
     }
 
-    public void setTerm(String term) {
+    public void setTerm(int term) {
         this.term = term;
     }
 
