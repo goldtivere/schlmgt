@@ -706,6 +706,29 @@ public class FreshReg implements Serializable {
         return false;
     }
 
+    public boolean studentEmailCheckName(String gmail, String fname, String mname, String lname) throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        con = dbConnections.mySqlDBconnection();
+        String testemail = "Select * from student_details where guardian_email=? and guardian_firstname=?,and guardian_middlename=?"
+                + " and guardian_lastname and is_deleted=?";
+        pstmt = con.prepareStatement(testemail);
+        pstmt.setString(1, gmail);
+        pstmt.setString(2, fname);
+        pstmt.setString(3, mname);
+        pstmt.setString(4, lname);
+        pstmt.setBoolean(5, false);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return true;
+
+        }
+        return false;
+    }
+
     public boolean studentPhoneCheck(String pnum, String gpnum) throws SQLException {
         DbConnectionX dbConnections = new DbConnectionX();
         Connection con = null;
@@ -717,6 +740,29 @@ public class FreshReg implements Serializable {
         pstmt.setString(1, pnum);
         pstmt.setString(2, gpnum);
         pstmt.setBoolean(3, false);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return true;
+
+        }
+        return false;
+    }
+
+    public boolean studentPhoneCheckName(String gpnum, String fname, String mname, String lname) throws SQLException {
+        DbConnectionX dbConnections = new DbConnectionX();
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        con = dbConnections.mySqlDBconnection();
+        String testemail = "Select * from student_details where Guardian_phone=? and guardian_firstname=? and guardian_middlename=?"
+                + " and guardian_lastname and is_deleted=?";
+        pstmt = con.prepareStatement(testemail);
+        pstmt.setString(1, gpnum);
+        pstmt.setString(2, fname);
+        pstmt.setString(3, mname);
+        pstmt.setString(4, lname);
+        pstmt.setBoolean(5, false);
         rs = pstmt.executeQuery();
 
         if (rs.next()) {
@@ -807,24 +853,14 @@ public class FreshReg implements Serializable {
     public void registerStudent() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
-
-            DbConnectionX dbConnections = new DbConnectionX();
-            Connection con = null;
-            PreparedStatement pstmt = null;
-            ResultSet rs = null;
             FacesMessage msg;
-            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
-            String on = String.valueOf(userObj);
-            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
-            String createdId = String.valueOf(userObj.getId());
-            String roleId = String.valueOf(userObj.getRole_id());
             int studentId;
             if (studentIdCheck() == 0) {
                 studentId = 0 + 1;
             } else {
                 studentId = studentIdCheck() + 1;
             }
-            con = dbConnections.mySqlDBconnection();
+
             SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
             String dob = format.format(getDob());
 
@@ -843,10 +879,48 @@ public class FreshReg implements Serializable {
             }
 
             //generate unique identifier
-            UUID idOne = UUID.randomUUID();
-
             String fullname = getLname() + " " + getMname() + " " + getFname();
             String gfullname = getGlname() + " " + getGmname() + " " + getGfname();
+            if (studentEmailCheck(getEmail(), getGemail()) && !studentEmailCheckName(getGemail(), getGfname(), getMname(), getGlname())) {
+                setMessangerOfTruth("Email Already Exist!! Please enter a different email");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+            } else if (studentPhoneCheck(getPnum(), getGpnum()) && !studentPhoneCheckName(getPnum(), getGfname(), getGmname(), getGlname())) {
+                setMessangerOfTruth("Phone Number Already Exist!! Please enter a different Phone Number");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+            } else if (!studentEmailCheck(getEmail(), getGemail()) && !studentPhoneCheck(getPnum(), getGpnum())) {
+                createStudent(studentId, dob, fullname, gfullname);
+            } else if ((studentEmailCheck(getEmail(), getGemail()) && studentEmailCheckName(getGemail(), getGfname(), getMname(), getGlname()))
+                    || (studentPhoneCheck(getPnum(), getGpnum()) && studentPhoneCheckName(getPnum(), getGfname(), getGmname(), getGlname()))) {
+                createStudent(studentId, dob, fullname, gfullname);
+            } else {
+                setMessangerOfTruth("User Created!!");
+                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                context.addMessage(null, msg);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void createStudent(int studentId, String dob, String fullname, String gfullname) {
+        try {
+            FacesContext context = FacesContext.getCurrentInstance();
+
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            FacesMessage msg;
+            UserDetails userObj = (UserDetails) context.getExternalContext().getSessionMap().get("sessn_nums");
+            String on = String.valueOf(userObj);
+            String createdby = String.valueOf(userObj.getFirst_name() + " " + userObj.getLast_name());
+            String createdId = String.valueOf(userObj.getId());
+            String roleId = String.valueOf(userObj.getRole_id());
+            con = dbConnections.mySqlDBconnection();
+            UUID idOne = UUID.randomUUID();
             String insertStudentDetails = "insert into Student_details"
                     + "(first_name,middle_name,last_name,fullname,DOB,student_phone,student_email,sex,Guardian_firstname,"
                     + "Guardian_middlename,Guardian_lastname,Guardian_fullname,relationship,relationship_other,Guardian_phone,"
@@ -929,8 +1003,8 @@ public class FreshReg implements Serializable {
             msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
             context.addMessage(null, msg);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1065,12 +1139,9 @@ public class FreshReg implements Serializable {
             gradeMode.setGrade(gradeMode.getGrade());
             setArm(getArm());
             setSex(getSex());
-            if(getSex().equalsIgnoreCase("1"))
-            {
+            if (getSex().equalsIgnoreCase("1")) {
                 setSexs("Male");
-            }
-            else if(getSex().equalsIgnoreCase("2"))
-            {
+            } else if (getSex().equalsIgnoreCase("2")) {
                 setSexs("Female");
             }
 
