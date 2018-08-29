@@ -712,8 +712,8 @@ public class FreshReg implements Serializable {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         con = dbConnections.mySqlDBconnection();
-        String testemail = "Select * from student_details where guardian_email=? and guardian_firstname=?,and guardian_middlename=?"
-                + " and guardian_lastname and is_deleted=?";
+        String testemail = "Select * from student_details where guardian_email=? and guardian_firstname=? and guardian_middlename=?"
+                + " and guardian_lastname=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
         pstmt.setString(1, gmail);
         pstmt.setString(2, fname);
@@ -756,7 +756,7 @@ public class FreshReg implements Serializable {
         ResultSet rs = null;
         con = dbConnections.mySqlDBconnection();
         String testemail = "Select * from student_details where Guardian_phone=? and guardian_firstname=? and guardian_middlename=?"
-                + " and guardian_lastname and is_deleted=?";
+                + " and guardian_lastname=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
         pstmt.setString(1, gpnum);
         pstmt.setString(2, fname);
