@@ -540,303 +540,272 @@ public class Registration implements Serializable {
 //                    }
                     Row ro = null;
                     for (int i = 1; i < rowNum; i++) {
-                        ro = (Row) ws.getRow(i);
-                        if (ro.getCell(0) != null) {
-                            mode.setFname(ro.getCell(0).getStringCellValue());
-                        } else {
-                            mode.setFname(null);
-                        }
+                        try {
+                            ro = (Row) ws.getRow(i);
+                            if (ro.getCell(0) != null) {
+                                mode.setFname(ro.getCell(0).getStringCellValue());
+                            } else {
+                                setMessangerOfTruth("Student First Name is required Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            }
 
-                        if (ro.getCell(1) != null) {
-                            mode.setMname(ro.getCell(1).getStringCellValue());
-                        } else {
-                            mode.setMname(null);
-                        }
+                            if (ro.getCell(1) != null) {
+                                mode.setMname(ro.getCell(1).getStringCellValue());
+                            } else {
+                                mode.setMname("");
+                            }
 
-                        if (ro.getCell(2) != null) {
-                            mode.setLname(ro.getCell(2).getStringCellValue());
-                        } else {
-                            mode.setLname(null);
-                        }
+                            if (ro.getCell(2) != null) {
+                                mode.setLname(ro.getCell(2).getStringCellValue());
+                            } else {
+                                setMessangerOfTruth("Student Last Name is required Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            }
 
-                        if (ro.getCell(3) != null) {
-                            mode.setDob(ro.getCell(3).getDateCellValue());
-                            dob = format.format(mode.getDob());
-                        } else {
-                            mode.setDob(null);
-                        }
+                            if (ro.getCell(3) != null) {
+                                mode.setDob(ro.getCell(3).getDateCellValue());
+                                dob = format.format(mode.getDob());
+                            } else {
+                                mode.setDob(null);
+                            }
 
-                        if (ro.getCell(4) != null) {
-                            mode.setPnum(df.formatCellValue(ro.getCell(4)));
-                        } else {
-                            mode.setPnum(null);
-                        }
+                            if (ro.getCell(4) != null) {
+                                mode.setPnum(df.formatCellValue(ro.getCell(4)));
+                            } else {
+                                mode.setPnum("");
+                            }
 
-                        if (ro.getCell(5) != null) {
-                            mode.setEmail(ro.getCell(5).getStringCellValue());
-                        } else {
-                            mode.setEmail(null);
-                        }
+                            if (ro.getCell(5) != null) {
+                                mode.setEmail(ro.getCell(5).getStringCellValue());
+                            } else {
+                                mode.setEmail("");
+                            }
 
-                        if (ro.getCell(6) != null) {
-                            mode.setSex((int) ro.getCell(6).getNumericCellValue());
-                        } else {
-                            setMessangerOfTruth("Sex should be 1(male) or 2(female): Row " + (i + 1));
+                            if (ro.getCell(6) != null) {
+                                mode.setSex((int) ro.getCell(6).getNumericCellValue());
+                            } else {
+                                setMessangerOfTruth("Sex should be 1(male) or 2(female): Row " + (i + 1));
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                                break;
+                            }
+
+                            if (ro.getCell(7) != null) {
+                                mode.setPfname(ro.getCell(7).getStringCellValue());
+                            } else {
+                                setMessangerOfTruth("Parent First Name is required Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            }
+                            if (ro.getCell(8) != null) {
+                                mode.setPmname(ro.getCell(8).getStringCellValue());
+
+                            } else {
+                                mode.setPmname("");
+                            }
+
+                            if (ro.getCell(9) != null) {
+                                mode.setPlname(ro.getCell(9).getStringCellValue());
+                            } else {
+                                setMessangerOfTruth("Parent Last Name is required Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                            }
+
+                            if (ro.getCell(10) != null) {
+                                mode.setPpnum(df.formatCellValue(ro.getCell(10)));
+                            } else {
+                                setMessangerOfTruth("Parent Phone Number is required Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                            }
+
+                            if (ro.getCell(11) != null) {
+                                mode.setPemail(ro.getCell(11).getStringCellValue());
+                            } else {
+                                mode.setPemail("");
+                            }
+
+                            if (ro.getCell(12) != null) {
+                                mode.setAddress(ro.getCell(12).getStringCellValue());
+                            } else {
+                                mode.setAddress("");
+                            }
+
+                            if (ro.getCell(13) != null) {
+                                mode.setPreviousEdu(ro.getCell(13).getStringCellValue());
+                            } else {
+                                mode.setPreviousEdu("");
+                            }
+
+                            if (ro.getCell(14) != null) {
+                                mode.setPreviousClass((int) ro.getCell(14).getNumericCellValue());
+                            } else {
+                                setMessangerOfTruth("Previous class field is required: Row " + (i + 1));
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                                break;
+                            }
+
+                            if (ro.getCell(15) != null) {
+                                mode.setPreviousGrade((int) ro.getCell(15).getNumericCellValue());
+                            } else {
+                                setMessangerOfTruth("Previous Grade field is required: Row " + (i + 1));
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                                break;
+                            }
+
+                            if (ro.getCell(16) != null) {
+                                mode.setCurrentClass((int) ro.getCell(16).getNumericCellValue());
+                            } else {
+                                setMessangerOfTruth("Current class field is required: " + studentDetails.toString());
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                                break;
+                            }
+
+                            if (ro.getCell(17) != null) {
+                                mode.setCurrentGrade((int) ro.getCell(17).getNumericCellValue());
+                            } else {
+                                setMessangerOfTruth("Cuurent Grade field is required: Row " + (i + 1));
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                                break;
+                            }
+
+                            if (ro.getCell(18) != null) {
+                                mode.setArm(ro.getCell(18).getStringCellValue());
+                            } else {
+                                setMessangerOfTruth("Arm is required:Row " + (i + 1));
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                                break;
+                            }
+
+                            if (ro.getCell(19) != null) {
+                                mode.setTerm((int) ro.getCell(19).getNumericCellValue());
+                            } else {
+                                setMessangerOfTruth("Term field is required: Row " + (i + 1));
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                                break;
+                            }
+
+                            if (ro.getCell(20) != null) {
+                                mode.setYear(df.formatCellValue(ro.getCell(20)));
+                            } else {
+                                setMessangerOfTruth("Year field is required: Row " + (i + 1));
+                                message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, message);
+                                break;
+                            }
+
+                            fullname = mode.getLname() + " " + mode.getMname() + " " + mode.getFname();
+                            gfullname = mode.getPlname() + " " + mode.getPmname() + " " + mode.getPfname();
+                            if (reg.studentNameCheck(mode.getFname(), mode.getLname())) {
+
+                                setMessangerOfTruth("Firstname: " + mode.getFname() + " and Lastname: " + mode.getLname() + " exists in row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getSex() != 1 && mode.getSex() != 2) {
+
+                                setMessangerOfTruth("Sex is either 1(male) or 2(female): Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if ((mode.getFname().isEmpty() || mode.getFname() == null) || (mode.getLname().isEmpty() || mode.getLname() == null)) {
+                                setMessangerOfTruth("Student FirstName and LastName is required: Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if ((mode.getPfname().isEmpty() || mode.getPfname() == null) || (mode.getPlname().isEmpty() || mode.getPlname() == null)) {
+                                setMessangerOfTruth("Parent FirstName and LastName is required: Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getPpnum().isEmpty() || mode.getPpnum() == null) {
+                                setMessangerOfTruth("Parent Phone Number is required: Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getPemail().isEmpty() || mode.getPemail() == null) {
+                                setMessangerOfTruth("Parent Email Address is required: Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getPreviousClass() != 1 && mode.getPreviousClass() != 2 && mode.getPreviousClass() != 3) {
+                                setMessangerOfTruth("Previous Class field should be either ; 1(Nursery), 2(Primary) or 3(Secondary): Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getCurrentClass() != 1 && mode.getCurrentClass() != 2 && mode.getCurrentClass() != 3) {
+                                setMessangerOfTruth("Current Class field should be either ; 1(Nursery), 2(Primary) or 3(Secondary): Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getCurrentClass() == 1 && (mode.getCurrentGrade() != 1 && mode.getCurrentGrade() != 2 && mode.getCurrentGrade() != 3)) {
+                                setMessangerOfTruth("Current Class 1(Nursery) must have current grade 1(Nursery 1),2(Nursery 2) or 3(Nursery 3): Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getCurrentClass() == 2 && (mode.getCurrentGrade() != 4 && mode.getCurrentGrade() != 5 && mode.getCurrentGrade() != 6 && mode.getCurrentGrade() != 7 && mode.getCurrentGrade() != 8)) {
+                                setMessangerOfTruth("Current Class 2(Primary) must have current grade 4(Primary 1),5(Primary 2), 6(Primary 3), 7(Primary 4) or 8(Primary 5): Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getPreviousClass() == 1 && (mode.getPreviousGrade() != 1 && mode.getPreviousGrade() != 2 && mode.getPreviousGrade() != 3)) {
+                                setMessangerOfTruth("Previous Class 1(Nursery) must have current grade 1(Nursery 1), 2(Nursery 2) or 3(Nursery 3): Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getPreviousClass() == 2 && (mode.getPreviousGrade() != 4 && mode.getPreviousGrade() != 5 && mode.getPreviousGrade() != 6 && mode.getPreviousGrade() != 7 && mode.getPreviousGrade() != 8)) {
+                                setMessangerOfTruth("Previous Class 2(Primary) must have current grade 4(Primary 1),5(Primary 2), 6(Primary 3), 7(Primary 4) or 8(Primary 5): Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getPreviousClass() == 3 && (mode.getPreviousGrade() != 9 && mode.getPreviousGrade() != 10 && mode.getPreviousGrade() != 11 && mode.getPreviousGrade() != 12 && mode.getPreviousGrade() != 13 && mode.getPreviousGrade() != 14)) {
+                                setMessangerOfTruth("Previous Class Secondary must have previous grade 9(Jss 1),10(Jss 2),11(Jss 3), 12(SS 1),13(SS 2) or 14 (SS 3): Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getCurrentClass() == 3 && (mode.getCurrentGrade() != 9 && mode.getCurrentGrade() != 10 && mode.getCurrentGrade() != 11 && mode.getCurrentGrade() != 12 && mode.getCurrentGrade() != 13 && mode.getCurrentGrade() != 14)) {
+                                setMessangerOfTruth("Current Class Secondary must have current grade 9(Jss 1),10(Jss 2),11(Jss 3), 12(SS 1),13(SS 2) or 14 (SS 3): Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (mode.getTerm() != 1 && mode.getTerm() != 2 && mode.getTerm() != 3) {
+                                setMessangerOfTruth("Term must be either; 1(First Term),2(Second Term),3(Third Term). Row: " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                                break;
+                            } else if (reg.studentEmailCheck(mode.getEmail(), mode.getPemail()) && !reg.studentEmailCheckName(mode.getPemail(), mode.getPfname(), mode.getPmname(), mode.getPlname())) {
+                                setMessangerOfTruth("Email Already Exist!! Please enter a different email");
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                            } else if (reg.studentPhoneCheck(mode.getPnum(), mode.getPpnum()) && !reg.studentPhoneCheckName(mode.getPpnum(), mode.getPfname(), mode.getPmname(), mode.getPlname())) {
+                                setMessangerOfTruth("Phone Number Already Exist!! Please enter a different Phone Number");
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
+                            } else if (!reg.studentEmailCheck(mode.getEmail(), mode.getPemail()) && !reg.studentPhoneCheck(mode.getPnum(), mode.getPpnum())) {
+                                createStudent(mode, fullname, dob, gfullname, createdby, studentId);
+                                success++;
+                            } else if ((reg.studentEmailCheck(mode.getEmail(), mode.getPemail()) && reg.studentEmailCheckName(mode.getPemail(), mode.getPfname(), mode.getPmname(), mode.getPlname()))
+                                    || (reg.studentPhoneCheck(mode.getPnum(), mode.getPpnum()) && reg.studentPhoneCheckName(mode.getPpnum(), mode.getPfname(), mode.getPmname(), mode.getPlname()))) {
+                                createStudent(mode, fullname, dob, gfullname, createdby, studentId);
+                                success++;
+                            }
+                        } catch (IllegalStateException e) {
+                            setMessangerOfTruth("Please check that phone number and sex and Date of Birth is in the correct format. Row " + (i + 1));
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
-                            break;
                         }
-
-                        if (ro.getCell(7) != null) {
-                            mode.setPfname(ro.getCell(7).getStringCellValue());
-                        } else {
-                            mode.setPfname(null);
-                        }
-                        if (ro.getCell(8) != null) {
-                            mode.setPmname(ro.getCell(8).getStringCellValue());
-
-                        } else {
-                            mode.setPmname(null);
-                        }
-
-                        if (ro.getCell(9) != null) {
-                            mode.setPlname(ro.getCell(9).getStringCellValue());
-                        } else {
-                            mode.setPlname(null);
-                        }
-
-                        if (ro.getCell(10) != null) {
-                            mode.setPpnum(df.formatCellValue(ro.getCell(10)));
-                        } else {
-                            mode.setPpnum(null);
-                        }
-
-                        if (ro.getCell(11) != null) {
-                            mode.setPemail(ro.getCell(11).getStringCellValue());
-                        } else {
-                            mode.setPemail(null);
-                        }
-
-                        if (ro.getCell(12) != null) {
-                            mode.setAddress(ro.getCell(12).getStringCellValue());
-                        } else {
-                            mode.setAddress(null);
-                        }
-
-                        if (ro.getCell(13) != null) {
-                            mode.setPreviousEdu(ro.getCell(13).getStringCellValue());
-                        } else {
-                            mode.setPreviousEdu(null);
-                        }
-
-                        if (ro.getCell(14) != null) {
-                            mode.setPreviousClass((int) ro.getCell(14).getNumericCellValue());
-                        } else {
-                            setMessangerOfTruth("Previous class field is required: Row " + (i + 1));
-                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, message);
-                            break;
-                        }
-
-                        if (ro.getCell(15) != null) {
-                            mode.setPreviousGrade((int) ro.getCell(15).getNumericCellValue());
-                        } else {
-                            setMessangerOfTruth("Previous Grade field is required: Row " + (i + 1));
-                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, message);
-                            break;
-                        }
-
-                        if (ro.getCell(16) != null) {
-                            mode.setCurrentClass((int) ro.getCell(16).getNumericCellValue());
-                        } else {
-                            setMessangerOfTruth("Current class field is required: " + studentDetails.toString());
-                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, message);
-                            break;
-                        }
-
-                        if (ro.getCell(17) != null) {
-                            mode.setCurrentGrade((int) ro.getCell(17).getNumericCellValue());
-                        } else {
-                            setMessangerOfTruth("Cuurent Grade field is required: Row " + (i + 1));
-                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, message);
-                            break;
-                        }
-
-                        if (ro.getCell(18) != null) {
-                            mode.setArm(ro.getCell(18).getStringCellValue());
-                        } else {
-                            setMessangerOfTruth("Arm is required:Row " + (i + 1));
-                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, message);
-                            break;
-                        }
-
-                        if (ro.getCell(19) != null) {
-                            mode.setTerm((int) ro.getCell(19).getNumericCellValue());
-                        } else {
-                            setMessangerOfTruth("Term field is required: Row " + (i + 1));
-                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, message);
-                            break;
-                        }
-
-                        if (ro.getCell(20) != null) {
-                            mode.setYear(df.formatCellValue(ro.getCell(20)));
-                        } else {
-                            setMessangerOfTruth("Year field is required: Row " + (i + 1));
-                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, message);
-                            break;
-                        }
-
-                        fullname = mode.getLname() + " " + mode.getMname() + " " + mode.getFname();
-                        gfullname = mode.getPlname() + " " + mode.getPmname() + " " + mode.getPfname();
-                        if (reg.studentNameCheck(mode.getFname(), mode.getLname())) {
-
-                            setMessangerOfTruth("Firstname: " + mode.getFname() + " and Lastname: " + mode.getLname() + " exists in row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getSex() != 1 && mode.getSex() != 2) {
-
-                            setMessangerOfTruth("Sex is either 1(male) or 2(female): Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if ((mode.getFname().isEmpty() || mode.getFname() == null) || (mode.getLname().isEmpty() || mode.getLname() == null)) {
-                            setMessangerOfTruth("Student FirstName and LastName is required: Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if ((mode.getPfname().isEmpty() || mode.getPfname() == null) || (mode.getPlname().isEmpty() || mode.getPlname() == null)) {
-                            setMessangerOfTruth("Parent FirstName and LastName is required: Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getPpnum().isEmpty() || mode.getPpnum() == null) {
-                            setMessangerOfTruth("Parent Phone Number is required: Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getPemail().isEmpty() || mode.getPemail() == null) {
-                            setMessangerOfTruth("Parent Email Address is required: Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getPreviousClass() != 1 && mode.getPreviousClass() != 2 && mode.getPreviousClass() != 3) {
-                            setMessangerOfTruth("Previous Class field should be either ; 1(Nursery), 2(Primary) or 3(Secondary): Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getCurrentClass() != 1 && mode.getCurrentClass() != 2 && mode.getCurrentClass() != 3) {
-                            setMessangerOfTruth("Current Class field should be either ; 1(Nursery), 2(Primary) or 3(Secondary): Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getCurrentClass() == 1 && (mode.getCurrentGrade() != 1 && mode.getCurrentGrade() != 2 && mode.getCurrentGrade() != 3)) {
-                            setMessangerOfTruth("Current Class 1(Nursery) must have current grade 1(Nursery 1),2(Nursery 2) or 3(Nursery 3): Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getCurrentClass() == 2 && (mode.getCurrentGrade() != 4 && mode.getCurrentGrade() != 5 && mode.getCurrentGrade() != 6 && mode.getCurrentGrade() != 7 && mode.getCurrentGrade() != 8)) {
-                            setMessangerOfTruth("Current Class 2(Primary) must have current grade 4(Primary 1),5(Primary 2), 6(Primary 3), 7(Primary 4) or 8(Primary 5): Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getPreviousClass() == 1 && (mode.getPreviousGrade() != 1 && mode.getPreviousGrade() != 2 && mode.getPreviousGrade() != 3)) {
-                            setMessangerOfTruth("Previous Class 1(Nursery) must have current grade 1(Nursery 1), 2(Nursery 2) or 3(Nursery 3): Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getPreviousClass() == 2 && (mode.getPreviousGrade() != 4 && mode.getPreviousGrade() != 5 && mode.getPreviousGrade() != 6 && mode.getPreviousGrade() != 7 && mode.getPreviousGrade() != 8)) {
-                            setMessangerOfTruth("Previous Class 2(Primary) must have current grade 4(Primary 1),5(Primary 2), 6(Primary 3), 7(Primary 4) or 8(Primary 5): Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getPreviousClass() == 3 && (mode.getPreviousGrade() != 9 && mode.getPreviousGrade() != 10 && mode.getPreviousGrade() != 11 && mode.getPreviousGrade() != 12 && mode.getPreviousGrade() != 13 && mode.getPreviousGrade() != 14)) {
-                            setMessangerOfTruth("Previous Class Secondary must have previous grade 9(Jss 1),10(Jss 2),11(Jss 3), 12(SS 1),13(SS 2) or 14 (SS 3): Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getCurrentClass() == 3 && (mode.getCurrentGrade() != 9 && mode.getCurrentGrade() != 10 && mode.getCurrentGrade() != 11 && mode.getCurrentGrade() != 12 && mode.getCurrentGrade() != 13 && mode.getCurrentGrade() != 14)) {
-                            setMessangerOfTruth("Current Class Secondary must have current grade 9(Jss 1),10(Jss 2),11(Jss 3), 12(SS 1),13(SS 2) or 14 (SS 3): Row " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else if (mode.getTerm() != 1 && mode.getTerm() != 2 && mode.getTerm() != 3) {
-                            setMessangerOfTruth("Term must be either; 1(First Term),2(Second Term),3(Third Term). Row: " + (i + 1));
-                            msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-                            context.addMessage(null, msg);
-                            break;
-                        } else {
-                            //generate unique identifier
-                            UUID idOne = UUID.randomUUID();
-                            String insertStudentDetails = "insert into Student_details"
-                                    + "(first_name,middle_name,last_name,fullname,DOB,student_phone,student_email,sex,Guardian_firstname,"
-                                    + "Guardian_middlename,Guardian_lastname,Guardian_fullname,Guardian_phone,"
-                                    + "Guardian_email,guardian_address,previous_school,"
-                                    + "previous_class,previous_grade,current_class,current_grade,Arm,created_by,"
-                                    + "date_created,datetime_created,is_deleted,studentId)"
-                                    + "values"
-                                    + "(?,?,?,?,?,"
-                                    + "?,?,?,?,?,"
-                                    + "?,?,?,?,?,?,"
-                                    + "?,?,?,?,?,"
-                                    + "?,?,?,?,?)";
-                            pstmt = con.prepareStatement(insertStudentDetails);
-                            pstmt.setString(1, mode.getFname());
-                            pstmt.setString(2, mode.getMname());
-                            pstmt.setString(3, mode.getLname());
-                            pstmt.setString(4, fullname);
-                            pstmt.setString(5, dob);
-                            pstmt.setString(6, mode.getPnum());
-                            pstmt.setString(7, mode.getEmail());
-                            pstmt.setString(8, String.valueOf(mode.getSex()));
-                            pstmt.setString(9, mode.getPfname());
-                            pstmt.setString(10, mode.getPmname());
-                            pstmt.setString(11, mode.getPlname());
-                            pstmt.setString(12, gfullname);
-                            pstmt.setString(13, mode.getPpnum());
-                            pstmt.setString(14, mode.getPemail());
-                            pstmt.setString(15, mode.getAddress());
-                            pstmt.setString(16, mode.getPreviousEdu());
-                            pstmt.setString(17, String.valueOf(mode.getPreviousClass()));
-                            pstmt.setString(18, String.valueOf(mode.getPreviousGrade()));
-                            pstmt.setString(19, String.valueOf(mode.getCurrentClass()));
-                            pstmt.setString(20, String.valueOf(mode.getCurrentGrade()));
-                            pstmt.setString(21, mode.getArm());
-                            pstmt.setString(22, createdby);
-                            pstmt.setString(23, DateManipulation.dateAlone());
-                            pstmt.setString(24, DateManipulation.dateAndTime());
-                            pstmt.setBoolean(25, false);
-                            pstmt.setInt(26, studentId);
-
-                            pstmt.executeUpdate();
-
-                            String slink = "http://localhost:8080/SchlMgt/faces/pages/create/index.xhtml?id=";
-                            String insertEmail = "insert into studentstatus (guid,full_name,status,datelogged,studentemail,date_time,studentId,link)"
-                                    + "values(?,?,?,?,?,?,?,?)";
-
-                            pstmt = con.prepareStatement(insertEmail);
-                            pstmt.setString(1, idOne.toString());
-                            pstmt.setString(2, fullname);
-                            pstmt.setBoolean(3, false);
-                            pstmt.setString(4, DateManipulation.dateAlone());
-                            pstmt.setString(5, mode.getPemail());
-                            pstmt.setString(6, DateManipulation.dateAndTime());
-                            pstmt.setInt(7, studentId);
-                            pstmt.setString(8, slink + idOne.toString());
-
-                            pstmt.executeUpdate();
-                            classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), String.valueOf(mode.getCurrentClass()), mode.getArm(), String.valueOf(mode.getTerm()), mode.getYear(), createdby, fullname, String.valueOf(mode.getCurrentGrade()));
-
-                            success++;
-
-                        }
-
                     }
                     setMessangerOfTruth(success + " Student Data Upload Successful");
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
@@ -852,9 +821,7 @@ public class Registration implements Serializable {
                 context.addMessage(null, message);
             }
         } catch (IllegalStateException e) {
-            setMessangerOfTruth("Please check that phone number and sex is in the correct format");
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
-            context.addMessage(null, message);
+
             e.printStackTrace();
         } catch (Exception exx) {
             exx.printStackTrace();
@@ -869,6 +836,78 @@ public class Registration implements Serializable {
                 pstmt = null;
             }
 
+        }
+    }
+
+    public void createStudent(StudentModel mode, String fullname, String dob, String gfullname, String createdby, int studentId) {
+        try {
+            DbConnectionX dbConnections = new DbConnectionX();
+            Connection con = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            con = dbConnections.mySqlDBconnection();
+            UUID idOne = UUID.randomUUID();
+            String insertStudentDetails = "insert into Student_details"
+                    + "(first_name,middle_name,last_name,fullname,DOB,student_phone,student_email,sex,Guardian_firstname,"
+                    + "Guardian_middlename,Guardian_lastname,Guardian_fullname,Guardian_phone,"
+                    + "Guardian_email,guardian_address,previous_school,"
+                    + "previous_class,previous_grade,current_class,current_grade,Arm,created_by,"
+                    + "date_created,datetime_created,is_deleted,studentId)"
+                    + "values"
+                    + "(?,?,?,?,?,"
+                    + "?,?,?,?,?,"
+                    + "?,?,?,?,?,?,"
+                    + "?,?,?,?,?,"
+                    + "?,?,?,?,?)";
+            pstmt = con.prepareStatement(insertStudentDetails);
+            pstmt.setString(1, mode.getFname());
+            pstmt.setString(2, mode.getMname());
+            pstmt.setString(3, mode.getLname());
+            pstmt.setString(4, fullname);
+            pstmt.setString(5, dob);
+            pstmt.setString(6, mode.getPnum());
+            pstmt.setString(7, mode.getEmail());
+            pstmt.setString(8, String.valueOf(mode.getSex()));
+            pstmt.setString(9, mode.getPfname());
+            pstmt.setString(10, mode.getPmname());
+            pstmt.setString(11, mode.getPlname());
+            pstmt.setString(12, gfullname);
+            pstmt.setString(13, mode.getPpnum());
+            pstmt.setString(14, mode.getPemail());
+            pstmt.setString(15, mode.getAddress());
+            pstmt.setString(16, mode.getPreviousEdu());
+            pstmt.setString(17, String.valueOf(mode.getPreviousClass()));
+            pstmt.setString(18, String.valueOf(mode.getPreviousGrade()));
+            pstmt.setString(19, String.valueOf(mode.getCurrentClass()));
+            pstmt.setString(20, String.valueOf(mode.getCurrentGrade()));
+            pstmt.setString(21, mode.getArm());
+            pstmt.setString(22, createdby);
+            pstmt.setString(23, DateManipulation.dateAlone());
+            pstmt.setString(24, DateManipulation.dateAndTime());
+            pstmt.setBoolean(25, false);
+            pstmt.setInt(26, studentId);
+
+            pstmt.executeUpdate();
+
+            String slink = "http://localhost:8080/SchlMgt/faces/pages/create/index.xhtml?id=";
+            String insertEmail = "insert into studentstatus (guid,full_name,status,datelogged,studentemail,date_time,studentId,link)"
+                    + "values(?,?,?,?,?,?,?,?)";
+
+            pstmt = con.prepareStatement(insertEmail);
+            pstmt.setString(1, idOne.toString());
+            pstmt.setString(2, fullname);
+            pstmt.setBoolean(3, false);
+            pstmt.setString(4, DateManipulation.dateAlone());
+            pstmt.setString(5, mode.getPemail());
+            pstmt.setString(6, DateManipulation.dateAndTime());
+            pstmt.setInt(7, studentId);
+            pstmt.setString(8, slink + idOne.toString());
+
+            pstmt.executeUpdate();
+            classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), String.valueOf(mode.getCurrentClass()), mode.getArm(), String.valueOf(mode.getTerm()), mode.getYear(), createdby, fullname, String.valueOf(mode.getCurrentGrade()));
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
