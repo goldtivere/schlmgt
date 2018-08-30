@@ -258,7 +258,7 @@ public class EditStudent implements Serializable {
     }
     
     public void onDisabilityChange() {
-        if (getDisability().equalsIgnoreCase("YES")) {
+        if (getDisability().equalsIgnoreCase("1")) {
             setStatus(true);
             
         } else {
@@ -634,7 +634,7 @@ public class EditStudent implements Serializable {
     }
     
     public void onRelationshipChange() {
-        if (getRelationship().equalsIgnoreCase("other")) {
+        if (getRelationship().equalsIgnoreCase("7")) {
             setRelatio(true);
         } else {
             setRelatio(false);

@@ -70,7 +70,7 @@ public class FreshReg implements Serializable {
     private String sex;
     private String year;
     private String term;
-    private Boolean armStatus;
+    private boolean armStatus;
     private UploadedFile uploadImage;
     private List<RelationshipModel> relation;
     private RelationshipModel modes = new RelationshipModel();
@@ -78,10 +78,10 @@ public class FreshReg implements Serializable {
     private List<StateModel> state;
     private CountryModel counts = new CountryModel();
     private StateModel citys = new StateModel();
-    private Boolean relatio;
-    private Boolean dStatus;
-    private Boolean confirmPanel;
-    private Boolean studentPanel;
+    private boolean relatio;
+    private boolean dStatus;
+    private boolean confirmPanel;
+    private boolean studentPanel;
     private LgaModel lgas = new LgaModel();
     private List<LgaModel> lgamodel;
     private List<ClassModel> classmodel;
@@ -126,7 +126,7 @@ public class FreshReg implements Serializable {
     }
 
     public void onRelationshipChange() {
-        if (modes.getRelation().equalsIgnoreCase("other")) {
+        if (modes.getRelation().equalsIgnoreCase("7")) {
             setRelatio(true);
         } else {
             setRelatio(false);
@@ -134,7 +134,7 @@ public class FreshReg implements Serializable {
     }
 
     public void onDisabilityChange() {
-        if (modeldis.getDisability().equalsIgnoreCase("YES")) {
+        if (modeldis.getDisability().equalsIgnoreCase("1")) {
             setdStatus(true);
         } else {
             setdStatus(false);
@@ -885,7 +885,7 @@ public class FreshReg implements Serializable {
                 setMessangerOfTruth("Email Already Exist!! Please enter a different email");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);
-            } else if (studentPhoneCheck(getPnum(), getGpnum()) && !studentPhoneCheckName(getPnum(), getGfname(), getGmname(), getGlname())) {
+            } else if (studentPhoneCheck(getPnum(), getGpnum()) && !studentPhoneCheckName(getGpnum(), getGfname(), getGmname(), getGlname())) {
                 setMessangerOfTruth("Phone Number Already Exist!! Please enter a different Phone Number");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);
@@ -1206,15 +1206,6 @@ public class FreshReg implements Serializable {
     public void setSex(String sex) {
         this.sex = sex;
     }
-
-    public Boolean getArmStatus() {
-        return armStatus;
-    }
-
-    public void setArmStatus(Boolean armStatus) {
-        this.armStatus = armStatus;
-    }
-
     public String getArm() {
         return arm;
     }
@@ -1259,29 +1250,7 @@ public class FreshReg implements Serializable {
         this.grademodels = grademodels;
     }
 
-    public Boolean getConfirmPanel() {
-        return confirmPanel;
-    }
-
-    public void setConfirmPanel(Boolean confirmPanel) {
-        this.confirmPanel = confirmPanel;
-    }
-
-    public Boolean getStudentPanel() {
-        return studentPanel;
-    }
-
-    public void setStudentPanel(Boolean studentPanel) {
-        this.studentPanel = studentPanel;
-    }
-
-    public Boolean getdStatus() {
-        return dStatus;
-    }
-
-    public void setdStatus(Boolean dStatus) {
-        this.dStatus = dStatus;
-    }
+   
 
     public void setPassport(UploadedFile passport) {
         this.passport = passport;
@@ -1422,14 +1391,7 @@ public class FreshReg implements Serializable {
     public void setCitys(StateModel citys) {
         this.citys = citys;
     }
-
-    public Boolean getRelatio() {
-        return relatio;
-    }
-
-    public void setRelatio(Boolean relatio) {
-        this.relatio = relatio;
-    }
+   
 
     public List<CountryModel> getCountry() {
         return country;
@@ -1645,6 +1607,45 @@ public class FreshReg implements Serializable {
 
     public void setUploadImage(UploadedFile uploadImage) {
         this.uploadImage = uploadImage;
+    }
+    public boolean isArmStatus() {
+        return armStatus;
+    }
+
+    public void setArmStatus(boolean armStatus) {
+        this.armStatus = armStatus;
+    }
+
+    public boolean isRelatio() {
+        return relatio;
+    }
+
+    public void setRelatio(boolean relatio) {
+        this.relatio = relatio;
+    }
+
+    public boolean isdStatus() {
+        return dStatus;
+    }
+
+    public void setdStatus(boolean dStatus) {
+        this.dStatus = dStatus;
+    }
+
+    public boolean isConfirmPanel() {
+        return confirmPanel;
+    }
+
+    public void setConfirmPanel(boolean confirmPanel) {
+        this.confirmPanel = confirmPanel;
+    }
+
+    public boolean isStudentPanel() {
+        return studentPanel;
+    }
+
+    public void setStudentPanel(boolean studentPanel) {
+        this.studentPanel = studentPanel;
     }
 
 }

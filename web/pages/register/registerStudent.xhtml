@@ -104,7 +104,7 @@
                                             <p:outputLabel for="relation" value="Relationship: "/>
                                             <br/>
                                             <p:selectOneMenu id="relation" class="form-control" value="#{freg.modes.relation}" required="true" requiredMessage="Relationsip required">
-                                                <p:ajax listener="#{freg.onRelationshipChange}" update="relate" />
+                                                <p:ajax listener="#{freg.onRelationshipChange}" update="relate,city" />
                                                 <f:selectItem itemLabel="--Select Relationship--" itemValue="" noSelectionOption="true"/>
                                                 <f:selectItems value="#{freg.relation}"
                                                                var="singlevalue"  
@@ -335,7 +335,7 @@
                                 <p:outputLabel for="dis" value="Disability: "/>
                                 <br/>
                                 <p:selectOneMenu id="dis" class="form-control" value="#{freg.modeldis.disability}" required="true" requiredMessage="Disability required">
-                                    <p:ajax listener="#{freg.onDisabilityChange}" update="stat" />
+                                    <p:ajax listener="#{freg.onDisabilityChange}" update="stat,distat" />
                                     <f:selectItem itemLabel="--Select Disability--" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems value="#{freg.dismodel}"
                                                    var="singlevalue"  
@@ -402,6 +402,7 @@
             </p:panel>
 
             <p:panel header="Student Registration" id="confirm" visible="#{freg.confirmPanel}">
+                <p:messages id="messagess" closable="true" />
                 <fieldset>
                     <legend>Personal Details</legend>
                     <div class="row">                
@@ -549,7 +550,7 @@
 
                 <div class="row">
                     <div class="col-md-offset-4 col-md-3 ">
-                        <p:commandButton value="Register" actionListener="#{freg.registerStudent}" update="reg,confirm"/>
+                        <p:commandButton value="Register" actionListener="#{freg.registerStudent}" update="reg,confirm,messagess"/>
                         <p:commandButton value="Back" actionListener="#{freg.back}" update="reg,confirm"/>
                     </div>                        
                 </div>
