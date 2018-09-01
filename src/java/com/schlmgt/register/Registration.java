@@ -799,10 +799,10 @@ public class Registration implements Serializable {
                                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                                 context.addMessage(null, message);
                                 break;
-                            }                            
+                            }
                             fullname = mode.getLname() + " " + mode.getMname() + " " + mode.getFname();
                             gfullname = mode.getPlname() + " " + mode.getPmname() + " " + mode.getPfname();
-                            if (studentNameCheck(mode.getFname(), mode.getLname(),con)) {
+                            if (studentNameCheck(mode.getFname(), mode.getLname(), con)) {
 
                                 setMessangerOfTruth("Firstname: " + mode.getFname() + " and Lastname: " + mode.getLname() + " exists in row " + (i + 1));
                                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
@@ -879,18 +879,19 @@ public class Registration implements Serializable {
                                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                                 context.addMessage(null, msg);
                                 break;
-                            } else if (studentEmailCheck(mode.getEmail(), mode.getPemail(),con) && !studentEmailCheckName(mode.getPemail(), mode.getPfname(), mode.getPmname(), mode.getPlname(),con)) {
+                            } else if (studentEmailCheck(mode.getEmail(), mode.getPemail(), con) && !studentEmailCheckName(mode.getPemail(), mode.getPfname(), mode.getPmname(), mode.getPlname(), con)) {
                                 setMessangerOfTruth("Email Already Exist!! Please enter a different email. Row: " + (i + 1));
                                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                                 context.addMessage(null, msg);
                                 break;
-                            } else if (studentPhoneCheck(mode.getPnum(), mode.getPpnum(),con) && !studentPhoneCheckName(mode.getPpnum(), mode.getPfname(), mode.getPmname(), mode.getPlname(),con)) {
+                            } else if (studentPhoneCheck(mode.getPnum(), mode.getPpnum(), con) && !studentPhoneCheckName(mode.getPpnum(), mode.getPfname(), mode.getPmname(), mode.getPlname(), con)) {
                                 setMessangerOfTruth("Phone Number Already Exist!! Please enter a different Phone Number. Row: " + (i + 1));
                                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                                 context.addMessage(null, msg);
                                 break;
                             } else {
                                 createStudent(mode, fullname, dob, gfullname, createdby, studentId);
+                                studentId++;
                                 success++;
                             }
                         } catch (IllegalStateException e) {
@@ -983,19 +984,19 @@ public class Registration implements Serializable {
             pstmt.setString(8, slink + idOne.toString());
 
             pstmt.executeUpdate();
-            classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), String.valueOf(mode.getCurrentClass()), mode.getArm(), String.valueOf(mode.getTerm()), mode.getYear(), createdby, fullname, String.valueOf(mode.getCurrentGrade()),con);
+            classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), String.valueOf(mode.getCurrentClass()), mode.getArm(), String.valueOf(mode.getTerm()), mode.getYear(), createdby, fullname, String.valueOf(mode.getCurrentGrade()), con);
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void classUpload(int studentId, String fname, String mname, String lname, String grade, String arm, String term, String year, String createdby, String fullname, String currentclass,Connection con) {
+    public void classUpload(int studentId, String fname, String mname, String lname, String grade, String arm, String term, String year, String createdby, String fullname, String currentclass, Connection con) {
 
-        try {            
+        try {
             String nurseryInsert = "insert into tbstudentclass (studentid,first_name,middle_name,last_name,full_name,class,"
                     + "classtype,isdeleted,datecreated,datetime_created,createdby,Arm,currentclass,term,year) values "
-                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";            
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             pstmt = con.prepareStatement(nurseryInsert);
 
             pstmt.setInt(1, studentId);
