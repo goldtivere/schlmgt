@@ -495,8 +495,7 @@ public class Registration implements Serializable {
         return false;
     }
 
-    public boolean studentPhoneCheck(String pnum, String gpnum, Connection con) throws SQLException {
-        System.out.println("*****Phone number here: " + pnum + " okay the other: " + gpnum + " ****");
+    public boolean studentPhoneCheck(String pnum, String gpnum, Connection con) throws SQLException {       
         String testemail = "Select * from student_details where student_phone=? or Guardian_phone=? and is_deleted=?";
         pstmt = con.prepareStatement(testemail);
         pstmt.setString(1, pnum);
