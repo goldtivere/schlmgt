@@ -889,6 +889,8 @@ public class FreshReg implements Serializable {
                 setMessangerOfTruth("Phone Number Already Exist!! Please enter a different Phone Number");
                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                 context.addMessage(null, msg);
+            } else if (!studentPhoneCheck(getPnum(), getGpnum()) && !studentPhoneCheckName(getGpnum(), getGfname(), getGmname(), getGlname())) {
+                createStudent(studentId, dob, fullname, gfullname);
             } else if (!studentEmailCheck(getEmail(), getGemail()) && !studentPhoneCheck(getPnum(), getGpnum())) {
                 createStudent(studentId, dob, fullname, gfullname);
             } else if ((studentEmailCheck(getEmail(), getGemail()) && studentEmailCheckName(getGemail(), getGfname(), getMname(), getGlname()))
@@ -1206,6 +1208,7 @@ public class FreshReg implements Serializable {
     public void setSex(String sex) {
         this.sex = sex;
     }
+
     public String getArm() {
         return arm;
     }
@@ -1249,8 +1252,6 @@ public class FreshReg implements Serializable {
     public void setGrademodels(List<GradeModel> grademodels) {
         this.grademodels = grademodels;
     }
-
-   
 
     public void setPassport(UploadedFile passport) {
         this.passport = passport;
@@ -1391,7 +1392,6 @@ public class FreshReg implements Serializable {
     public void setCitys(StateModel citys) {
         this.citys = citys;
     }
-   
 
     public List<CountryModel> getCountry() {
         return country;
@@ -1608,6 +1608,7 @@ public class FreshReg implements Serializable {
     public void setUploadImage(UploadedFile uploadImage) {
         this.uploadImage = uploadImage;
     }
+
     public boolean isArmStatus() {
         return armStatus;
     }

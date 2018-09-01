@@ -57,6 +57,10 @@ public class Registration implements Serializable {
     private boolean student;
     private boolean admin;
     private boolean staffStudent;
+    Connection con = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    DbConnectionX dbConnections = new DbConnectionX();
 
     @PostConstruct
     public void init() {
@@ -141,12 +145,8 @@ public class Registration implements Serializable {
         FacesMessage message;
         FacesContext context = FacesContext.getCurrentInstance();
         UploadImagesX uploadImagesX = new UploadImagesX();
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        con = dbConnections.mySqlDBconnection();
         try {
+            con = dbConnections.mySqlDBconnection();
             FreshReg reg = new FreshReg();
             StaffModel mode = new StaffModel();
             Register rg = new Register();
@@ -450,18 +450,111 @@ public class Registration implements Serializable {
         }
     }
 
+    public int studentIdCheck(Connection con) throws SQLException {
+
+        String testflname = "Select * from student_details order by id DESC LIMIT 1";
+        pstmt = con.prepareStatement(testflname);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt("id");
+        }
+        return 0;
+    }
+
+    public boolean studentEmailCheck(String email, String gmail, Connection con) throws SQLException {
+        String testemail = "Select * from student_details where student_email=? or guardian_email=? and is_deleted=?";
+        pstmt = con.prepareStatement(testemail);
+        pstmt.setString(1, email);
+        pstmt.setString(2, gmail);
+        pstmt.setBoolean(3, false);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return true;
+
+        }
+        return false;
+    }
+
+    public boolean studentEmailCheckName(String gmail, String fname, String mname, String lname, Connection con) throws SQLException {
+        String testemail = "Select * from student_details where guardian_email=? and guardian_firstname=? and guardian_middlename=?"
+                + " and guardian_lastname=? and is_deleted=?";
+        pstmt = con.prepareStatement(testemail);
+        pstmt.setString(1, gmail);
+        pstmt.setString(2, fname);
+        pstmt.setString(3, mname);
+        pstmt.setString(4, lname);
+        pstmt.setBoolean(5, false);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean studentPhoneCheck(String pnum, String gpnum, Connection con) throws SQLException {
+        System.out.println("*****Phone number here: " + pnum + " okay the other: " + gpnum + " ****");
+        String testemail = "Select * from student_details where student_phone=? or Guardian_phone=? and is_deleted=?";
+        pstmt = con.prepareStatement(testemail);
+        pstmt.setString(1, pnum);
+        pstmt.setString(2, gpnum);
+        pstmt.setBoolean(3, false);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return true;
+
+        }
+        return false;
+    }
+
+    public boolean studentPhoneCheckName(String gpnum, String fname, String mname, String lname, Connection con) throws SQLException {
+        String testemail = "Select * from student_details where Guardian_phone=? and guardian_firstname=? and guardian_middlename=?"
+                + " and guardian_lastname=? and is_deleted=?";
+        pstmt = con.prepareStatement(testemail);
+        pstmt.setString(1, gpnum);
+        pstmt.setString(2, fname);
+        pstmt.setString(3, mname);
+        pstmt.setString(4, lname);
+        pstmt.setBoolean(5, false);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return true;
+
+        }
+        return false;
+    }
+
+    public boolean studentNameCheck(String fname, String lname, Connection con) {
+        try {
+            String testflname = "Select * from student_details where first_name=? and last_name=? and is_deleted=?";
+            pstmt = con.prepareStatement(testflname);
+            pstmt.setString(1, fname);
+            pstmt.setString(2, lname);
+            pstmt.setBoolean(3, false);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public void studentUpload(FileUploadEvent event) throws SQLException {
         FacesMessage msg;
         FacesMessage message;
         FacesContext context = FacesContext.getCurrentInstance();
         UploadImagesX uploadImagesX = new UploadImagesX();
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        con = dbConnections.mySqlDBconnection();
         try {
-            FreshReg reg = new FreshReg();
+            con = dbConnections.mySqlDBconnection();
             StudentModel mode = new StudentModel();
             List<String> studentDetails = new ArrayList<>();
             studentDetails.add("SFirstName");
@@ -520,10 +613,10 @@ public class Registration implements Serializable {
 
                 if (val == row.getPhysicalNumberOfCells()) {
 
-                    if (reg.studentIdCheck() == 0) {
+                    if (studentIdCheck(con) == 0) {
                         studentId = 0 + 1;
                     } else {
-                        studentId = reg.studentIdCheck() + 1;
+                        studentId = studentIdCheck(con) + 1;
                     }
 
 //                    if (getPnum().isEmpty() || getPnum().equals("")) {
@@ -554,7 +647,7 @@ public class Registration implements Serializable {
                             if (ro.getCell(1) != null) {
                                 mode.setMname(ro.getCell(1).getStringCellValue());
                             } else {
-                                mode.setMname("");
+                                mode.setMname(null);
                             }
 
                             if (ro.getCell(2) != null) {
@@ -576,13 +669,13 @@ public class Registration implements Serializable {
                             if (ro.getCell(4) != null) {
                                 mode.setPnum(df.formatCellValue(ro.getCell(4)));
                             } else {
-                                mode.setPnum("");
+                                mode.setPnum(null);
                             }
 
                             if (ro.getCell(5) != null) {
                                 mode.setEmail(ro.getCell(5).getStringCellValue());
                             } else {
-                                mode.setEmail("");
+                                mode.setEmail(null);
                             }
 
                             if (ro.getCell(6) != null) {
@@ -606,7 +699,7 @@ public class Registration implements Serializable {
                                 mode.setPmname(ro.getCell(8).getStringCellValue());
 
                             } else {
-                                mode.setPmname("");
+                                mode.setPmname(null);
                             }
 
                             if (ro.getCell(9) != null) {
@@ -620,7 +713,7 @@ public class Registration implements Serializable {
                             if (ro.getCell(10) != null) {
                                 mode.setPpnum(df.formatCellValue(ro.getCell(10)));
                             } else {
-                                setMessangerOfTruth("Parent Phone Number is required Row " + (i + 1));
+                                setMessangerOfTruth("Parent Phone Number is required. Row " + (i + 1));
                                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                                 context.addMessage(null, msg);
                             }
@@ -628,19 +721,21 @@ public class Registration implements Serializable {
                             if (ro.getCell(11) != null) {
                                 mode.setPemail(ro.getCell(11).getStringCellValue());
                             } else {
-                                mode.setPemail("");
+                                setMessangerOfTruth("Parent Email Number is required. Row " + (i + 1));
+                                msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
+                                context.addMessage(null, msg);
                             }
 
                             if (ro.getCell(12) != null) {
                                 mode.setAddress(ro.getCell(12).getStringCellValue());
                             } else {
-                                mode.setAddress("");
+                                mode.setAddress(null);
                             }
 
                             if (ro.getCell(13) != null) {
                                 mode.setPreviousEdu(ro.getCell(13).getStringCellValue());
                             } else {
-                                mode.setPreviousEdu("");
+                                mode.setPreviousEdu(null);
                             }
 
                             if (ro.getCell(14) != null) {
@@ -705,10 +800,10 @@ public class Registration implements Serializable {
                                 context.addMessage(null, message);
                                 break;
                             }
-
+                            System.out.println(mode.getEmail() + " this is it " + mode.getPemail());
                             fullname = mode.getLname() + " " + mode.getMname() + " " + mode.getFname();
                             gfullname = mode.getPlname() + " " + mode.getPmname() + " " + mode.getPfname();
-                            if (reg.studentNameCheck(mode.getFname(), mode.getLname())) {
+                            if (studentNameCheck(mode.getFname(), mode.getLname(),con)) {
 
                                 setMessangerOfTruth("Firstname: " + mode.getFname() + " and Lastname: " + mode.getLname() + " exists in row " + (i + 1));
                                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
@@ -785,19 +880,17 @@ public class Registration implements Serializable {
                                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                                 context.addMessage(null, msg);
                                 break;
-                            } else if (reg.studentEmailCheck(mode.getEmail(), mode.getPemail()) && !reg.studentEmailCheckName(mode.getPemail(), mode.getPfname(), mode.getPmname(), mode.getPlname())) {
-                                setMessangerOfTruth("Email Already Exist!! Please enter a different email");
+                            } else if (studentEmailCheck(mode.getEmail(), mode.getPemail(),con) && !studentEmailCheckName(mode.getPemail(), mode.getPfname(), mode.getPmname(), mode.getPlname(),con)) {
+                                setMessangerOfTruth("Email Already Exist!! Please enter a different email. Row: " + (i + 1));
                                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                                 context.addMessage(null, msg);
-                            } else if (reg.studentPhoneCheck(mode.getPnum(), mode.getPpnum()) && !reg.studentPhoneCheckName(mode.getPpnum(), mode.getPfname(), mode.getPmname(), mode.getPlname())) {
-                                setMessangerOfTruth("Phone Number Already Exist!! Please enter a different Phone Number");
+                                break;
+                            } else if (studentPhoneCheck(mode.getPnum(), mode.getPpnum(),con) && !studentPhoneCheckName(mode.getPpnum(), mode.getPfname(), mode.getPmname(), mode.getPlname(),con)) {
+                                setMessangerOfTruth("Phone Number Already Exist!! Please enter a different Phone Number. Row: " + (i + 1));
                                 msg = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                                 context.addMessage(null, msg);
-                            } else if (!reg.studentEmailCheck(mode.getEmail(), mode.getPemail()) && !reg.studentPhoneCheck(mode.getPnum(), mode.getPpnum())) {
-                                createStudent(mode, fullname, dob, gfullname, createdby, studentId);
-                                success++;
-                            } else if ((reg.studentEmailCheck(mode.getEmail(), mode.getPemail()) && reg.studentEmailCheckName(mode.getPemail(), mode.getPfname(), mode.getPmname(), mode.getPlname()))
-                                    || (reg.studentPhoneCheck(mode.getPnum(), mode.getPpnum()) && reg.studentPhoneCheckName(mode.getPpnum(), mode.getPfname(), mode.getPmname(), mode.getPlname()))) {
+                                break;
+                            } else {
                                 createStudent(mode, fullname, dob, gfullname, createdby, studentId);
                                 success++;
                             }
@@ -805,6 +898,7 @@ public class Registration implements Serializable {
                             setMessangerOfTruth("Please check that phone number and sex and Date of Birth is in the correct format. Row " + (i + 1));
                             message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                             context.addMessage(null, message);
+                            break;
                         }
                     }
                     setMessangerOfTruth(success + " Student Data Upload Successful");
@@ -825,26 +919,12 @@ public class Registration implements Serializable {
             e.printStackTrace();
         } catch (Exception exx) {
             exx.printStackTrace();
-        } finally {
-
-            if (!(con == null)) {
-                con.close();
-                con = null;
-            }
-            if (!(pstmt == null)) {
-                pstmt.close();
-                pstmt = null;
-            }
-
         }
     }
 
     public void createStudent(StudentModel mode, String fullname, String dob, String gfullname, String createdby, int studentId) {
+
         try {
-            DbConnectionX dbConnections = new DbConnectionX();
-            Connection con = null;
-            PreparedStatement pstmt = null;
-            ResultSet rs = null;
             con = dbConnections.mySqlDBconnection();
             UUID idOne = UUID.randomUUID();
             String insertStudentDetails = "insert into Student_details"
@@ -904,26 +984,20 @@ public class Registration implements Serializable {
             pstmt.setString(8, slink + idOne.toString());
 
             pstmt.executeUpdate();
-            classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), String.valueOf(mode.getCurrentClass()), mode.getArm(), String.valueOf(mode.getTerm()), mode.getYear(), createdby, fullname, String.valueOf(mode.getCurrentGrade()));
+            classUpload(studentId, mode.getFname(), mode.getMname(), mode.getLname(), String.valueOf(mode.getCurrentClass()), mode.getArm(), String.valueOf(mode.getTerm()), mode.getYear(), createdby, fullname, String.valueOf(mode.getCurrentGrade()),con);
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void classUpload(int studentId, String fname, String mname, String lname, String grade, String arm, String term, String year, String createdby, String fullname, String currentclass) {
-        DbConnectionX dbConnections = new DbConnectionX();
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+    public void classUpload(int studentId, String fname, String mname, String lname, String grade, String arm, String term, String year, String createdby, String fullname, String currentclass,Connection con) {
 
-        try {
-            con = dbConnections.mySqlDBconnection();
-
+        try {            
             String nurseryInsert = "insert into tbstudentclass (studentid,first_name,middle_name,last_name,full_name,class,"
                     + "classtype,isdeleted,datecreated,datetime_created,createdby,Arm,currentclass,term,year) values "
                     + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
+            System.out.println("Values are: " + studentId + " " + fname + " " + mname + " " + lname + " " + grade + " " + arm + " " + term + " " + year + " " + createdby + " " + fullname + " " + currentclass);
             pstmt = con.prepareStatement(nurseryInsert);
 
             pstmt.setInt(1, studentId);
