@@ -799,8 +799,7 @@ public class Registration implements Serializable {
                                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                                 context.addMessage(null, message);
                                 break;
-                            }
-                            System.out.println(mode.getEmail() + " this is it " + mode.getPemail());
+                            }                            
                             fullname = mode.getLname() + " " + mode.getMname() + " " + mode.getFname();
                             gfullname = mode.getPlname() + " " + mode.getPmname() + " " + mode.getPfname();
                             if (studentNameCheck(mode.getFname(), mode.getLname(),con)) {
@@ -901,7 +900,7 @@ public class Registration implements Serializable {
                             break;
                         }
                     }
-                    setMessangerOfTruth(success + " Student Data Upload Successful");
+                    setMessangerOfTruth(success + " Student(s) Data Upload Successful");
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, getMessangerOfTruth(), getMessangerOfTruth());
                     context.addMessage(null, message);
                 } else {
@@ -996,8 +995,7 @@ public class Registration implements Serializable {
         try {            
             String nurseryInsert = "insert into tbstudentclass (studentid,first_name,middle_name,last_name,full_name,class,"
                     + "classtype,isdeleted,datecreated,datetime_created,createdby,Arm,currentclass,term,year) values "
-                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            System.out.println("Values are: " + studentId + " " + fname + " " + mname + " " + lname + " " + grade + " " + arm + " " + term + " " + year + " " + createdby + " " + fullname + " " + currentclass);
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";            
             pstmt = con.prepareStatement(nurseryInsert);
 
             pstmt.setInt(1, studentId);
