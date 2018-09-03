@@ -39,10 +39,9 @@ public class ThreadRunner implements Runnable {
     public void run() {
         try {
             System.out.println("Hello Gold");
-            if (!doTransaction().isEmpty()) {
-                runValue(doTransaction());
 
-            }
+            runValue(doTransaction());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,7 +64,7 @@ public class ThreadRunner implements Runnable {
                     + "where status=? and statuscode is null";
             //
             pstmt = con.prepareStatement(querySMSDetails);
-            pstmt.setBoolean(1, false);            
+            pstmt.setBoolean(1, false);
             rs = pstmt.executeQuery();
 
             //

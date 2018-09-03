@@ -23,9 +23,9 @@ public class DbConnectionX implements Serializable {
 
         try {
 
-//            String dburl = "jdbc:mysql://node34984-school.njs.jelastic.vps-host.net/schlmgt";
+//            String dburl = "jdbc:mysql://node36047-mgtschl.atl.jelastic.vps-host.net/schlmgt";
 //            String username = "schlmgt";
-//            String password = "Gd0ay1k4firCBKix";
+//            String password = "frLeBIZwP0EF6yug";
 //            Class.forName("com.mysql.jdbc.Driver");
 //            //Connection con = DriverManager.getConnection(url);
 //            Connection con = DriverManager.getConnection(dburl, username, password);
